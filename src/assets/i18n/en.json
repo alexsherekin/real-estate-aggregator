@@ -1,0 +1,15 @@
+{
+  "HomePage": {
+    "Title": "Available Offers",
+    "Search": "Search..."
+  },
+  "SettingsPage": {
+    "Title": "Settings"
+  },
+  "ApartmentDescription": {
+    "City": "City",
+    "County": "County",
+    "RoomsCount": "Rooms count",
+    "Price": "Price"
+  }
+}

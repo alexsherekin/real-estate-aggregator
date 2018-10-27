@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ "HomePage.Title" | translate}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item>
+      <ion-label position="floating">{{ "ApartmentDescription.City" | translate }}</ion-label>
+      <ion-input right type="text" [(ngModel)]="apartment.city"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">{{ "ApartmentDescription.County" | translate }}</ion-label>
+      <ion-input right type="text" [(ngModel)]="apartment.county"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">{{ ("ApartmentDescription.RoomsCount" | translate) + '(' + apartment.minRoomsCount + ' - ' + apartment.maxRoomsCount + ')' }}</ion-label>
+      <ion-range dualKnobs="true" min="1" max="5" step="1" snaps="true" [value]="{lower: apartment.minRoomsCount, upper: apartment.maxRoomsCount}" (ionChange)="roomsCountChanged($event.detail.value)"></ion-range>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">{{ ("ApartmentDescription.Price" | translate) + '(' + apartment.minPrice + ' - ' + apartment.maxPrice + ')' }}</ion-label>
+      <ion-range dualKnobs="true" min="0" max="10000" step="100" snaps="true" [value]="{lower: apartment.minPrice, upper: apartment.maxPrice}" (ionChange)="priceRangeChanged($event.detail.value)"></ion-range>
+    </ion-item>
+  </ion-list>
+  <ion-button color="primary" expand="full" (click)="search()">{{ "HomePage.Search" | translate }}</ion-button>
+  <ion-list *ngFor="let realEstate of data$ | async">
+    <ion-item>
+      {{  realEstate["resultlist.realEstate"].title }}
+    </ion-item>
+  </ion-list>
+</ion-content>
