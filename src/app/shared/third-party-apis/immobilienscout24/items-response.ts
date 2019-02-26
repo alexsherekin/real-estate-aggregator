@@ -1,43 +1,46 @@
-export interface RealEstateDescription {
+export interface RealEstateAddress {
+  "street": string,
+  "houseNumber": string,
+  "postcode": string,
+  "city": string,
+  "quarter": string,
+  "wgs84Coordinate": {
+    "latitude": number,
+    "longitude": number
+  },
+  "preciseHouseNumber": boolean,
+  "description": {
+    "text": string
+  }
+}
+
+export interface RealEstateShortDescription {
+  "@xsi.type": "search:ApartmentRent",
+  "@id": string,
+  title: string,
+  address: RealEstateAddress,
+  price: {
+    "value": number,
+    "currency": "EUR",
+    "marketingType": "RENT",
+    "priceIntervalType": "MONTH"
+  },
+  calculatedPrice: {
+    "value": number,
+    "currency": "EUR",
+    "marketingType": "BUDGET_RENT",
+    "priceIntervalType": "MONTH",
+    "rentScope": "WARM_RENT"
+  }
+}
+
+export interface RealEstateFullDescription {
   "@id": string,
   "@publichDate": string,
   "@creation": string,
   "@modification": string,
   "realEstateId": number,
-  "resultlist.realEstate": {
-    "@xsi.type": "search:ApartmentRent",
-    "@id": string,
-    title: string,
-    address: {
-      "street": string,
-      "houseNumber": string,
-      "postcode": string,
-      "city": string,
-      "quarter": string,
-      "wgs84Coordinate": {
-        "latitude": number,
-        "longitude": number
-      },
-      "preciseHouseNumber": boolean,
-      "description": {
-        "text": string
-      }
-    },
-    price: {
-      "value": number,
-      "currency": "EUR",
-      "marketingType": "RENT",
-      "priceIntervalType": "MONTH"
-    },
-    calculatedPrice: {
-      "value": number,
-      "currency": "EUR",
-      "marketingType": "BUDGET_RENT",
-      "priceIntervalType": "MONTH",
-      "rentScope": "WARM_RENT"
-    }
-  }
-
+  "resultlist.realEstate": RealEstateShortDescription,
 }
 
 export interface ItemsResponse {
@@ -58,7 +61,7 @@ export interface ItemsResponse {
       },
       resultlistEntries: Array<{
         "@realEstateType": string,
-        resultlistEntry: Array<RealEstateDescription>
+        resultlistEntry: Array<RealEstateFullDescription>
       }>
     }
   }

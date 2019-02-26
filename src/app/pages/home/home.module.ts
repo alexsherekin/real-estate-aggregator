@@ -6,6 +6,8 @@ import { FormsModule } from '@angular/forms';
 import { HomePage } from './home.page';
 import { TranslateModule } from '@ngx-translate/core';
 import { HomePageRoutingModule } from './home.router.module';
+import { RealEstateListComponent } from './real-estate-list/real-estate-list.component';
+import { RealEstateItemComponent } from './real-estate-item/real-estate-item.component';
 
 @NgModule({
   imports: [
@@ -15,6 +17,10 @@ import { HomePageRoutingModule } from './home.router.module';
     HomePageRoutingModule,
     TranslateModule,
   ],
-  declarations: [HomePage]
+  declarations: [
+    HomePage,
+    RealEstateListComponent,
+    RealEstateItemComponent,
+  ]
 })
 export class HomePageModule { }

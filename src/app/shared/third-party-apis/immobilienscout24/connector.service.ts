@@ -1,9 +1,9 @@
-import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { UrlCreatorService } from "./url.creator.service";
-import { ApartmentRequirements } from "../../types/search-description";
-import { SearchSettings } from "../../types/search-settings";
-import { ItemsResponse } from "./items-response";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { UrlCreatorService } from './url.creator.service';
+import { ApartmentRequirements } from '../../types/search-description';
+import { SearchSettings } from '../../types/search-settings';
+import { ItemsResponse } from './items-response';
 
 @Injectable()
 export class ConnectorService {

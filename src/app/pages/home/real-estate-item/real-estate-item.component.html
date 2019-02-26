@@ -1,0 +1,14 @@
+<h3>{{ description.title }}</h3>
+
+<address>
+  <p *ngIf="address.street || address.houseNumber">
+    <span>{{ address.street }}</span>
+    &nbsp;
+    <span>{{ address.houseNumber }}</span>
+  </p>
+  <p *ngIf="address.postcode || address.city">
+    <span>{{ address.postcode }}</span>
+    &nbsp;
+    <span>{{ address.city }}</span>
+  </p>
+</address>

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ApartmentRequirements } from '../../shared/types/search-description';
-import { ItemsResponse, RealEstateDescription } from '../../shared/third-party-apis/immobilienscout24/items-response';
+import { ItemsResponse, RealEstateFullDescription } from '../../shared/third-party-apis/immobilienscout24/items-response';
 import { ConnectorService } from '../../shared/third-party-apis/immobilienscout24/connector.service';
 import { SearchSettings } from '../../shared/types/search-settings';
 import { Sorting } from '../../shared/types/sorting';
@@ -27,7 +27,7 @@ export class HomePage {
 
   public results: ItemsResponse = {};
 
-  public data$ = new Observable<Array<RealEstateDescription>>();
+  public data$ = new Observable<Array<RealEstateFullDescription>>();
   public searchChanged$ = new Subject<{ apartment: ApartmentRequirements, searchSettings: SearchSettings }>();
 
   public isLoading = false;
@@ -37,12 +37,12 @@ export class HomePage {
       switchMap((search) => this.getData(search.apartment, search.searchSettings)),
       map(result => {
         try {
-          return result.searchResponseModel["resultlist.resultlist"].resultlistEntries[0].resultlistEntry;
+          return result.searchResponseModel['resultlist.resultlist'].resultlistEntries[0].resultlistEntry;
         } catch (error) {
           return [];
         }
       })
-    )
+    );
   }
 
   public search() {
@@ -62,7 +62,7 @@ export class HomePage {
         this.isLoading = false;
         return of({} as ItemsResponse);
       })
-    )
+    );
   }
 
   public roomsCountChanged({ lower, upper } = { lower: 0, upper: 5 }) {

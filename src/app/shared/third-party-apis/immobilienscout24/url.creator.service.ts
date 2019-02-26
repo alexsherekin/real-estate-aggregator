@@ -8,7 +8,7 @@ export class UrlCreatorService {
   // short url example
   // https://www.immobilienscout24.de/Suche/S-T/Wohnung-Miete/Bayern/Wuerzburg/Dom_Frauenland_Grombuehl/1,00-3,00/10,00-55,00/EURO-100,00-500,00
   // https://www.immobilienscout24.de/Suche/{sortingType}/{marketingType}/{County}/{City}/{Districts}/{minRooms}-{maxRooms}/{minSquare}-{maxSquare}/EURO-{minPrice}-{maxPrice}
-  private readonly baseUrl = 'https://www.immobilienscout24.de/Suche/';
+  private readonly baseUrl = 'https://www.immobilienscout24.de/Suche';
 
   public createUrl(apartment: ApartmentRequirements, search: SearchSettings) {
     const districts = (apartment.districts || []).join('_') || '-';
@@ -19,7 +19,7 @@ export class UrlCreatorService {
     const county = apartment.county || '-';
     const city = apartment.city || '-';
 
-    return `https://www.immobilienscout24.de/Suche/${this.convertSorting(search.sorting)}/${this.convertMarketingType()}/${county}/${city}/${districts}/${roomsCount}/${square}/${price}`;
+    return `${this.baseUrl}/${this.convertSorting(search.sorting)}/${this.convertMarketingType()}/${county}/${city}/${districts}/${roomsCount}/${square}/${price}`;
   }
 
   private convertRange(left: any, right: any) {
