@@ -19,18 +19,30 @@ export interface RealEstateShortDescription {
   "@id": string,
   title: string,
   address: RealEstateAddress,
+  balkony: "true" | "false",
+  builtInKitchen: "true" | "false",
+  livingSpace: number,
+  numberOfRooms: number,
   price: {
-    "value": number,
-    "currency": "EUR",
-    "marketingType": "RENT",
-    "priceIntervalType": "MONTH"
+    value: number,
+    currency: "EUR",
+    marketingType: "RENT",
+    priceIntervalType: "MONTH"
   },
   calculatedPrice: {
-    "value": number,
-    "currency": "EUR",
-    "marketingType": "BUDGET_RENT",
-    "priceIntervalType": "MONTH",
-    "rentScope": "WARM_RENT"
+    value: number,
+    currency: "EUR",
+    marketingType: "BUDGET_RENT",
+    priceIntervalType: "MONTH",
+    rentScope: "WARM_RENT"
+  },
+  titlePicture: {
+    urls: Array<{
+      url: Array<{
+        "@href": string,
+        "@scale": "SCALE_210x210" | "SCALE" | "SCALE_AND_CROP" | "WHITE_FILLING"
+      }>
+    }>
   }
 }
 
@@ -40,6 +52,9 @@ export interface RealEstateFullDescription {
   "@creation": string,
   "@modification": string,
   "realEstateId": number,
+  "realEstateTags": {
+    tag: Array<string>
+  }
   "resultlist.realEstate": RealEstateShortDescription,
 }
 

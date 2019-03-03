@@ -1,14 +1,54 @@
-<h3>{{ description.title }}</h3>
+<h3>
+  {{ description.title }}
+  <a class="maps"
+    href="https://www.google.com/maps/place/{{addressAsString}}"
+    target="_blank">
+    <img [src]="mapsIcon"
+      alt="map"
+      class="maps-icon" />
+  </a>
+</h3>
 
-<address>
-  <p *ngIf="address.street || address.houseNumber">
-    <span>{{ address.street }}</span>
-    &nbsp;
-    <span>{{ address.houseNumber }}</span>
-  </p>
-  <p *ngIf="address.postcode || address.city">
-    <span>{{ address.postcode }}</span>
-    &nbsp;
-    <span>{{ address.city }}</span>
-  </p>
-</address>
+<main class="main">
+  <img [src]="titleImage"
+    alt="Title picture"
+    class="title-picture" />
+  <section class="info">
+    <address *ngIf="address"
+      class="address">
+      <p *ngIf="address.street || address.houseNumber">
+        <span>{{ address.street }}</span>
+        &nbsp;
+        <span>{{ address.houseNumber }}</span>
+      </p>
+      <p *ngIf="address.postcode || address.city || address.quarter">
+        <span>{{ address.postcode }}</span>&nbsp;
+        <span>{{ address.city }}</span>
+        <span *ngIf="address.city && address.quarter">,&nbsp;</span>
+        <span>{{ address.quarter }}</span>
+      </p>
+    </address>
+
+    <section class="details">
+      <p *ngIf="description.numberOfRooms">
+        {{ 'Number of rooms: ' + description.numberOfRooms}}
+      </p>
+      <p *ngIf="description.livingSpace">
+        {{ 'Living space: ' + description.livingSpace }} m<sup>2</sup>
+      </p>
+      <p *ngIf="description.price">
+        {{ 'Price: ' + description.price.value + ' (' + description.calculatedPrice.value + ') ' + description.price.currency }}
+      </p>
+      <div class="tags"
+        *ngIf="item.realEstateTags && item.realEstateTags.tag">
+        <div class="tag"
+          *ngFor="let tag of item.realEstateTags.tag">
+          {{tag}}
+        </div>
+      </div>
+    </section>
+  </section>
+  <section class="contacts">
+
+  </section>
+</main>
