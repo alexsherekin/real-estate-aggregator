@@ -40,9 +40,9 @@
         {{ 'Price: ' + description.price.value + ' (' + description.calculatedPrice.value + ') ' + description.price.currency }}
       </p>
       <div class="tags"
-        *ngIf="item.realEstateTags && item.realEstateTags.tag">
+        *ngIf="hasTags(item)">
         <div class="tag"
-          *ngFor="let tag of item.realEstateTags.tag">
+          *ngFor="let tag of getTags(item)">
           {{tag}}
         </div>
       </div>

@@ -58,26 +58,32 @@ export interface RealEstateFullDescription {
   "resultlist.realEstate": RealEstateShortDescription,
 }
 
+export type ItemsResponseResultListEntry = Array<{
+  "@realEstateType": string,
+  resultlistEntry: Array<RealEstateFullDescription>
+}>;
+
+export interface ItemsResponsePaging {
+  next?: {
+    "@xlink.href": string
+  },
+  current?: {
+    "@xlink.href": string
+  },
+  pageNumber?: number,
+  pageSize?: number,
+  numberOfPages?: number,
+  numberOfHits?: number,
+  numberOfListings?: number,
+};
+
+export interface ItemsResponseResultList {
+  paging?: ItemsResponsePaging,
+  resultlistEntries?: ItemsResponseResultListEntry
+}
+
 export interface ItemsResponse {
   searchResponseModel?: {
-    "resultlist.resultlist": {
-      paging: {
-        next: {
-          "@xlink.href": string
-        },
-        current: {
-          "@xlink.href": string
-        },
-        pageNumber: number,
-        pageSize: number,
-        numberOfPages: number,
-        numberOfHits: number,
-        numberOfListings: number,
-      },
-      resultlistEntries: Array<{
-        "@realEstateType": string,
-        resultlistEntry: Array<RealEstateFullDescription>
-      }>
-    }
+    "resultlist.resultlist": ItemsResponseResultList
   }
 }

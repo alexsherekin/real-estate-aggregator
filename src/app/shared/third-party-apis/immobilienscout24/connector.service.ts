@@ -18,4 +18,8 @@ export class ConnectorService {
     const url = this.urlCreator.createUrl(apartment, search);
     return this.http.post<ItemsResponse>(url, undefined);
   }
+
+  public searchByUrl(url: string) {
+    return this.http.post<ItemsResponse>(this.urlCreator.addBaseUrl(url), undefined);
+  }
 }

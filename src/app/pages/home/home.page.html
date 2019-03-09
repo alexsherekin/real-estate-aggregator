@@ -46,5 +46,12 @@
   <ion-button color="primary"
     expand="full"
     (click)="search()">{{ "HomePage.Search" | translate }}</ion-button>
-  <app-real-estate-list [items$]="data$"></app-real-estate-list>
+  <app-real-estate-list [items$]="entries$"></app-real-estate-list>
+  <ion-infinite-scroll #infiniteScroll
+    threshold="100px"
+    (ionInfinite)="loadData($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles"
+      loadingText="Loading more data...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 </ion-content>

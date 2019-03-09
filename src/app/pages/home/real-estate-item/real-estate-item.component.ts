@@ -42,4 +42,13 @@ export class RealEstateItemComponent implements OnInit, OnChanges {
 
     this.addressAsString = `${this.address.city || ''} ${this.address.quarter || ''} ${this.address.street || ''} ${this.address.houseNumber || ''}`;
   }
+
+  public hasTags(item: RealEstateFullDescription) {
+    return item.realEstateTags && item.realEstateTags.tag;
+  }
+
+  public getTags(item: RealEstateFullDescription) {
+    const tags = item.realEstateTags && item.realEstateTags.tag;
+    return Array.isArray(tags) ? tags : [tags];
+  }
 }
