@@ -12,10 +12,12 @@ export class RealEstateItemComponent implements OnInit, OnChanges {
 
   public description: RealEstateShortDescription;
   public address: RealEstateAddress;
+  public linkToSource: string;
 
   public titleImage: string;
   public addressAsString: string;
   public mapsIcon = require('./assets/maps.svg');
+  public linkIcon = require('./assets/link.svg');
 
   private readonly titleImageSize = 500;
 
@@ -27,17 +29,24 @@ export class RealEstateItemComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['item']) {
       this.description = changes['item'].currentValue && changes['item'].currentValue['resultlist.realEstate'];
-      this.address = this.description && this.description.address;
       this.updateInfo();
     }
   }
 
   private updateInfo() {
+    this.address = this.description && this.description.address;
+
     try {
       this.titleImage = this.description.titlePicture.urls[0].url.find(url => url['@scale'] === 'SCALE')['@href'];
       this.titleImage = this.titleImage.replace('%WIDTH%x%HEIGHT%', this.titleImageSize.toString());
     } catch (error) {
       this.titleImage = '';
+    }
+
+    try {
+      this.linkToSource = `https://www.immobilienscout24.de/expose/${this.description['@id']}`;
+    } catch (error) {
+      this.linkToSource = '';
     }
 
     this.addressAsString = `${this.address.city || ''} ${this.address.quarter || ''} ${this.address.street || ''} ${this.address.houseNumber || ''}`;

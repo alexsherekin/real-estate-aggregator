@@ -7,6 +7,14 @@
       alt="map"
       class="maps-icon" />
   </a>
+  <a *ngIf="linkToSource"
+    class="link"
+    href="{{linkToSource}}"
+    target="_blank">
+    <img [src]="linkIcon"
+      alt="link"
+      class="link-icon" />
+  </a>
 </h3>
 
 <main class="main">
