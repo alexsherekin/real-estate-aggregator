@@ -163,6 +163,8 @@ export class HomePage {
     maxPrice: 1000,
     minRoomsCount: 2,
     maxRoomsCount: 3,
+    minSquare: 0,
+    maxSquare: 70,
   };
   public searchSettings: SearchSettings = {
     sorting: Sorting.dateDesc
@@ -182,6 +184,11 @@ export class HomePage {
   public roomsCountChanged({ lower, upper } = { lower: 0, upper: 5 }) {
     this.apartment.minRoomsCount = lower;
     this.apartment.maxRoomsCount = upper;
+  }
+
+  public squareChanged({ lower, upper } = { lower: 0, upper: 70 }) {
+    this.apartment.minSquare = lower;
+    this.apartment.maxSquare = upper;
   }
 
   public priceRangeChanged({ lower, upper } = { lower: 0, upper: 10000 }) {

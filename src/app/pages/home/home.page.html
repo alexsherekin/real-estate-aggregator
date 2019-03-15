@@ -32,6 +32,18 @@
     </ion-item>
     <ion-item>
       <ion-label position="floating">
+        {{ ("ApartmentDescription.Square" | translate) + '(' + apartment.minSquare + ' - ' + apartment.maxSquare + ')' }}
+      </ion-label>
+      <ion-range dualKnobs="true"
+        min="0"
+        max="200"
+        step="5"
+        snaps="true"
+        [value]="{lower: apartment.minSquare, upper: apartment.maxSquare}"
+        (ionChange)="squareChanged($event.detail.value)"></ion-range>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">
         {{ ("ApartmentDescription.Price" | translate) + '(' + apartment.minPrice + ' - ' + apartment.maxPrice + ')' }}
       </ion-label>
       <ion-range dualKnobs="true"

@@ -10,6 +10,7 @@
     "City": "City",
     "County": "County",
     "RoomsCount": "Rooms count",
-    "Price": "Price"
+    "Price": "Price",
+    "Square": "Square"
   }
 }
