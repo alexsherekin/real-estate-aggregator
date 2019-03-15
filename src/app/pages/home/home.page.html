@@ -35,9 +35,9 @@
         {{ ("ApartmentDescription.Price" | translate) + '(' + apartment.minPrice + ' - ' + apartment.maxPrice + ')' }}
       </ion-label>
       <ion-range dualKnobs="true"
-        min="0"
-        max="10000"
-        step="100"
+        min="{{ priceRangeConfig.min }}"
+        max="{{ priceRangeConfig.max }}"
+        step="{{ priceRangeConfig.step }}"
         snaps="true"
         [value]="{lower: apartment.minPrice, upper: apartment.maxPrice}"
         (ionChange)="priceRangeChanged($event.detail.value)"></ion-range>
@@ -46,7 +46,7 @@
   <ion-button color="primary"
     expand="full"
     (click)="search()">{{ "HomePage.Search" | translate }}</ion-button>
-  <app-real-estate-list [items$]="entries$"></app-real-estate-list>
+  <app-real-estate-list [items$]="itemsLoaded_i$"></app-real-estate-list>
   <ion-infinite-scroll #infiniteScroll
     threshold="100px"
     (ionInfinite)="loadData($event)">

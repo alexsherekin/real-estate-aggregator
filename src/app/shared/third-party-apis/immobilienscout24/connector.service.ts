@@ -4,6 +4,7 @@ import { UrlCreatorService } from './url.creator.service';
 import { ApartmentRequirements } from '../../types/search-description';
 import { SearchSettings } from '../../types/search-settings';
 import { ItemsResponse } from './items-response';
+import { of } from 'rxjs';
 
 @Injectable()
 export class ConnectorService {
@@ -20,6 +21,9 @@ export class ConnectorService {
   }
 
   public searchByUrl(url: string) {
+    if (!url) {
+      return of(undefined);
+    }
     return this.http.post<ItemsResponse>(this.urlCreator.addBaseUrl(url), undefined);
   }
 }
