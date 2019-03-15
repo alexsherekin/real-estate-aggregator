@@ -14,12 +14,19 @@ export class UrlCreatorService {
     const districts = (apartment.districts || []).join('_') || '-';
     const priceRange = this.convertRange(apartment.minPrice, apartment.maxPrice);
     const price = priceRange ? `EURO-${priceRange}` : '-';
-    const square = this.convertRange(apartment.minSquare, apartment.maxSquare) || '-';
-    const roomsCount = this.convertRange(apartment.minRoomsCount, apartment.maxRoomsCount) || '-';
-    const county = apartment.county || '-';
-    const city = apartment.city || '-';
+    const square = this.convertRange(apartment.minSquare, apartment.maxSquare);
+    const roomsCount = this.convertRange(apartment.minRoomsCount, apartment.maxRoomsCount);
+    const county = this.convertString(apartment.county);
+    const city = this.convertString(apartment.city);
 
     return `${this.baseUrl}/Suche/${this.convertSorting(search.sorting)}/${this.convertMarketingType()}/${county}/${city}/${districts}/${roomsCount}/${square}/${price}`;
+  }
+
+  private convertString(value: string) {
+    if (!value) {
+      return '-';
+    }
+    return value.replace(/\s+/g, '-');
   }
 
   public addBaseUrl(url: string) {
@@ -29,7 +36,7 @@ export class UrlCreatorService {
   private convertRange(left: any, right: any) {
     left = left || '';
     right = right || '';
-    return left || right ? [left, right].join('-') : undefined;
+    return left || right ? [left, right].join('-') : '-';
   }
 
   private convertSorting(sorting: Sorting) {
