@@ -14,6 +14,19 @@ export interface RealEstateAddress {
   }
 }
 
+export interface ImageUrl {
+  "@href": string,
+  "@scale": "SCALE_210x210" | "SCALE" | "SCALE_AND_CROP" | "WHITE_FILLING",
+}
+
+export interface RealEstatePrice {
+  value: number,
+  currency: "EUR",
+  marketingType: "RENT" | "BUDGET_RENT",
+  priceIntervalType: "MONTH",
+  rentScope: "WARM_RENT",
+}
+
 export interface RealEstateShortDescription {
   "@xsi.type": "search:ApartmentRent",
   "@id": string,
@@ -23,25 +36,11 @@ export interface RealEstateShortDescription {
   builtInKitchen: "true" | "false",
   livingSpace: number,
   numberOfRooms: number,
-  price: {
-    value: number,
-    currency: "EUR",
-    marketingType: "RENT",
-    priceIntervalType: "MONTH"
-  },
-  calculatedPrice: {
-    value: number,
-    currency: "EUR",
-    marketingType: "BUDGET_RENT",
-    priceIntervalType: "MONTH",
-    rentScope: "WARM_RENT"
-  },
+  price: RealEstatePrice,
+  calculatedPrice: RealEstatePrice,
   titlePicture: {
     urls: Array<{
-      url: Array<{
-        "@href": string,
-        "@scale": "SCALE_210x210" | "SCALE" | "SCALE_AND_CROP" | "WHITE_FILLING"
-      }>
+      url: Array<ImageUrl>
     }>
   }
 }

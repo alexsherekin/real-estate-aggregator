@@ -3,7 +3,7 @@ import { InfiniteScroll } from '@ionic/angular';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { distinctUntilChanged, map, mergeMap, withLatestFrom } from 'rxjs/operators';
 
-import { ConnectorService } from '../../shared/third-party-apis/immobilienscout24/connector.service';
+import { ImmobilienScout24ConnectorService } from '../../shared/third-party-apis/immobilienscout24/connector.service';
 import {
   ItemsResponse,
   ItemsResponsePaging,
@@ -37,7 +37,7 @@ export class HomePage {
 
   private nextUrl_i$: Observable<string>;
 
-  constructor(private connector: ConnectorService) {
+  constructor(private connector: ImmobilienScout24ConnectorService) {
     this.searchChanged_s$.subscribe(data => {
       const apartment = data && data.apartment;
       const searchSettings = data && data.searchSettings;
