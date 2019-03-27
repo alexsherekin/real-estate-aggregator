@@ -1,6 +1,17 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RealEstateListComponent } from './real-estate-list.component';
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Input } from '@ionic/angular';
+
+@Component({
+  selector: 'app-real-estate-item',
+  template: '<span>app-real-estate-item</span>'
+})
+export class RealEstateItemMockComponent {
+  @Input()
+  public item: any;
+}
 
 describe('RealEstateListComponent', () => {
   let component: RealEstateListComponent;
@@ -8,9 +19,9 @@ describe('RealEstateListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RealEstateListComponent ]
-    })
-    .compileComponents();
+      declarations: [RealEstateListComponent, RealEstateItemMockComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

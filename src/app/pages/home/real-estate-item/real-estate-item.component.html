@@ -1,5 +1,5 @@
 <h3>
-  {{ description.title }}
+  {{ (description && description.title) || '' }}
   <a class="maps"
     href="https://www.google.com/maps/place/{{addressAsString}}"
     target="_blank">
@@ -37,7 +37,8 @@
       </p>
     </address>
 
-    <section class="details">
+    <section class="details"
+      *ngIf="description">
       <p *ngIf="description.numberOfRooms">
         {{ 'Number of rooms: ' + description.numberOfRooms}}
       </p>
