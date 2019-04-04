@@ -1,5 +1,5 @@
 import { Action } from "@ngrx/store";
-import { IFilters } from "./iState";
+import { IFilters } from "./state";
 
 export class LoadSettings implements Action {
   public static type = '[Settings] Load';

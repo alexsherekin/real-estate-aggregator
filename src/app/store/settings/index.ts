@@ -1,5 +1,5 @@
 export * from './actions';
 export * from './default';
-export * from './iState';
+export * from './state';
 export * from './reducers';
 export * from './selectors';

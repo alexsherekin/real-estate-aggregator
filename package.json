@@ -48,6 +48,7 @@
     "core-js": "^2.5.3",
     "ngrx-data": "^6.0.2-beta.10",
     "ngrx-store-freeze": "^0.2.4",
+    "ngrx-store-localstorage": "^7.0.0",
     "rxjs": "6.2.2",
     "zone.js": "^0.8.26"
   },

@@ -1,13 +1,14 @@
-import { IonicModule } from '@ionic/angular';
-import { RouterModule } from '@angular/router';
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HomePage } from './home.page';
+import { IonicModule } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
+
+import { SearchPanelModule } from '../../search-panel/search-panel.module';
+import { HomePage } from './home.page';
 import { HomePageRoutingModule } from './home.router.module';
-import { RealEstateListComponent } from './real-estate-list/real-estate-list.component';
 import { RealEstateItemComponent } from './real-estate-item/real-estate-item.component';
+import { RealEstateListComponent } from './real-estate-list/real-estate-list.component';
 
 @NgModule({
   imports: [
@@ -16,6 +17,7 @@ import { RealEstateItemComponent } from './real-estate-item/real-estate-item.com
     FormsModule,
     HomePageRoutingModule,
     TranslateModule,
+    SearchPanelModule,
   ],
   declarations: [
     HomePage,

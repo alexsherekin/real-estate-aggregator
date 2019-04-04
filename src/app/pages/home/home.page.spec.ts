@@ -39,12 +39,6 @@ describe('HomePage', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should set default price range config', async () => {
-    expect(component.priceRangeConfig.min).toEqual(0);
-    expect(component.priceRangeConfig.max).toEqual(2000);
-    expect(component.priceRangeConfig.step).toEqual(10);
-  });
-
   it('should have title as "HomePage.Title"', async () => {
     const compiled = fixture.debugElement.nativeElement;
     expect(compiled.querySelector('ion-title').textContent).toContain('HomePage.Title');

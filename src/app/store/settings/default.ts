@@ -1,6 +1,6 @@
-import { IState, Phase } from "./iState";
+import { ISettingsState, Phase } from "./state";
 
-export const defaultSettings: IState = {
+export const defaultSettings: ISettingsState = {
   loading: {
     phase: Phase.unknown,
     payload: undefined,
@@ -10,9 +10,12 @@ export const defaultSettings: IState = {
     payload: undefined,
   },
   filters: {
-    roomsCountMin: 1,
-    roomsCountMax: 2,
-    city: '',
+    county: 'Bayern',
+    city: 'Wuerzburg',
+    minSquare: 0,
+    maxSquare: 100,
+    minRoomsCount: 1,
+    maxRoomsCount: 2,
     minPrice: 100,
     maxPrice: 1000
   }

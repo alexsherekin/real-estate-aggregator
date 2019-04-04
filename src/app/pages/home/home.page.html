@@ -5,56 +5,7 @@
 </ion-header>
 
 <ion-content>
-  <ion-list>
-    <ion-item>
-      <ion-label position="floating">{{ "ApartmentDescription.City" | translate }}</ion-label>
-      <ion-input right
-        type="text"
-        [(ngModel)]="apartment.city"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label position="floating">{{ "ApartmentDescription.County" | translate }}</ion-label>
-      <ion-input right
-        type="text"
-        [(ngModel)]="apartment.county"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label position="floating">
-        {{ ("ApartmentDescription.RoomsCount" | translate) + '(' + apartment.minRoomsCount + ' - ' + apartment.maxRoomsCount + ')' }}
-      </ion-label>
-      <ion-range dualKnobs="true"
-        min="1"
-        max="5"
-        step="1"
-        snaps="true"
-        [value]="{lower: apartment.minRoomsCount, upper: apartment.maxRoomsCount}"
-        (ionChange)="roomsCountChanged($event.detail.value)"></ion-range>
-    </ion-item>
-    <ion-item>
-      <ion-label position="floating">
-        {{ ("ApartmentDescription.Square" | translate) + '(' + apartment.minSquare + ' - ' + apartment.maxSquare + ')' }}
-      </ion-label>
-      <ion-range dualKnobs="true"
-        min="0"
-        max="200"
-        step="5"
-        snaps="true"
-        [value]="{lower: apartment.minSquare, upper: apartment.maxSquare}"
-        (ionChange)="squareChanged($event.detail.value)"></ion-range>
-    </ion-item>
-    <ion-item>
-      <ion-label position="floating">
-        {{ ("ApartmentDescription.Price" | translate) + '(' + apartment.minPrice + ' - ' + apartment.maxPrice + ')' }}
-      </ion-label>
-      <ion-range dualKnobs="true"
-        min="{{ priceRangeConfig.min }}"
-        max="{{ priceRangeConfig.max }}"
-        step="{{ priceRangeConfig.step }}"
-        snaps="true"
-        [value]="{lower: apartment.minPrice, upper: apartment.maxPrice}"
-        (ionChange)="priceRangeChanged($event.detail.value)"></ion-range>
-    </ion-item>
-  </ion-list>
+  <app-search-panel></app-search-panel>
   <ion-button color="primary"
     expand="full"
     (click)="search()">{{ "HomePage.Search" | translate }}</ion-button>

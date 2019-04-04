@@ -1,5 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { InfiniteScroll } from '@ionic/angular';
+import { Store } from '@ngrx/store';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { distinctUntilChanged, map, mergeMap, withLatestFrom } from 'rxjs/operators';
 
@@ -9,8 +10,8 @@ import {
   ItemsResponsePaging,
   RealEstateFullDescription,
 } from '../../shared/third-party-apis/immobilienscout24/items-response';
-import { ApartmentRequirements } from '../../shared/types/search-description';
-import { SearchSettings } from '../../shared/types/search-settings';
+import { settingsSelectors } from '../../store/reducers';
+import { ISettingsState } from '../../store/settings';
 import { Sorting } from '../../shared/types/sorting';
 
 @Component({
@@ -19,7 +20,7 @@ import { Sorting } from '../../shared/types/sorting';
   styleUrls: ['home.page.scss']
 })
 export class HomePage {
-  private searchChanged_s$ = new BehaviorSubject<{ apartment: ApartmentRequirements, searchSettings: SearchSettings }>(undefined);
+  private doSearch_s$ = new BehaviorSubject(undefined);
   private forceLoad_s$ = new BehaviorSubject<boolean>(false);
 
   private searchLoadingState_i$ = new BehaviorSubject<boolean>(false);
@@ -37,10 +38,17 @@ export class HomePage {
 
   private nextUrl_i$: Observable<string>;
 
-  constructor(private connector: ImmobilienScout24ConnectorService) {
-    this.searchChanged_s$.subscribe(data => {
-      const apartment = data && data.apartment;
-      const searchSettings = data && data.searchSettings;
+  constructor(
+    private connector: ImmobilienScout24ConnectorService,
+    private settingsStore: Store<ISettingsState>
+  ) {
+    this.doSearch_s$.pipe(
+      distinctUntilChanged(() => false),
+      withLatestFrom(this.settingsStore.select(settingsSelectors.getFilters))
+    ).subscribe(([empty, apartment]) => {
+      const searchSettings = {
+        sorting: Sorting.dateDesc
+      };
       if (!apartment || !searchSettings) {
         return;
       }
@@ -150,49 +158,11 @@ export class HomePage {
 
   @ViewChild(InfiniteScroll) infiniteScroll: InfiniteScroll;
 
-  public priceRangeConfig = {
-    min: 0,
-    max: 2000,
-    step: 10
-  };
-
-  public apartment: ApartmentRequirements = {
-    city: 'Frankfurt am Main',
-    county: 'Hessen',
-    minPrice: 0,
-    maxPrice: 1000,
-    minRoomsCount: 2,
-    maxRoomsCount: 3,
-    minSquare: 0,
-    maxSquare: 70,
-  };
-  public searchSettings: SearchSettings = {
-    sorting: Sorting.dateDesc
-  };
-
   public search() {
-    this.searchChanged_s$.next({
-      apartment: this.apartment,
-      searchSettings: this.searchSettings
-    });
+    this.doSearch_s$.next(undefined);
   }
 
   public loadData() {
     this.forceLoad_s$.next(true);
-  }
-
-  public roomsCountChanged({ lower, upper } = { lower: 0, upper: 5 }) {
-    this.apartment.minRoomsCount = lower;
-    this.apartment.maxRoomsCount = upper;
-  }
-
-  public squareChanged({ lower, upper } = { lower: 0, upper: 70 }) {
-    this.apartment.minSquare = lower;
-    this.apartment.maxSquare = upper;
-  }
-
-  public priceRangeChanged({ lower, upper } = { lower: 0, upper: 10000 }) {
-    this.apartment.minPrice = lower;
-    this.apartment.maxPrice = upper;
   }
 }

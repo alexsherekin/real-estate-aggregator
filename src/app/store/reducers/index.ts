@@ -30,7 +30,7 @@ import * as fromSettings from '../settings';
  * our top level state interface is just a map of keys to inner state types.
  */
 export interface State {
-  settings: fromSettings.IState;
+  settings: fromSettings.ISettingsState;
   router: fromRouter.RouterReducerState<RouterStateUrl>;
 }
 
@@ -59,8 +59,8 @@ export function logger(reducer: ActionReducer<State>): ActionReducer<State> {
  * the root meta-reducer. To add more meta-reducers, provide an array of meta-reducers
  * that will be composed to form the root meta-reducer.
  */
-export const metaReducers: MetaReducer<State>[] = !environment.production
-  ? [logger, storeFreeze]
-  : [];
+export const metaReducers: MetaReducer<State>[] = [
+  ...(!environment.production ? [logger, storeFreeze] : []),
+];
 
 export const settingsSelectors = fromSettings.getSelectors('settings');
