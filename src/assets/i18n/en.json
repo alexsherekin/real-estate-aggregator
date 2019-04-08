@@ -12,5 +12,15 @@
     "RoomsCount": "Rooms count",
     "Price": "Price",
     "Square": "Square"
+  },
+  "RealEstateFeature": {
+    "Balcony": "Balcony",
+    "BuiltInKitchen": "Built in kitchen",
+    "Elevator": "Elevator",
+    "Cellar": "Cellar",
+    "Garden": "Garden",
+    "GuestWC": "Guest WC",
+    "Accessible": "Accessible",
+    "WGPossible": "Students friendly"
   }
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { RealEstateFullDescription } from '../../../shared/third-party-apis/immobilienscout24/items-response';
+import { Advertisement } from '../../../shared/types/address';
 
 @Component({
   selector: 'app-real-estate-list',
@@ -10,11 +10,14 @@ import { RealEstateFullDescription } from '../../../shared/third-party-apis/immo
 export class RealEstateListComponent implements OnInit {
 
   @Input()
-  public items$: Observable<Array<RealEstateFullDescription>> = of([]);
+  public items$: Observable<Array<Advertisement>> = of([]);
 
   constructor() { }
 
   ngOnInit() {
   }
 
+  public trackById(value: Advertisement) {
+    return value.id;
+  }
 }

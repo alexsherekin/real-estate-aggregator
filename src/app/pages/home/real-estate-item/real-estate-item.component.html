@@ -1,5 +1,5 @@
 <h3>
-  {{ (description && description.title) || '' }}
+  {{ (item && item.title) || '' }}
   <a class="maps"
     href="https://www.google.com/maps/place/{{addressAsString}}"
     target="_blank">
@@ -38,21 +38,21 @@
     </address>
 
     <section class="details"
-      *ngIf="description">
-      <p *ngIf="description.numberOfRooms">
-        {{ 'Number of rooms: ' + description.numberOfRooms}}
+      *ngIf="realEstate">
+      <p *ngIf="realEstate.numberOfRooms">
+        {{ 'Number of rooms: ' + realEstate.numberOfRooms}}
       </p>
-      <p *ngIf="description.livingSpace">
-        {{ 'Living space: ' + description.livingSpace }} m<sup>2</sup>
+      <p *ngIf="realEstate.livingSpace">
+        {{ 'Living space: ' + realEstate.livingSpace }} m<sup>2</sup>
       </p>
-      <p *ngIf="description.price">
-        {{ 'Price: ' + description.price.value + ' (' + description.calculatedPrice.value + ') ' + description.price.currency }}
+      <p *ngIf="realEstate.price">
+        {{ 'Price: ' + realEstate.price.value + ' (' + realEstate.fullPrice.value + ') ' + realEstate.price.currency }}
       </p>
       <div class="tags"
-        *ngIf="hasTags(item)">
+        *ngIf="hasTags(realEstate)">
         <div class="tag"
-          *ngFor="let tag of getTags(item)">
-          {{tag}}
+          *ngFor="let tag of getTags(realEstate)">
+          {{ ('RealEstateFeature.' + tag) | translate }}
         </div>
       </div>
     </section>

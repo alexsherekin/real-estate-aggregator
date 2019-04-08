@@ -5,12 +5,16 @@ import { Sorting } from "../../types/sorting";
 
 @Injectable()
 export class UrlCreatorService {
+  public static createAdvertimentUrl(id: string) {
+    return `https://www.immobilienscout24.de/expose/${id}`;
+  }
+
   // short url example
   // https://www.immobilienscout24.de/Suche/S-T/Wohnung-Miete/Bayern/Wuerzburg/Dom_Frauenland_Grombuehl/1,00-3,00/10,00-55,00/EURO-100,00-500,00
   // https://www.immobilienscout24.de/Suche/{sortingType}/{marketingType}/{County}/{City}/{Districts}/{minRooms}-{maxRooms}/{minSquare}-{maxSquare}/EURO-{minPrice}-{maxPrice}
   private readonly baseUrl = 'https://www.immobilienscout24.de';
 
-  public createUrl(apartment: ApartmentRequirements, search: SearchSettings) {
+  public createSearchUrl(apartment: ApartmentRequirements, search: SearchSettings) {
     const districts = (apartment.districts || []).join('_') || '-';
     const priceRange = this.convertRange(apartment.minPrice, apartment.maxPrice);
     const price = priceRange ? `EURO-${priceRange}` : '-';

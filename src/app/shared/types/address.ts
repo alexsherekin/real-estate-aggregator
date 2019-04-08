@@ -1,6 +1,7 @@
 export interface Advertisement {
   id: string,
   title: string,
+  url: string,
   picture: Picture,
   creation: Date,
   modification: Date,
@@ -38,7 +39,7 @@ export type Picture = ExternalAsset;
 
 export interface RealEstate {
   address: Address,
-  features?: RealEstateFeatures[],
+  features?: RealEstateFeature[],
   livingSpace?: number,
   numberOfRooms?: number,
   price: Price,
@@ -46,10 +47,15 @@ export interface RealEstate {
   pictures: Picture[],
 }
 
-export enum RealEstateFeatures {
-  Balkony = 'Balcony',
-  BuildInKitchen = 'BuildInKitchen',
-
+export enum RealEstateFeature {
+  Balcony = 'Balcony',
+  BuiltInKitchen = 'BuiltInKitchen',
+  Elevator = 'Elevator',
+  Cellar = 'Cellar',
+  Garden = 'Garden',
+  GuestWC = 'GuestWC',
+  Accessible = 'Accessible',
+  WGPossible = 'WGPossible',
 }
 
 export interface Address {

@@ -32,7 +32,7 @@ export interface RealEstateShortDescription {
   "@id": string,
   title: string,
   address: RealEstateAddress,
-  balkony: "true" | "false",
+  balcony: "true" | "false",
   builtInKitchen: "true" | "false",
   livingSpace: number,
   numberOfRooms: number,
