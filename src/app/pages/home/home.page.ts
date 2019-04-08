@@ -1,8 +1,8 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { InfiniteScroll } from '@ionic/angular';
 import { Store } from '@ngrx/store';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { distinctUntilChanged, map, mergeMap, withLatestFrom } from 'rxjs/operators';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { distinctUntilChanged, map, merge, withLatestFrom } from 'rxjs/operators';
 
 import { ImmobilienScout24ConnectorService } from '../../shared/third-party-apis/immobilienscout24/connector.service';
 import {
@@ -10,18 +10,18 @@ import {
   ItemsResponsePaging,
   RealEstateFullDescription,
 } from '../../shared/third-party-apis/immobilienscout24/items-response';
+import { Sorting } from '../../shared/types/sorting';
 import { settingsSelectors } from '../../store/reducers';
 import { ISettingsState } from '../../store/settings';
-import { Sorting } from '../../shared/types/sorting';
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss']
 })
-export class HomePage {
+export class HomePage implements OnDestroy {
   private doSearch_s$ = new BehaviorSubject(undefined);
-  private forceLoad_s$ = new BehaviorSubject<boolean>(false);
+  private forceLoad_s$ = new BehaviorSubject(undefined);
 
   private searchLoadingState_i$ = new BehaviorSubject<boolean>(false);
   private searchDataLoaded_i$ = new BehaviorSubject<ItemsResponse>(undefined);
@@ -38,11 +38,13 @@ export class HomePage {
 
   private nextUrl_i$: Observable<string>;
 
+  private subscriptions: Subscription[] = [];
+
   constructor(
     private connector: ImmobilienScout24ConnectorService,
     private settingsStore: Store<ISettingsState>
   ) {
-    this.doSearch_s$.pipe(
+    const doSearchSub = this.doSearch_s$.pipe(
       distinctUntilChanged(() => false),
       withLatestFrom(this.settingsStore.select(settingsSelectors.getFilters))
     ).subscribe(([empty, apartment]) => {
@@ -54,11 +56,15 @@ export class HomePage {
       }
 
       this.searchLoadingState_i$.next(true);
-      this.connector.search(apartment, searchSettings).subscribe(response => {
-        this.searchDataLoaded_i$.next(response);
-        this.searchLoadingState_i$.next(false);
-      });
+      const searchSub = this.connector.search(apartment, searchSettings)
+        .subscribe(response => {
+          this.searchDataLoaded_i$.next(response);
+          this.searchLoadingState_i$.next(false);
+          searchSub.unsubscribe();
+        });
     });
+    this.subscriptions.push(doSearchSub);
+
     this.searchItemsLoaded_i$ = this.searchDataLoaded_i$.pipe(
       map(response => {
         try {
@@ -78,10 +84,8 @@ export class HomePage {
       }),
     );
 
-
-
-    this.nextUrl_i$ = of(0, 1).pipe(
-      mergeMap(index => [this.searchDataLoaded_i$, this.infiniteDataLoaded_i$][index]),
+    this.nextUrl_i$ = this.searchDataLoaded_i$.pipe(
+      merge(this.infiniteDataLoaded_i$),
       map(response => {
         try {
           return response.searchResponseModel['resultlist.resultlist'].paging.next['@xlink.href'];
@@ -91,9 +95,7 @@ export class HomePage {
       })
     );
 
-
-
-    this.forceLoad_s$.pipe(
+    const forceLoadSub = this.forceLoad_s$.pipe(
       distinctUntilChanged(() => false),
       withLatestFrom(this.nextUrl_i$)
     ).subscribe(([trigger, url]) => {
@@ -102,11 +104,15 @@ export class HomePage {
       }
 
       this.infiniteLoadingState_i$.next(true);
-      this.connector.searchByUrl(url).subscribe(response => {
+      const searchSub = this.connector.searchByUrl(url).subscribe(response => {
         this.infiniteDataLoaded_i$.next(response);
         this.infiniteLoadingState_i$.next(false);
+
+        searchSub.unsubscribe();
       });
     });
+    this.subscriptions.push(forceLoadSub);
+
     this.infiniteItemsLoaded_i$ = this.infiniteDataLoaded_i$.pipe(
       map(response => {
         try {
@@ -125,35 +131,34 @@ export class HomePage {
         }
       }),
     );
-    this.infiniteLoadingState_i$.subscribe(state => {
+    const infiniteLoadingStateSub = this.infiniteLoadingState_i$.subscribe(state => {
       if (this.infiniteScroll) {
         if (!state) {
           this.infiniteScroll.complete();
         }
       }
     });
+    this.subscriptions.push(infiniteLoadingStateSub);
 
-
-    const markedSearchItemsLoaded_i$ = this.searchItemsLoaded_i$.pipe(
-      map(result => ({ source: 'search', values: result || [] }))
-    );
-    const markedInfiniteItemsLoaded_i$ = this.infiniteItemsLoaded_i$.pipe(
-      map(result => ({ source: 'infinite', values: result || [] }))
-    );
-    of(0, 1).pipe(
-      mergeMap(index => [markedSearchItemsLoaded_i$, markedInfiniteItemsLoaded_i$][index]),
+    const searchItemsLoadedSub = this.searchItemsLoaded_i$.pipe(
+      map(result => ({ source: 'search', values: result || [] })),
+      merge(this.infiniteItemsLoaded_i$.pipe(map(result => ({ source: 'infinite', values: result || [] })))),
       withLatestFrom(this.itemsLoaded_i$),
-      map(([newList, currentList]) => {
-        if (newList.source === 'search') {
-          return this.itemsLoaded_i$.next(newList.values);
-        }
-        return this.itemsLoaded_i$.next([...currentList, ...newList.values]);
-      })
-    ).subscribe(() => { });
+    ).subscribe(([newList, currentList]) => {
+      if (newList.source === 'search') {
+        return this.itemsLoaded_i$.next(newList.values);
+      }
+      return this.itemsLoaded_i$.next([...currentList, ...newList.values]);
+    });
+    this.subscriptions.push(searchItemsLoadedSub);
 
-    this.pagingLoaded_i$ = of(0, 1).pipe(
-      mergeMap(index => [this.searchPagingLoaded_i$, this.infinitePagingLoaded_i$][index])
+    this.pagingLoaded_i$ = this.searchPagingLoaded_i$.pipe(
+      merge(this.infinitePagingLoaded_i$)
     );
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   @ViewChild(InfiniteScroll) infiniteScroll: InfiniteScroll;
