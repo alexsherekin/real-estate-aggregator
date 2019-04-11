@@ -6,6 +6,9 @@
   "SettingsPage": {
     "Title": "Settings"
   },
+  "LoadingController": {
+    "Wait": "Please wait..."
+  },
   "ApartmentDescription": {
     "City": "City",
     "County": "County",

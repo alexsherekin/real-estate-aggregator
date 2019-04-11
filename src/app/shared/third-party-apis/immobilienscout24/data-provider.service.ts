@@ -142,6 +142,14 @@ export class ImmobilienScout24DataProvider implements IDataProvider {
           return Phase.failed;
         }
 
+        if (initSearchState === Phase.init) {
+          return incrementalSearchState;
+        }
+
+        if (incrementalSearchState === Phase.init) {
+          return initSearchState;
+        }
+
         return Phase.unknown;
       })
     );
