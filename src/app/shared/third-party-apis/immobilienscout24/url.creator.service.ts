@@ -1,7 +1,10 @@
-import { Injectable } from "@angular/core";
-import { ApartmentRequirements } from "../../types/search-description";
-import { SearchSettings } from "../../types/search-settings";
-import { Sorting } from "../../types/sorting";
+import { Injectable } from '@angular/core';
+
+import { MarketingType } from '../../types/address';
+import { ApartmentRequirements } from '../../types/search-description';
+import { SearchSettings } from '../../types/search-settings';
+import { Sorting } from '../../types/sorting';
+import { RealEstateTypeString3 } from './items-response';
 
 @Injectable()
 export class UrlCreatorService {
@@ -23,7 +26,7 @@ export class UrlCreatorService {
     const county = this.convertString(apartment.county);
     const city = this.convertString(apartment.city);
 
-    return `${this.baseUrl}/Suche/${this.convertSorting(search.sorting)}/${this.convertMarketingType()}/${county}/${city}/${districts}/${roomsCount}/${square}/${price}`;
+    return `${this.baseUrl}/Suche/${this.convertSorting(search.sorting)}/${this.convertMarketingType(apartment.marketingType)}/${county}/${city}/${districts}/${roomsCount}/${square}/${price}`;
   }
 
   private convertString(value: string) {
@@ -67,8 +70,14 @@ export class UrlCreatorService {
     }
   }
 
-  private convertMarketingType() {
-    return 'Wohnung-Miete';
+  private convertMarketingType(marketingType: MarketingType) {
+    const map = {
+      [MarketingType.ApartmentBuy]: RealEstateTypeString3.ApartmentBuy,
+      [MarketingType.ApartmentRent]: RealEstateTypeString3.ApartmentRent,
+      [MarketingType.HouseBuy]: RealEstateTypeString3.HouseBuy,
+      [MarketingType.HouseRent]: RealEstateTypeString3.HouseRent,
+    }
+    return map[marketingType];
   }
 
   private guard(value: never) { }

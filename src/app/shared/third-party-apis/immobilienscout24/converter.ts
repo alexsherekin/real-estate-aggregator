@@ -1,10 +1,17 @@
-import { Address, Advertisement, ExternalAsset, Price, RealEstate, RealEstateFeature } from '../../types/address';
-import { ImageUrl, RealEstateAddress, RealEstateFullDescription, RealEstatePrice, RealEstateShortDescription } from './items-response';
+import { Address, Advertisement, ExternalAsset, MarketingType, Price, RealEstate, RealEstateFeature } from '../../types/address';
+import {
+  ImageUrl,
+  RealEstateAddress,
+  RealEstateFullDescription,
+  RealEstatePrice,
+  RealEstateShortDescription,
+  RealEstateTypeNumber,
+} from './items-response';
 import { UrlCreatorService } from './url.creator.service';
 
 const titleImageSize = 500;
 
-export function convert(entries: RealEstateFullDescription[]): Advertisement[] {
+export function convert(entries: RealEstateFullDescription[], marketingType: RealEstateTypeNumber): Advertisement[] {
   if (!entries) {
     return undefined;
   }
@@ -17,7 +24,7 @@ export function convert(entries: RealEstateFullDescription[]): Advertisement[] {
       url: UrlCreatorService.createAdvertimentUrl(entry['@id']),
       title: getTitle(entry['resultlist.realEstate']),
       picture: getPictures(entry['resultlist.realEstate'])[0],
-      realEstate: getRealEstate(entry),
+      realEstate: getRealEstate(entry, marketingType),
     } as Advertisement;
   });
 }
@@ -47,13 +54,14 @@ function getPictures(description: RealEstateShortDescription): ExternalAsset[] {
     });
 }
 
-function getRealEstate(description: RealEstateFullDescription): RealEstate {
+function getRealEstate(description: RealEstateFullDescription, marketingType: RealEstateTypeNumber): RealEstate {
   if (!description || !description['resultlist.realEstate']) {
     return undefined;
   }
 
   return {
     address: getAddress(description['resultlist.realEstate'].address),
+    marketingType: getMarketingType(marketingType),
     features: getFeatures(description),
     livingSpace: description['resultlist.realEstate'].livingSpace,
     numberOfRooms: description['resultlist.realEstate'].numberOfRooms,
@@ -78,6 +86,16 @@ function getAddress(address: RealEstateAddress): Address {
     coordinates: getCoordinate(address.wgs84Coordinate),
     description: getDescription(address.description),
   };
+}
+
+function getMarketingType(type: RealEstateTypeNumber): MarketingType {
+  const map = {
+    [RealEstateTypeNumber.ApartmentBuy]: MarketingType.ApartmentBuy,
+    [RealEstateTypeNumber.ApartmentRent]: MarketingType.ApartmentRent,
+    [RealEstateTypeNumber.HouseBuy]: MarketingType.HouseBuy,
+    [RealEstateTypeNumber.HouseRent]: MarketingType.HouseBuy,
+  };
+  return map[type] || MarketingType.Unknown;
 }
 
 function getCoordinate(coordinate) {

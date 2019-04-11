@@ -8,7 +8,7 @@ import { ISettingsState, Phase } from '../../../store/settings';
 import { IDataProvider } from '../../lib/data-provider';
 import { Sorting } from '../../types/sorting';
 import { ImmobilienScout24ConnectorService } from './connector.service';
-import { ItemsResponse, RealEstateFullDescription } from './items-response';
+import { ItemsResponse, RealEstateFullDescription, RealEstateTypeNumber } from './items-response';
 import { Advertisement } from '../../types/address';
 import { convert } from './converter';
 
@@ -122,7 +122,7 @@ export class ImmobilienScout24DataProvider implements IDataProvider {
     ).subscribe(([newList, currentList]) => {
       const result = (newList.source === 'search') ? newList.values : [...currentList, ...newList.values];
       this.itemsLoadedCustom_i$.next(result);
-      const converted = convert(result);
+      const converted = convert(Array.isArray(result) ? result : [result], RealEstateTypeNumber.ApartmentRent);
       this.itemsLoaded_i$.next(converted);
     });
     this.subscriptions.push(searchItemsLoadedSub);

@@ -39,6 +39,7 @@ export type Picture = ExternalAsset;
 
 export interface RealEstate {
   address: Address,
+  marketingType: MarketingType,
   features?: RealEstateFeature[],
   livingSpace?: number,
   numberOfRooms?: number,
@@ -71,4 +72,12 @@ export interface Address {
     longitude: number
   },
   description?: string,
+}
+
+export enum MarketingType {
+  ApartmentBuy = 'ApartmentBuy',
+  ApartmentRent = 'ApartmentRent',
+  HouseBuy = 'HouseBuy',
+  HouseRent = 'HouseRent',
+  Unknown = 'Unknown',
 }

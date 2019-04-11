@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
 
+import { MarketingType } from '../shared/types/address';
 import { ApartmentRequirements } from '../shared/types/search-description';
 import { SearchSettings } from '../shared/types/search-settings';
 import { Sorting } from '../shared/types/sorting';
@@ -26,6 +26,7 @@ export class SearchPanelComponent implements OnInit {
     max: 2000,
     step: 10
   };
+  public marketingTypes = [MarketingType.ApartmentBuy, MarketingType.ApartmentRent, MarketingType.HouseBuy, MarketingType.HouseRent];
 
   constructor(private store: Store<ISettingsState>) {
     this.store.select(settingsSelectors.getFilters).subscribe(data => {
@@ -66,6 +67,12 @@ export class SearchPanelComponent implements OnInit {
     this.store.dispatch(new SaveSettings({
       minPrice: lower,
       maxPrice: upper,
+    }));
+  }
+
+  public selectedMarketingTypeChanged(value: MarketingType) {
+    this.store.dispatch(new SaveSettings({
+      marketingType: value
     }));
   }
 }

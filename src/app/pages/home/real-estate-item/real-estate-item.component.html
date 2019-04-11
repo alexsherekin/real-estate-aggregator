@@ -46,7 +46,11 @@
         {{ 'Living space: ' + realEstate.livingSpace }} m<sup>2</sup>
       </p>
       <p *ngIf="realEstate.price">
-        {{ 'Price: ' + realEstate.price.value + ' (' + realEstate.fullPrice.value + ') ' + realEstate.price.currency }}
+        {{ 'Price: ' + realEstate.price.value }}
+        <span *ngIf="realEstate.fullPrice">
+          {{ ' (' + realEstate.fullPrice.value + ') ' }}
+        </span>
+        {{ realEstate.price.currency }}
       </p>
       <div class="tags"
         *ngIf="hasTags(realEstate)">

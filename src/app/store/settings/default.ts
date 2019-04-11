@@ -1,4 +1,5 @@
 import { ISettingsState, Phase } from "./state";
+import { MarketingType } from '../../shared/types/address';
 
 export const defaultSettings: ISettingsState = {
   loading: {
@@ -17,6 +18,7 @@ export const defaultSettings: ISettingsState = {
     minRoomsCount: 1,
     maxRoomsCount: 2,
     minPrice: 100,
-    maxPrice: 1000
+    maxPrice: 1000,
+    marketingType: MarketingType.ApartmentRent,
   }
 };

@@ -57,6 +57,34 @@ export interface RealEstateFullDescription {
   "resultlist.realEstate": RealEstateShortDescription,
 }
 
+export enum RealEstateTypeNumber {
+  ApartmentBuy = 2,
+  ApartmentRent = 0,
+  HouseBuy = 3,
+  HouseRent = 6,
+}
+
+export enum RealEstateTypeString {
+  ApartmentBuy = 'apartmentbuy',
+  ApartmentRent = 'apartmentrent',
+  HouseBuy = 'housebuy',
+  HouseRent = 'houserent',
+}
+
+export enum RealEstateTypeString2 {
+  ApartmentBuy = 'APARTMENT_BUY',
+  ApartmentRent = 'APARTMENT_RENT',
+  HouseBuy = 'HOUSE_BUY',
+  HouseRent = 'HOUSE_RENT',
+}
+
+export enum RealEstateTypeString3 {
+  ApartmentBuy = 'Wohnung-Kauf',
+  ApartmentRent = 'Wohnung-Miete',
+  HouseBuy = 'Haus-Kauf',
+  HouseRent = 'Haus-Miete',
+}
+
 export type ItemsResponseResultListEntry = Array<{
   "@realEstateType": string,
   resultlistEntry: Array<RealEstateFullDescription>

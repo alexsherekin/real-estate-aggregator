@@ -25,5 +25,11 @@
     "GuestWC": "Guest WC",
     "Accessible": "Accessible",
     "WGPossible": "Students friendly"
+  },
+  "MarketingType": {
+    "ApartmentBuy": "Buy apartment",
+    "ApartmentRent": "Rent apartment",
+    "HouseBuy": "Buy house",
+    "HouseRent": "Rent house"
   }
 }

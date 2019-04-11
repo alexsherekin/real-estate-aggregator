@@ -1,4 +1,5 @@
 import { Sorting } from '../../shared/types/sorting';
+import { MarketingType } from '../../shared/types/address';
 
 export enum Phase {
   unknown = 'unknown',
@@ -23,6 +24,7 @@ export interface IFilters {
   maxSquare?: number,
   minPrice?: number,
   maxPrice?: number,
+  marketingType?: MarketingType,
 }
 export interface ISettingsState {
   loading: IActionPhase,
