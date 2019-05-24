@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 
 import { Phase } from '../../store/settings';
-import { Advertisement } from '../types/address';
+import { Advertisement } from '../third-party-apis/native/address';
 
 export interface IDataProvider {
   itemsLoadingState_i$: Observable<Phase>;

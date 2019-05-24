@@ -1,4 +1,4 @@
-import { Address, Advertisement, ExternalAsset, MarketingType, Price, RealEstate, RealEstateFeature } from '../../types/address';
+import { Address, Advertisement, ExternalAsset, MarketingType, Price, RealEstate, RealEstateFeature } from '../../native/address';
 import {
   ImageUrl,
   RealEstateAddress,
@@ -6,12 +6,12 @@ import {
   RealEstatePrice,
   RealEstateShortDescription,
   RealEstateTypeNumber,
-} from './items-response';
-import { UrlCreatorService } from './url.creator.service';
+} from './data-items-response';
+import { UrlCreatorService } from '../url.creator.service';
 
 const titleImageSize = 500;
 
-export function convert(entries: RealEstateFullDescription[], marketingType: RealEstateTypeNumber): Advertisement[] {
+export function convertData(entries: RealEstateFullDescription[], marketingType: RealEstateTypeNumber): Advertisement[] {
   if (!entries) {
     return undefined;
   }

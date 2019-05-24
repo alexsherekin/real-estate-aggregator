@@ -1,14 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { of } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { delay, catchError } from 'rxjs/operators';
 
 import { ApartmentRequirements } from '../../types/search-description';
 import { SearchSettings } from '../../types/search-settings';
-import { ItemsResponse } from './items-response';
+import { ItemsResponse } from './data/data-items-response';
+import { LocationAutocompleteResponse } from './location-autocomplete/location-autocomplete-response';
 import { UrlCreatorService } from './url.creator.service';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class ImmobilienScout24ConnectorService {
   constructor(
     private http: HttpClient,
@@ -32,6 +33,17 @@ export class ImmobilienScout24ConnectorService {
     return this.http.post<ItemsResponse>(this.urlCreator.addBaseUrl(url), undefined)
       .pipe(
         delay(2000)
+      );
+  }
+
+  public searchLocation(searchQuery: string) {
+    const url = this.urlCreator.createSearchLocationUrl(searchQuery);
+    return this.http.get<LocationAutocompleteResponse>(url)
+      .pipe(
+        delay(2000),
+        catchError(error => {
+          return of([]);
+        })
       );
   }
 }

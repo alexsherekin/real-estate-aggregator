@@ -1,5 +1,5 @@
 import { Sorting } from '../../shared/types/sorting';
-import { MarketingType } from '../../shared/types/address';
+import { MarketingType } from '../../shared/third-party-apis/native/address';
 
 export enum Phase {
   unknown = 'unknown',
@@ -16,7 +16,7 @@ export interface IActionPhase {
 }
 export interface IFilters {
   county?: string,
-  city?: string,
+  city?: string | { label: string },
   districts?: Array<string>,
   minRoomsCount?: number,
   maxRoomsCount?: number,

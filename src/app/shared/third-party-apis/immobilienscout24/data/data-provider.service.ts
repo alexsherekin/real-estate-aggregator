@@ -3,16 +3,16 @@ import { Store } from '@ngrx/store';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { combineLatest, distinctUntilChanged, map, merge, withLatestFrom } from 'rxjs/operators';
 
-import { settingsSelectors } from '../../../store/reducers';
-import { ISettingsState, Phase } from '../../../store/settings';
-import { IDataProvider } from '../../lib/data-provider';
-import { Sorting } from '../../types/sorting';
-import { ImmobilienScout24ConnectorService } from './connector.service';
-import { ItemsResponse, RealEstateFullDescription, RealEstateTypeNumber } from './items-response';
-import { Advertisement } from '../../types/address';
-import { convert } from './converter';
+import { settingsSelectors } from '../../../../store/reducers';
+import { ISettingsState, Phase } from '../../../../store/settings';
+import { IDataProvider } from '../../../lib/data-provider';
+import { Sorting } from '../../../types/sorting';
+import { ImmobilienScout24ConnectorService } from '../connector.service';
+import { ItemsResponse, RealEstateFullDescription, RealEstateTypeNumber } from './data-items-response';
+import { Advertisement } from '../../native/address';
+import { convertData } from './data-converter';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class ImmobilienScout24DataProvider implements IDataProvider {
   private searchBySettings_s$ = new BehaviorSubject(undefined);
   private searchByUrl_s$ = new BehaviorSubject(undefined);
@@ -122,7 +122,7 @@ export class ImmobilienScout24DataProvider implements IDataProvider {
     ).subscribe(([newList, currentList]) => {
       const result = (newList.source === 'search') ? newList.values : [...currentList, ...newList.values];
       this.itemsLoadedCustom_i$.next(result);
-      const converted = convert(Array.isArray(result) ? result : [result], RealEstateTypeNumber.ApartmentRent);
+      const converted = convertData(Array.isArray(result) ? result : [result], RealEstateTypeNumber.ApartmentRent);
       this.itemsLoaded_i$.next(converted);
     });
     this.subscriptions.push(searchItemsLoadedSub);

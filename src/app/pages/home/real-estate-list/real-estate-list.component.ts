@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { Advertisement } from '../../../shared/types/address';
+import { Advertisement } from '../../../shared/third-party-apis/native/address';
 
 @Component({
   selector: 'app-real-estate-list',

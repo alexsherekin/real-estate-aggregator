@@ -1,5 +1,5 @@
 import { ISettingsState, Phase } from "./state";
-import { MarketingType } from '../../shared/types/address';
+import { MarketingType } from '../../shared/third-party-apis/native/address';
 
 export const defaultSettings: ISettingsState = {
   loading: {

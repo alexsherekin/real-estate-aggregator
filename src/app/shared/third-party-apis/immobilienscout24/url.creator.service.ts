@@ -1,21 +1,36 @@
 import { Injectable } from '@angular/core';
 
-import { MarketingType } from '../../types/address';
+import { MarketingType } from '../native/address';
 import { ApartmentRequirements } from '../../types/search-description';
 import { SearchSettings } from '../../types/search-settings';
 import { Sorting } from '../../types/sorting';
-import { RealEstateTypeString3 } from './items-response';
+import { RealEstateTypeString3 } from './data/data-items-response';
 
 @Injectable()
 export class UrlCreatorService {
   public static createAdvertimentUrl(id: string) {
-    return `https://www.immobilienscout24.de/expose/${id}`;
+    return `${UrlCreatorService.baseUrl}/expose/${id}`;
+  }
+
+  public static createSearchPlaceUrl(searchQuery: string) {
+    const searchAs = [
+      'country',
+      'region',
+      // 'district',
+      'quarterOrTown',
+      'postcode',
+      // 'street',
+      // 'trainStation',
+    ];
+    const url = `${UrlCreatorService.baseUrl}/geoautocomplete/v3/locations.json`;
+    const urlQuery = `i=${searchQuery}&t=${searchAs.join(',')}`;
+    return `${url}?${urlQuery}`;
   }
 
   // short url example
   // https://www.immobilienscout24.de/Suche/S-T/Wohnung-Miete/Bayern/Wuerzburg/Dom_Frauenland_Grombuehl/1,00-3,00/10,00-55,00/EURO-100,00-500,00
   // https://www.immobilienscout24.de/Suche/{sortingType}/{marketingType}/{County}/{City}/{Districts}/{minRooms}-{maxRooms}/{minSquare}-{maxSquare}/EURO-{minPrice}-{maxPrice}
-  private readonly baseUrl = 'https://www.immobilienscout24.de';
+  private static readonly baseUrl = 'https://www.immobilienscout24.de';
 
   public createSearchUrl(apartment: ApartmentRequirements, search: SearchSettings) {
     const districts = (apartment.districts || []).join('_') || '-';
@@ -26,18 +41,27 @@ export class UrlCreatorService {
     const county = this.convertString(apartment.county);
     const city = this.convertString(apartment.city);
 
-    return `${this.baseUrl}/Suche/${this.convertSorting(search.sorting)}/${this.convertMarketingType(apartment.marketingType)}/${county}/${city}/${districts}/${roomsCount}/${square}/${price}`;
+    return `${UrlCreatorService.baseUrl}/Suche/${this.convertSorting(search.sorting)}/${this.convertMarketingType(apartment.marketingType)}/${county}/${city}/${districts}/${roomsCount}/${square}/${price}`;
   }
 
-  private convertString(value: string) {
-    if (!value) {
-      return '-';
-    }
-    return value.replace(/\s+/g, '-');
+  public createSearchLocationUrl(queryString: string) {
+    return UrlCreatorService.createSearchPlaceUrl(queryString);
   }
 
   public addBaseUrl(url: string) {
-    return `${this.baseUrl}${url}`;
+    return `${UrlCreatorService.baseUrl}${url}`;
+  }
+
+
+  private convertString(value: string | { label: string }) {
+    if (!value) {
+      return '-';
+    }
+    const text = (typeof value === 'string') ? value : value.label;
+    if (!text) {
+      return '-';
+    }
+    return text.replace(/\s+/g, '-');
   }
 
   private convertRange(left: any, right: any) {

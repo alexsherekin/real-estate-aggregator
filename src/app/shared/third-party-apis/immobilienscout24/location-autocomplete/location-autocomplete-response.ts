@@ -12,7 +12,22 @@
 //   "matches": [{ "offset": 0, "length": 1 }]
 // }
 
-export enum LocationResponseEntityType {
+export type LocationAutocompleteResponse = LocationAutocompleteItem[];
+
+export interface LocationAutocompleteItem {
+  entity: {
+    type: LocationType,
+    id: string,
+    label: string,
+    geopath: {
+      uri: string,
+    }
+  }
+
+  matches?: LocationMatch[],
+}
+
+export enum LocationType {
   'country',
   'region',
   'city',
@@ -22,14 +37,8 @@ export enum LocationResponseEntityType {
   'postcode',
   'trainStation'
 }
-export interface LocationResponse {
-  entity: {
-    type: LocationResponseEntityType,
-    id: string,
-    label: string,
-    value: string,
-    geopath: {
-      uri: string,
-    }
-  }
+
+export interface LocationMatch {
+  offset: number,
+  length: number
 }

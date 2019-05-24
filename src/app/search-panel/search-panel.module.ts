@@ -7,6 +7,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import * as fromFeature from '../store/settings';
 import { SearchPanelComponent } from './search-panel.component';
+import { TypeaheadModule } from '../typeahead/typeahead.module';
 
 @NgModule({
   imports: [
@@ -14,6 +15,7 @@ import { SearchPanelComponent } from './search-panel.component';
     CommonModule,
     FormsModule,
     TranslateModule,
+    TypeaheadModule,
     StoreModule.forFeature(fromFeature.FEATURE_NAME, fromFeature.reducer, {
       metaReducers: fromFeature.metaReducers
     })
@@ -22,7 +24,8 @@ import { SearchPanelComponent } from './search-panel.component';
     SearchPanelComponent
   ],
   exports: [
-    SearchPanelComponent
+    SearchPanelComponent,
+    TypeaheadModule,
   ]
 })
 export class SearchPanelModule { }

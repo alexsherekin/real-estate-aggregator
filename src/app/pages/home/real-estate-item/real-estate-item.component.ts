@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { Advertisement, Address, RealEstate } from '../../../shared/types/address';
+import { Advertisement, Address, RealEstate } from '../../../shared/third-party-apis/native/address';
 
 @Component({
   selector: 'app-real-estate-item',

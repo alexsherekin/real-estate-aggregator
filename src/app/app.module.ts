@@ -1,25 +1,24 @@
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { EffectsModule } from '@ngrx/effects';
-
-import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
+import { EffectsModule } from '@ngrx/effects';
+import { RouterStateSerializer, StoreRouterConnectingModule } from '@ngrx/router-store';
+import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 
+import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { StoreModule } from '@ngrx/store';
-import { reducers, metaReducers } from './store/reducers';
-import { StoreRouterConnectingModule, RouterStateSerializer } from '@ngrx/router-store';
-import { environment } from '../environments/environment';
-import { CustomRouterStateSerializer } from './shared/utils';
-
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { HttpLoaderFactory } from './i18n/http-loader-factory';
 import { SharedModule } from './shared/shared.module';
+import { CustomRouterStateSerializer } from './shared/utils';
+import { metaReducers, reducers } from './store/reducers';
+import { TypeaheadModule } from './typeahead/typeahead.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -63,12 +62,12 @@ import { SharedModule } from './shared/shared.module';
     }),
 
     /**
- * EffectsModule.forRoot() is imported once in the root module and
- * sets up the effects class to be initialized immediately when the
- * application starts.
- *
- * See: https://github.com/ngrx/platform/blob/master/docs/effects/api.md#forroot
- */
+     * EffectsModule.forRoot() is imported once in the root module and
+     * sets up the effects class to be initialized immediately when the
+     * application starts.
+     *
+     * See: https://github.com/ngrx/platform/blob/master/docs/effects/api.md#forroot
+     */
     EffectsModule.forRoot([]),
     TranslateModule.forRoot({
       loader: {
@@ -78,6 +77,7 @@ import { SharedModule } from './shared/shared.module';
       }
     }),
     SharedModule,
+    TypeaheadModule,
   ],
   providers: [
     StatusBar,
