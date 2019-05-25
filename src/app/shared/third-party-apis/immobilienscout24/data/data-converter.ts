@@ -1,4 +1,4 @@
-import { Address, Advertisement, ExternalAsset, MarketingType, Price, RealEstate, RealEstateFeature } from '../../native/address';
+import { Address, Advertisement, ExternalAsset, MarketingType, Price, RealEstate, RealEstateFeature, RealEstateType } from '../../native/address';
 import {
   ImageUrl,
   RealEstateAddress,
@@ -62,6 +62,7 @@ function getRealEstate(description: RealEstateFullDescription, marketingType: Re
   return {
     address: getAddress(description['resultlist.realEstate'].address),
     marketingType: getMarketingType(marketingType),
+    realEstateType: getRealEstateType(marketingType),
     features: getFeatures(description),
     livingSpace: description['resultlist.realEstate'].livingSpace,
     numberOfRooms: description['resultlist.realEstate'].numberOfRooms,
@@ -90,12 +91,22 @@ function getAddress(address: RealEstateAddress): Address {
 
 function getMarketingType(type: RealEstateTypeNumber): MarketingType {
   const map = {
-    [RealEstateTypeNumber.ApartmentBuy]: MarketingType.ApartmentBuy,
-    [RealEstateTypeNumber.ApartmentRent]: MarketingType.ApartmentRent,
-    [RealEstateTypeNumber.HouseBuy]: MarketingType.HouseBuy,
-    [RealEstateTypeNumber.HouseRent]: MarketingType.HouseBuy,
+    [RealEstateTypeNumber.ApartmentBuy]: MarketingType.BUY,
+    [RealEstateTypeNumber.ApartmentRent]: MarketingType.RENT,
+    [RealEstateTypeNumber.HouseBuy]: MarketingType.BUY,
+    [RealEstateTypeNumber.HouseRent]: MarketingType.RENT,
   };
-  return map[type] || MarketingType.Unknown;
+  return map[type] || MarketingType.UNKNOWN;
+}
+
+function getRealEstateType(type: RealEstateTypeNumber): RealEstateType {
+  const map = {
+    [RealEstateTypeNumber.ApartmentBuy]: RealEstateType.FLAT,
+    [RealEstateTypeNumber.ApartmentRent]: RealEstateType.FLAT,
+    [RealEstateTypeNumber.HouseBuy]: RealEstateType.HOUSE,
+    [RealEstateTypeNumber.HouseRent]: RealEstateType.HOUSE,
+  };
+  return map[type] || RealEstateType.UNKNOWN;
 }
 
 function getCoordinate(coordinate) {

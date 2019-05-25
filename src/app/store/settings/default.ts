@@ -1,5 +1,5 @@
 import { ISettingsState, Phase } from "./state";
-import { MarketingType } from '../../shared/third-party-apis/native/address';
+import { MarketingType, RealEstateType } from '../../shared/third-party-apis/native/address';
 
 export const defaultSettings: ISettingsState = {
   loading: {
@@ -17,8 +17,15 @@ export const defaultSettings: ISettingsState = {
     maxSquare: 100,
     minRoomsCount: 1,
     maxRoomsCount: 2,
-    minPrice: 100,
-    maxPrice: 1000,
-    marketingType: MarketingType.ApartmentRent,
+    rentPrice: {
+      minPrice: 100,
+      maxPrice: 1000,
+    },
+    buyPrice: {
+      minPrice: 30000,
+      maxPrice: 150000,
+    },
+    marketingType: MarketingType.RENT,
+    realEstateType: RealEstateType.FLAT,
   }
 };

@@ -1,5 +1,5 @@
 <ion-list>
-  <ion-radio-group [ngModel]="apartment.marketingType"
+  <ion-radio-group [ngModel]="uiMarketingType"
     (ngModelChange)="selectedMarketingTypeChanged($event)">
     <ion-row>
       <ion-col *ngFor="let type of marketingTypes">
@@ -51,14 +51,14 @@
   </ion-item>
   <ion-item>
     <ion-label position="floating">
-      {{ ("ApartmentDescription.Price" | translate) + '(' + apartment.minPrice + ' - ' + apartment.maxPrice + ')' }}
+      {{ ("ApartmentDescription.Price" | translate) + '(' + price.minPrice + ' - ' + price.maxPrice + ')' }}
     </ion-label>
     <ion-range dualKnobs="true"
       min="{{ priceRangeConfig.min }}"
       max="{{ priceRangeConfig.max }}"
       step="{{ priceRangeConfig.step }}"
       snaps="true"
-      [value]="{lower: apartment.minPrice, upper: apartment.maxPrice}"
+      [value]="{lower: price.minPrice, upper: price.maxPrice}"
       (ionChange)="priceRangeChanged($event.detail.value)"></ion-range>
   </ion-item>
 </ion-list>

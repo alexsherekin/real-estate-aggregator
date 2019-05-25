@@ -56,9 +56,13 @@ export class ImmobilienScout24DataProvider implements IDataProvider {
           this.searchLoadingState_i$.next(Phase.ready);
         }, error => {
           this.searchLoadingState_i$.next(Phase.failed);
-          searchSub.unsubscribe();
+          if (searchSub) {
+            searchSub.unsubscribe();
+          }
         }, () => {
-          searchSub.unsubscribe();
+          if (searchSub) {
+            searchSub.unsubscribe();
+          }
         });
     });
     this.subscriptions.push(doSearchSub);
@@ -98,9 +102,13 @@ export class ImmobilienScout24DataProvider implements IDataProvider {
         this.infiniteLoadingState_i$.next(Phase.ready);
       }, error => {
         this.infiniteLoadingState_i$.next(Phase.failed);
-        searchSub.unsubscribe();
+        if (searchSub) {
+          searchSub.unsubscribe();
+        }
       }, () => {
-        searchSub.unsubscribe();
+        if (searchSub) {
+          searchSub.unsubscribe();
+        }
       });
     });
     this.subscriptions.push(forceLoadSub);

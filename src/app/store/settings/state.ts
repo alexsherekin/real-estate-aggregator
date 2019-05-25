@@ -1,5 +1,5 @@
 import { Sorting } from '../../shared/types/sorting';
-import { MarketingType } from '../../shared/third-party-apis/native/address';
+import { MarketingType, RealEstateType } from '../../shared/third-party-apis/native/address';
 
 export enum Phase {
   unknown = 'unknown',
@@ -14,7 +14,14 @@ export interface IActionPhase {
   phase: Phase,
   payload?: any
 }
+export interface Price {
+  minPrice?: number,
+  maxPrice?: number,
+}
 export interface IFilters {
+  marketingType?: MarketingType,
+  realEstateType?: RealEstateType,
+
   county?: string,
   city?: string | { label: string },
   districts?: Array<string>,
@@ -22,10 +29,11 @@ export interface IFilters {
   maxRoomsCount?: number,
   minSquare?: number,
   maxSquare?: number,
-  minPrice?: number,
-  maxPrice?: number,
-  marketingType?: MarketingType,
+
+  buyPrice?: Price,
+  rentPrice?: Price,
 }
+
 export interface ISettingsState {
   loading: IActionPhase,
   saving: IActionPhase,

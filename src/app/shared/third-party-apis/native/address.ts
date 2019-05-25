@@ -17,7 +17,15 @@ export enum Currency {
 export enum MarketingType {
   RENT = 'RENT',
   BUY = 'BUY',
+  UNKNOWN = 'UNKNOWN',
 }
+
+export enum RealEstateType {
+  FLAT = 'FLAT',
+  HOUSE = 'HOUSE',
+  UNKNOWN = 'UNKNOWN',
+}
+
 
 export enum PriceIntervalType {
   MONTH = 'MONTH',
@@ -40,6 +48,7 @@ export type Picture = ExternalAsset;
 export interface RealEstate {
   address: Address,
   marketingType: MarketingType,
+  realEstateType: RealEstateType,
   features?: RealEstateFeature[],
   livingSpace?: number,
   numberOfRooms?: number,
@@ -72,12 +81,4 @@ export interface Address {
     longitude: number
   },
   description?: string,
-}
-
-export enum MarketingType {
-  ApartmentBuy = 'ApartmentBuy',
-  ApartmentRent = 'ApartmentRent',
-  HouseBuy = 'HouseBuy',
-  HouseRent = 'HouseRent',
-  Unknown = 'Unknown',
 }

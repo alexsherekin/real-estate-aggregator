@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { MarketingType } from '../native/address';
+import { MarketingType, RealEstateType } from '../native/address';
 import { ApartmentRequirements } from '../../types/search-description';
 import { SearchSettings } from '../../types/search-settings';
 import { Sorting } from '../../types/sorting';
@@ -34,14 +34,15 @@ export class UrlCreatorService {
 
   public createSearchUrl(apartment: ApartmentRequirements, search: SearchSettings) {
     const districts = (apartment.districts || []).join('_') || '-';
-    const priceRange = this.convertRange(apartment.minPrice, apartment.maxPrice);
+    const rawPrice = apartment.marketingType === MarketingType.BUY ? apartment.buyPrice : apartment.rentPrice;
+    const priceRange = this.convertRange(rawPrice.minPrice, rawPrice.maxPrice);
     const price = priceRange ? `EURO-${priceRange}` : '-';
     const square = this.convertRange(apartment.minSquare, apartment.maxSquare);
     const roomsCount = this.convertRange(apartment.minRoomsCount, apartment.maxRoomsCount);
     const county = this.convertString(apartment.county);
     const city = this.convertString(apartment.city);
 
-    return `${UrlCreatorService.baseUrl}/Suche/${this.convertSorting(search.sorting)}/${this.convertMarketingType(apartment.marketingType)}/${county}/${city}/${districts}/${roomsCount}/${square}/${price}`;
+    return `${UrlCreatorService.baseUrl}/Suche/${this.convertSorting(search.sorting)}/${this.convertMarketingType(apartment.marketingType, apartment.realEstateType)}/${county}/${city}/${districts}/${roomsCount}/${square}/${price}`;
   }
 
   public createSearchLocationUrl(queryString: string) {
@@ -94,14 +95,20 @@ export class UrlCreatorService {
     }
   }
 
-  private convertMarketingType(marketingType: MarketingType) {
+  private convertMarketingType(marketingType: MarketingType, realEstateType: RealEstateType) {
     const map = {
-      [MarketingType.ApartmentBuy]: RealEstateTypeString3.ApartmentBuy,
-      [MarketingType.ApartmentRent]: RealEstateTypeString3.ApartmentRent,
-      [MarketingType.HouseBuy]: RealEstateTypeString3.HouseBuy,
-      [MarketingType.HouseRent]: RealEstateTypeString3.HouseRent,
-    }
-    return map[marketingType];
+      [MarketingType.BUY]: {
+        [RealEstateType.FLAT]: RealEstateTypeString3.ApartmentBuy,
+        [RealEstateType.HOUSE]: RealEstateTypeString3.HouseBuy,
+
+      },
+      [MarketingType.RENT]: {
+        [RealEstateType.FLAT]: RealEstateTypeString3.ApartmentRent,
+        [RealEstateType.HOUSE]: RealEstateTypeString3.HouseRent,
+      }
+    };
+
+    return map[marketingType] ? map[marketingType][realEstateType] : RealEstateTypeString3.ApartmentRent;
   }
 
   private guard(value: never) { }
