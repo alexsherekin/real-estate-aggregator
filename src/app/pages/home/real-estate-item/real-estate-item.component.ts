@@ -18,6 +18,7 @@ export class RealEstateItemComponent implements OnInit, OnChanges {
   public addressAsString: string;
   public mapsIcon = require('./assets/maps.svg');
   public linkIcon = require('./assets/link.svg');
+  public noImageIcon = require('./assets/no-image.svg');
 
   constructor() { }
 
