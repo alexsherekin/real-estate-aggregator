@@ -12,11 +12,12 @@
 
 </ion-item>
 
-<ng-container *ngIf="searchValue && searchValue !== value">
+<div *ngIf="!selectedOption"
+  class="popup">
   <ion-item *ngFor="let option of dataSource$ | async"
     (click)="selectValue(option)">
     <ion-label>
       {{ option[bindValue] }}
     </ion-label>
   </ion-item>
-</ng-container>
+</div>

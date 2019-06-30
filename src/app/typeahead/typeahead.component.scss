@@ -1,6 +1,23 @@
+:host {
+  display: block;
+  position: relative;
+}
+
 .item-list__options {
-        margin: 0;
-        max-height: 200px;
-        width: 100%;
-        overflow: auto;
-      }
+  margin: 0;
+  max-height: 200px;
+  width: 100%;
+  overflow: auto;
+}
+
+.popup {
+  position: absolute;
+  z-index: 99999;
+  width: 100%;
+  border: lightgray 2px solid;
+  overflow: auto;
+  height: 200px;
+  &:empty {
+    display: none;
+  }
+}

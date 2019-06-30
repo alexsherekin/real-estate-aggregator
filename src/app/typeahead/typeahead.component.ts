@@ -19,6 +19,7 @@ export class TypeaheadComponent implements OnChanges {
 
   public searchValue: string;
   public selectedOption: any;
+  public valueSelected: boolean = false;
 
   public get showList() {
     return !this.selectedOption && (
@@ -43,10 +44,12 @@ export class TypeaheadComponent implements OnChanges {
   public selectValue(option: any) {
     this.selectedOption = option;
     this.searchValue = option[this.searchField];
+    this.valueSelected = true;
     this.itemSelected.emit(this.selectedOption);
   }
 
   public searchTermChanged() {
+    this.valueSelected = false;
     this.selectedOption = undefined;
     this.search.emit(this.searchValue);
     this.itemSelected.emit(this.selectedOption);
