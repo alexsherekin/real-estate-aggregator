@@ -1,6 +1,7 @@
 export enum LocationType {
   country,
   city,
+  district,
   quarter,
   postcode,
   region,
@@ -8,6 +9,7 @@ export enum LocationType {
 }
 
 export interface LocationAutocompleteItem {
+  id: string,
   type: LocationType,
   label: string,
 }

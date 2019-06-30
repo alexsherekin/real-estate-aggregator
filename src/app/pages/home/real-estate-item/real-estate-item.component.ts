@@ -9,7 +9,7 @@ import { Advertisement, Address, RealEstate } from '../../../shared/third-party-
 export class RealEstateItemComponent implements OnInit, OnChanges {
   @Input()
   public item: Advertisement;
-
+  // https://www.immonet.de/immobiliensuche/sel.do?sortby=0&suchart=1&fromarea=10&parentcat=1&marketingtype=1&toprice=150000&fromrooms=2&pageoffset=0&listsize=10&page=1&locationName=W%C3%BCrzburg&city=153145
   public realEstate: RealEstate;
   public address: Address;
   public linkToSource: string;

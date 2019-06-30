@@ -10,14 +10,15 @@ import { Observable } from 'rxjs';
 export class TypeaheadComponent implements OnChanges {
   @Input() dataSource$: Observable<any>;
   @Input() bindValue: string;
+  @Input() searchField: string;
   @Input() placeholder: string;
-  @Input() value: string;
+  @Input() value: any;
 
   @Output() search = new EventEmitter<string>();
-  @Output() select = new EventEmitter<any>();
+  @Output() itemSelected = new EventEmitter<any>();
 
   public searchValue: string;
-  public selectedOption: string;
+  public selectedOption: any;
 
   public get showList() {
     return !this.selectedOption && (
@@ -32,19 +33,22 @@ export class TypeaheadComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['value']) {
-      this.selectedOption = changes.value.currentValue;
+      this.selectedOption = {
+        [this.searchField]: changes.value.currentValue
+      };
       this.searchValue = changes.value.currentValue;
     }
   }
 
   public selectValue(option: any) {
-    this.searchValue = this.selectedOption = option[this.bindValue];
-    this.select.emit(this.selectedOption);
+    this.selectedOption = option;
+    this.searchValue = option[this.searchField];
+    this.itemSelected.emit(this.selectedOption);
   }
 
   public searchTermChanged() {
     this.selectedOption = undefined;
     this.search.emit(this.searchValue);
-    this.select.emit(this.selectedOption);
+    this.itemSelected.emit(this.selectedOption);
   }
 }

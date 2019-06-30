@@ -1,0 +1,110 @@
+{
+  "Autocomplete": {
+    "url": "https://www.wunschimmo.de/autocomplete?query=97070",
+    "response": [
+      {
+        "geoid": "1315197070",
+        "label": "97070 W\u00fcrzburg",
+        "sublabel": "kreisfreie Stadt",
+        "url": "bayern,stadt-wuerzburg,wurzburg,97070",
+        "id_bl": "2",
+        "id_lk": "141",
+        "id_vg": "0",
+        "id_ge": "3151"
+      },
+      {
+        "geoid": "1315197078",
+        "label": "97078 W\u00fcrzburg",
+        "sublabel": "kreisfreie Stadt",
+        "url": "bayern,stadt-wuerzburg,wurzburg,97078",
+        "id_bl": "2",
+        "id_lk": "141",
+        "id_vg": "0",
+        "id_ge": "3151"
+      },
+      {
+        "geoid": "1315197073",
+        "label": "97073 W\u00fcrzburg",
+        "sublabel": "kreisfreie Stadt",
+        "url": "bayern,stadt-wuerzburg,wurzburg,97073",
+        "id_bl": "2",
+        "id_lk": "141",
+        "id_vg": "0",
+        "id_ge": "3151"
+      },
+      {
+        "geoid": "1315197076",
+        "label": "97076 W\u00fcrzburg",
+        "sublabel": "kreisfreie Stadt",
+        "url": "bayern,stadt-wuerzburg,wurzburg,97076",
+        "id_bl": "2",
+        "id_lk": "141",
+        "id_vg": "0",
+        "id_ge": "3151"
+      },
+      {
+        "geoid": "1315197071",
+        "label": "97071 W\u00fcrzburg",
+        "sublabel": "kreisfreie Stadt",
+        "url": "bayern,stadt-wuerzburg,wurzburg,97071",
+        "id_bl": "2",
+        "id_lk": "141",
+        "id_vg": "0",
+        "id_ge": "3151"
+      },
+      {
+        "geoid": "1315197079",
+        "label": "97079 W\u00fcrzburg",
+        "sublabel": "kreisfreie Stadt",
+        "url": "bayern,stadt-wuerzburg,wurzburg,97079",
+        "id_bl": "2",
+        "id_lk": "141",
+        "id_vg": "0",
+        "id_ge": "3151"
+      },
+      {
+        "geoid": "1315197074",
+        "label": "97074 W\u00fcrzburg",
+        "sublabel": "kreisfreie Stadt",
+        "url": "bayern,stadt-wuerzburg,wurzburg,97074",
+        "id_bl": "2",
+        "id_lk": "141",
+        "id_vg": "0",
+        "id_ge": "3151"
+      },
+      {
+        "geoid": "1315197077",
+        "label": "97077 W\u00fcrzburg",
+        "sublabel": "kreisfreie Stadt",
+        "url": "bayern,stadt-wuerzburg,wurzburg,97077",
+        "id_bl": "2",
+        "id_lk": "141",
+        "id_vg": "0",
+        "id_ge": "3151"
+      },
+      {
+        "geoid": "1315197072",
+        "label": "97072 W\u00fcrzburg",
+        "sublabel": "kreisfreie Stadt",
+        "url": "bayern,stadt-wuerzburg,wurzburg,97072",
+        "id_bl": "2",
+        "id_lk": "141",
+        "id_vg": "0",
+        "id_ge": "3151"
+      },
+      {
+        "geoid": "1315197075",
+        "label": "97075 W\u00fcrzburg",
+        "sublabel": "kreisfreie Stadt",
+        "url": "bayern,stadt-wuerzburg,wurzburg,97075",
+        "id_bl": "2",
+        "id_lk": "141",
+        "id_vg": "0",
+        "id_ge": "3151"
+      }
+    ],
+  },
+  "Data": {
+    "url": "https://www.wunschimmo.de/suche/hessen,frankfurt-am-main,frankfurt/{wohnung|haus}-{mieten|kaufen}?page=1&umkreis=20&preis_bis=bis%201000%E2%82%AC&flaeche_ab=ab%2020m%C2%B2&zimmer=2"
+  }
+}

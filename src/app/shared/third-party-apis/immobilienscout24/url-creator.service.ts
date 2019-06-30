@@ -7,9 +7,9 @@ import { Sorting } from '../../types/sorting';
 import { RealEstateTypeString3 } from './data/data-items-response';
 
 @Injectable()
-export class UrlCreatorService {
+export class ImmobilienScout24UrlCreatorService {
   public static createAdvertimentUrl(id: string) {
-    return `${UrlCreatorService.baseUrl}/expose/${id}`;
+    return `${ImmobilienScout24UrlCreatorService.baseUrl}/expose/${id}`;
   }
 
   public static createSearchPlaceUrl(searchQuery: string) {
@@ -22,7 +22,7 @@ export class UrlCreatorService {
       // 'street',
       // 'trainStation',
     ];
-    const url = `${UrlCreatorService.baseUrl}/geoautocomplete/v3/locations.json`;
+    const url = `${ImmobilienScout24UrlCreatorService.baseUrl}/geoautocomplete/v3/locations.json`;
     const urlQuery = `i=${searchQuery}&t=${searchAs.join(',')}`;
     return `${url}?${urlQuery}`;
   }
@@ -42,15 +42,18 @@ export class UrlCreatorService {
     const county = this.convertString(apartment.county);
     const city = this.convertString(apartment.city);
 
-    return `${UrlCreatorService.baseUrl}/Suche/${this.convertSorting(search.sorting)}/${this.convertMarketingType(apartment.marketingType, apartment.realEstateType)}/${county}/${city}/${districts}/${roomsCount}/${square}/${price}`;
+    return `${ImmobilienScout24UrlCreatorService.baseUrl}/Suche/${this.convertSorting(search.sorting)}/${this.convertMarketingType(apartment.marketingType, apartment.realEstateType)}/${county}/${city}/${districts}/${roomsCount}/${square}/${price}`;
   }
 
-  public createSearchLocationUrl(queryString: string) {
-    return UrlCreatorService.createSearchPlaceUrl(queryString);
+  public createLocationAutocompleteUrl(queryString: string) {
+    return ImmobilienScout24UrlCreatorService.createSearchPlaceUrl(queryString);
   }
 
   public addBaseUrl(url: string) {
-    return `${UrlCreatorService.baseUrl}${url}`;
+    if (url.startsWith(ImmobilienScout24UrlCreatorService.baseUrl)) {
+      return url;
+    }
+    return `${ImmobilienScout24UrlCreatorService.baseUrl}${url}`;
   }
 
 

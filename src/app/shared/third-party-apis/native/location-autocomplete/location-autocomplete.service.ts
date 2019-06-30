@@ -19,6 +19,7 @@ export class LocationAutocompleteService {
           .filter(city => ~city.toLowerCase().indexOf(searchQuery))
           .map(city => {
             return {
+              id: city,
               type: LocationType.city,
               label: city,
             }

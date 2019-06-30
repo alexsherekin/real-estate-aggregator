@@ -1,0 +1,42 @@
+{
+  "Autocomplete": {
+    "url": "https://www.immonet.de/in-immoobject-search/v1/autocomplete?query=9707",
+    "response": {
+      "data": [
+        {
+          "id": "97070",
+          "type": "zip",
+          "name": "97070 Würzburg",
+          "top": false
+        },
+        {
+          "id": "97072",
+          "type": "zip",
+          "name": "97072 Würzburg",
+          "top": false
+        },
+        {
+          "id": "97074",
+          "type": "zip",
+          "name": "97074 Würzburg",
+          "top": false
+        },
+        {
+          "id": "97076",
+          "type": "zip",
+          "name": "97076 Würzburg",
+          "top": false
+        },
+        {
+          "id": "97078",
+          "type": "zip",
+          "name": "97078 Würzburg",
+          "top": false
+        }
+      ]
+    }
+  },
+  "data": {
+    "url": "https://www.immonet.de/immobiliensuche/sel.do?sortby=0&suchart=1&zip=97070&fromarea=10&objecttype=1&marketingtype=2&parentcat=1&toprice=1000&fromrooms=2&pageoffset=1&listsize=26&page=2&locationname=97070+Würzburg"
+  }
+}

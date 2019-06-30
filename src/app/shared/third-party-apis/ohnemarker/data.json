@@ -1,0 +1,15 @@
+{
+  "Autocomplete": {
+    "url": "https://www.ohne-makler.net/geodb/cities/find/?term=97070",
+    "response": [
+      "97070: Würzburg",
+      "97072: Würzburg",
+      "97074: Würzburg",
+      "97076: Würzburg",
+      "97078: Würzburg"
+    ],
+  },
+  "Data": {
+    "url": "https://www.ohne-makler.net/immobilien/{wohnung|haus}-{mieten|kaufen}/bayern/wurzburg/?radius=10"
+  }
+}

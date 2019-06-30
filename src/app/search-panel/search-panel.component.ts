@@ -121,10 +121,13 @@ export class SearchPanelComponent implements OnInit {
     this.cityChanged$.next(value);
   }
 
-  public cityChanged(value: string | Event) {
-    if (typeof value === 'string') {
+  public cityChanged(value: any | Event) {
+    if (value && value.id) {
       this.store.dispatch(new SaveSettings({
-        city: value || ''
+        city: value.label || '',
+        locationSettings: {
+          'location': value
+        }
       }));
     }
   }

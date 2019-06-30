@@ -1,6 +1,6 @@
 <ion-item class="snui-toolbar-subtle-input-item">
 
-  <ion-label>
+  <ion-label position="floating">
     <ion-icon name="search"></ion-icon>
     {{ placeholder }}
   </ion-label>
@@ -12,12 +12,11 @@
 
 </ion-item>
 
-<ng-container *ngFor="let option of dataSource$ | async">
-  <ng-container *ngIf="showList">
-    <ion-item (click)="selectValue(option)">
-      <ion-label>
-        {{ option[bindValue] }}
-      </ion-label>
-    </ion-item>
-  </ng-container>
+<ng-container *ngIf="searchValue && searchValue !== value">
+  <ion-item *ngFor="let option of dataSource$ | async"
+    (click)="selectValue(option)">
+    <ion-label>
+      {{ option[bindValue] }}
+    </ion-label>
+  </ion-item>
 </ng-container>

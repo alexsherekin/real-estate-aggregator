@@ -8,14 +8,14 @@ import { ApartmentRequirements } from '../../types/search-description';
 import { SearchSettings } from '../../types/search-settings';
 import { ItemsResponse } from './data/data-items-response';
 import { LocationAutocompleteResponse } from './location-autocomplete/location-autocomplete-response';
-import { UrlCreatorService } from './url.creator.service';
+import { ImmobilienScout24UrlCreatorService } from './url-creator.service';
 
 @Injectable({ providedIn: 'root' })
 export class ImmobilienScout24ConnectorService {
   constructor(
     private http: HTTP,
     private httpClient: HttpClient,
-    private urlCreator: UrlCreatorService,
+    private urlCreator: ImmobilienScout24UrlCreatorService,
   ) {
 
   }
@@ -69,7 +69,7 @@ export class ImmobilienScout24ConnectorService {
   }
 
   public searchLocation(searchQuery: string): Observable<LocationAutocompleteResponse> {
-    const url = this.urlCreator.createSearchLocationUrl(searchQuery);
+    const url = this.urlCreator.createLocationAutocompleteUrl(searchQuery);
     this.http.setDataSerializer('json');
     if (window.cordova) {
       return from(this.http.get(url, {}, { "Content-Type": "application/json" }))

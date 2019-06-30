@@ -1,0 +1,74 @@
+{
+  "Autocomplete": {
+    "url": "post https://www.immobilien.de/",
+    "args": {
+      "args.autocomplete.property": "wo",
+      "args.autocomplete.value": "9707",
+      "gui": "component",
+      "name": "finder_template_v2",
+      "id": "rn_11443",
+      "_secret": "915054d",
+      "ecc": "rn_11443",
+      "args.__ecc__": "rn_11443",
+      "args.gui": "autocomplete"
+    },
+    "response": {
+      "entries": [],
+      "groups": [
+        {
+          "label": "",
+          "values": [
+            {
+              "id": "city:2086",
+              "label": "97070 Würzburg",
+              "url": ""
+            },
+            {
+              "id": "district:459",
+              "label": "97070 Würzburg - Altstadt",
+              "url": ""
+            },
+            {
+              "id": "district:460",
+              "label": "97082 Würzburg - Altstadt",
+              "url": ""
+            },
+            {
+              "id": "district:462",
+              "label": "97080 Würzburg - Altstadt",
+              "url": ""
+            },
+            {
+              "id": "district:452",
+              "label": "97072 Würzburg - Altstadt",
+              "url": ""
+            },
+            {
+              "id": "district:461",
+              "label": "97080 Würzburg - Dürrbachau",
+              "url": ""
+            },
+            {
+              "id": "district:453",
+              "label": "97074 Würzburg - Frauenland",
+              "url": ""
+            },
+            {
+              "id": "district:449",
+              "label": "97076 Würzburg - Grombühl",
+              "url": ""
+            },
+            {
+              "id": "district:471",
+              "label": "97078 Würzburg - Grombühl",
+              "url": ""
+            }
+          ]
+        }
+      ]
+    },
+  },
+  "Data": {
+    "url": "ttps://www.immobilien.de/Wohnen/Suchergebnisse-51797.html?search._digest=true&search._filter=wohnen&search.typ=mieten&search.objektart=wohnung&search.wo=city%3A2086&search.umkreis=10&search.preis_bis=1000&search.flaeche_von=10&search.zimmer_von=1"
+  }
+}

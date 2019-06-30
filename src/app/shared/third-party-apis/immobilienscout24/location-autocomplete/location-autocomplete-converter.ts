@@ -18,6 +18,7 @@ function convertItem(locationItem: ImmobilienScout24LocationAutocompleteItem): L
     return undefined;
   }
   return {
+    id: locationItem.entity.id,
     label: locationItem.entity.label,
     type: convertType(locationItem.entity.type),
   };

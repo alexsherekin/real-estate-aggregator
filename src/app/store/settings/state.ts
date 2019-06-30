@@ -1,5 +1,6 @@
 import { Sorting } from '../../shared/types/sorting';
 import { MarketingType, RealEstateType } from '../../shared/third-party-apis/native/address';
+import { LocationAutocompleteItem } from '../..//shared/third-party-apis/native/location-autocomplete/location-autocomplete';
 
 export enum Phase {
   unknown = 'unknown',
@@ -22,6 +23,7 @@ export interface IFilters {
   marketingType?: MarketingType,
   realEstateType?: RealEstateType,
 
+  locationSettings?: { [key: string]: LocationAutocompleteItem },
   county?: string,
   city?: string | { label: string },
   districts?: Array<string>,

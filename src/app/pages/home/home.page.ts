@@ -4,13 +4,12 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 
 import { IDataProvider } from '../../shared/lib/data-provider';
-import { ImmobilienScout24DataProvider } from '../../shared/third-party-apis/immobilienscout24';
+import { ImmoweltDataProvider, LocationAutocompleteService } from '../../shared/third-party-apis/immowelt';
 import { Advertisement } from '../../shared/third-party-apis/native/address';
 import {
   BaseLocationAutocompleteService,
 } from '../../shared/third-party-apis/native/location-autocomplete/base-location-autocomplete.service';
 import { Phase } from '../../store/settings';
-import { LocationAutocompleteService } from '../../../app/shared/third-party-apis/native/location-autocomplete/location-autocomplete.service';
 
 @Component({
   selector: 'app-home',
@@ -30,7 +29,7 @@ export class HomePage implements OnDestroy {
   private loadingOverlayPromise: Promise<HTMLIonLoadingElement>;
 
   constructor(
-    dataProvider: ImmobilienScout24DataProvider,
+    dataProvider: ImmoweltDataProvider,
     loading: LoadingController,
     private translate: TranslateService,
   ) {

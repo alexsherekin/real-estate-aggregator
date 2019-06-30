@@ -15,8 +15,9 @@
     [value]="apartment.city"
     [placeholder]="'ApartmentDescription.City' | translate"
     [bindValue]="'label'"
+    [searchField]="'label'"
     (search)="citySearchChanged($event)"
-    (select)="cityChanged($event)">
+    (itemSelected)="cityChanged($event)">
   </app-typeahead>
   <ion-item>
     <ion-label position="floating">{{ "ApartmentDescription.County" | translate }}</ion-label>

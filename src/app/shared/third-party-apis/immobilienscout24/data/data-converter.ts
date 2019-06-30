@@ -7,7 +7,7 @@ import {
   RealEstateShortDescription,
   RealEstateTypeNumber,
 } from './data-items-response';
-import { UrlCreatorService } from '../url.creator.service';
+import { ImmobilienScout24UrlCreatorService } from '../url-creator.service';
 
 const titleImageSize = 500;
 
@@ -21,7 +21,7 @@ export function convertData(entries: RealEstateFullDescription[], marketingType:
       id: entry['@id'],
       modification: new Date(entry['@modification']),
       creation: new Date(entry['@publichDate']),
-      url: UrlCreatorService.createAdvertimentUrl(entry['@id']),
+      url: ImmobilienScout24UrlCreatorService.createAdvertimentUrl(entry['@id']),
       title: getTitle(entry['resultlist.realEstate']),
       picture: getPictures(entry['resultlist.realEstate'])[0],
       realEstate: getRealEstate(entry, marketingType),
