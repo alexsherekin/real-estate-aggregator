@@ -81,7 +81,6 @@ function getAddress(address: RealEstateAddress): Address {
     houseNumber: address.houseNumber,
     postcode: address.postcode,
     city: address.city,
-    county: '',
     country: '',
     quarter: address.quarter,
     coordinates: getCoordinate(address.wgs84Coordinate),

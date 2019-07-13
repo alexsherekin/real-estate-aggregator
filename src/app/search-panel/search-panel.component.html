@@ -22,13 +22,6 @@
     (itemSelected)="cityChanged($event)">
   </app-typeahead>
   <ion-item>
-    <ion-label position="floating">{{ "ApartmentDescription.County" | translate }}</ion-label>
-    <ion-input right
-      type="text"
-      [ngModel]="apartment.county"
-      (ngModelChange)="countyChanged($event)"></ion-input>
-  </ion-item>
-  <ion-item>
     <ion-label position="stacked">
       {{ ("ApartmentDescription.RoomsCount" | translate) + '(' + apartment.minRoomsCount + ' - ' + apartment.maxRoomsCount + ')' }}
     </ion-label>

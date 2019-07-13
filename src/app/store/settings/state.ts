@@ -24,7 +24,6 @@ export interface IFilters {
   realEstateType?: RealEstateType,
 
   locationSettings?: { [key: string]: LocationAutocompleteItem },
-  county?: string,
   city?: string | { label: string },
   districts?: Array<string>,
   minRoomsCount?: number,

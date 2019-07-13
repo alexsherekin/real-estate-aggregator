@@ -11,7 +11,6 @@ export const defaultSettings: ISettingsState = {
     payload: undefined,
   },
   filters: {
-    county: 'Bayern',
     city: 'Wuerzburg',
     minSquare: 0,
     maxSquare: 100,

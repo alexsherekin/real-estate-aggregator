@@ -73,7 +73,6 @@ export interface Address {
   houseNumber?: string,
   postcode?: string,
   city: string,
-  county?: string,
   country?: string,
   quarter?: string,
   coordinates?: {

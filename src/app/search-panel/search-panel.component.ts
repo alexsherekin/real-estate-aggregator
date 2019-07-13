@@ -139,12 +139,6 @@ export class SearchPanelComponent implements OnInit {
     }
   }
 
-  public countyChanged(value: string) {
-    this.store.dispatch(new SaveSettings({
-      county: value
-    }));
-  }
-
   public roomsCountChanged({ lower, upper } = { lower: 0, upper: 5 }) {
     this.store.dispatch(new SaveSettings({
       minRoomsCount: lower,
