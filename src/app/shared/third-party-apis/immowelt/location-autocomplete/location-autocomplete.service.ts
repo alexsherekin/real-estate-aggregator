@@ -5,7 +5,7 @@ import { BaseLocationAutocompleteService } from '../../native/location-autocompl
 import { ImmoweltConnectorService } from '../connector.service';
 import { convertAutocompleteResponse } from './location-autocomplete-converter';
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class LocationAutocompleteService extends BaseLocationAutocompleteService {
   constructor(
     private connector: ImmoweltConnectorService,

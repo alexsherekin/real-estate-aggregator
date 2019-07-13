@@ -6,14 +6,13 @@ import { catchError, delay, map, switchMap } from 'rxjs/operators';
 
 import { ApartmentRequirements } from '../../types/search-description';
 import { SearchSettings } from '../../types/search-settings';
-import { ItemsResponse, RealEstateTypeString2 } from './data/data-items-response';
-import { LocationAutocompleteResponse, LocationAutocompleteItem } from './location-autocomplete/location-autocomplete-response';
+import { ItemsResponse } from './data/data-items-response';
+import { LocationAutocompleteResponse } from './location-autocomplete/location-autocomplete-response';
 import { ImmobilienScout24UrlCreatorService } from './url-creator.service';
-import { MarketingType, RealEstateType } from '../native';
 
 
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class ImmobilienScout24ConnectorService {
   constructor(
     private http: HTTP,

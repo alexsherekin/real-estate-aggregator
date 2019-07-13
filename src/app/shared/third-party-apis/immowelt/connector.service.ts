@@ -29,7 +29,7 @@ interface ParserItemConfig {
   post?: (value: string) => any;
 }
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class ImmoweltConnectorService {
   constructor(
     private http: HTTP,
@@ -141,6 +141,20 @@ export class ImmoweltConnectorService {
           } as RealEstatePrice;
         }
       },
+      calculatedPrice: {
+        selector: '[id^="selPrice_"] .text-250',
+        post: (value: string) => {
+          if (value === undefined || value === null) {
+            value = '';
+          }
+          const isEuro = value.includes('€');
+          value = value.replace(/[,]/g, '.');
+          return {
+            value: parseInt((/\s*[0-9]+/.exec(value) || '').toString()),
+            currency: isEuro ? 'EUR' : 'USD'
+          } as RealEstatePrice;
+        }
+      },
       livingSpace: {
         selector: '[id^="selArea_"] .text-250',
         post: (value: string) => {
@@ -177,7 +191,7 @@ export class ImmoweltConnectorService {
         livingSpace: this.getDataItem(config.livingSpace, item)[0],
         numberOfRooms: this.getDataItem(config.numberOfRooms, item)[0],
         price: this.getDataItem(config.price, item)[0],
-        calculatedPrice: this.getDataItem(config.price, item)[0],
+        calculatedPrice: this.getDataItem(config.calculatedPrice, item)[0],
         titlePicture: this.getDataItem(config.image, item)[0],
       } as Partial<ItemsResponseResultListEntry>;
     });

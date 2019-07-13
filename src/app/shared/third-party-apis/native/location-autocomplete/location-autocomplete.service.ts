@@ -5,7 +5,7 @@ import { Observable, of } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class LocationAutocompleteService {
   private readonly cities = [
     'Würzburg',
