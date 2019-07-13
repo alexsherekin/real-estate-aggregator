@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
+import { NgModule, ModuleWithProviders, Provider } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
@@ -23,6 +23,23 @@ import { RealEstateListComponent } from './real-estate-list/real-estate-list.com
     HomePage,
     RealEstateListComponent,
     RealEstateItemComponent,
+  ],
+  exports: [
+    IonicModule,
+    CommonModule,
+    FormsModule,
+    HomePageRoutingModule,
+    TranslateModule,
+    SearchPanelModule,
   ]
 })
-export class HomePageModule { }
+export class HomePageModule {
+  public static forChild(providers: Provider[]): ModuleWithProviders {
+    return {
+      ngModule: HomePageModule,
+      providers: [
+        ...providers
+      ]
+    };
+  }
+}

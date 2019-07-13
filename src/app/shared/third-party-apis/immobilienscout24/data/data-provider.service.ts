@@ -12,7 +12,7 @@ import { ItemsResponse, RealEstateFullDescription, RealEstateTypeNumber } from '
 import { Advertisement } from '../../native/address';
 import { convertData } from './data-converter';
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class ImmobilienScout24DataProvider implements IDataProvider {
   private searchBySettings_s$ = new BehaviorSubject(undefined);
   private searchByUrl_s$ = new BehaviorSubject(undefined);

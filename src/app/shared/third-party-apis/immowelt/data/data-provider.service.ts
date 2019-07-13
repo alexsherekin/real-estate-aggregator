@@ -14,7 +14,7 @@ import { ItemsResponse, ItemsResponseResultListEntry } from './data-items-respon
 import { Advertisement } from '../../native/address';
 import { convertData } from './data-converter';
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class ImmoweltDataProvider implements IDataProvider {
   private searchBySettings_s$ = new BehaviorSubject(undefined);
   private searchByUrl_s$ = new BehaviorSubject(undefined);

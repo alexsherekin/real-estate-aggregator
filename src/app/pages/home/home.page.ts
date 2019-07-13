@@ -1,23 +1,16 @@
-import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnDestroy, ViewChild, Injector, Inject } from '@angular/core';
 import { IonInfiniteScroll, LoadingController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 
-import { IDataProvider } from '../../shared/lib/data-provider';
-import { ImmoweltDataProvider, LocationAutocompleteService } from '../../shared/third-party-apis/immowelt';
-import { Advertisement } from '../../shared/third-party-apis/native/address';
-import {
-  BaseLocationAutocompleteService,
-} from '../../shared/third-party-apis/native/location-autocomplete/base-location-autocomplete.service';
+import { IDataProvider, IDataProviderInjectionToken } from '../../shared/lib/data-provider';
+import { Advertisement } from '../../shared/third-party-apis/native';
 import { Phase } from '../../store/settings';
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
-  providers: [
-    { provide: BaseLocationAutocompleteService, useClass: LocationAutocompleteService }
-  ]
 })
 export class HomePage implements OnDestroy {
   public itemsLoaded_i$: Observable<Array<Advertisement>>;
@@ -25,21 +18,19 @@ export class HomePage implements OnDestroy {
   public Phase = Phase;
 
   private subscriptions: Subscription[] = [];
-  private dataProvider: IDataProvider;
   private loadingOverlayPromise: Promise<HTMLIonLoadingElement>;
 
   constructor(
-    dataProvider: ImmoweltDataProvider,
-    loading: LoadingController,
+    @Inject(IDataProviderInjectionToken) private dataProvider: IDataProvider,
+    private loading: LoadingController,
     private translate: TranslateService,
   ) {
-    this.dataProvider = dataProvider;
     this.itemsLoaded_i$ = this.dataProvider.itemsLoaded_i$;
     this.itemsLoadingState_i$ = this.dataProvider.itemsLoadingState_i$;
 
     const itemsLoadingStateSub = this.dataProvider.itemsLoadingState_i$.subscribe(state => {
       if (state === Phase.running && !this.loadingOverlayPromise) {
-        this.loadingOverlayPromise = loading.create({
+        this.loadingOverlayPromise = this.loading.create({
           message: this.translate.instant('LoadingController.Wait'),
         }).then(loadingOverlay => {
           loadingOverlay.present();

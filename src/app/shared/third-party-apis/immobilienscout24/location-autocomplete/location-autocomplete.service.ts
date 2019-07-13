@@ -5,7 +5,7 @@ import { BaseLocationAutocompleteService } from '../../native/location-autocompl
 import { ImmobilienScout24ConnectorService } from '../connector.service';
 import { convertAurocompleteResponse } from './location-autocomplete-converter';
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class LocationAutocompleteService extends BaseLocationAutocompleteService {
   constructor(
     private connector: ImmobilienScout24ConnectorService,
