@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 
@@ -9,6 +9,7 @@ import { Observable } from 'rxjs';
 })
 export class TypeaheadComponent implements OnChanges {
   @Input() dataSource$: Observable<any>;
+  @Input() loading: boolean;
   @Input() bindValue: string;
   @Input() searchField: string;
   @Input() placeholder: string;
@@ -29,6 +30,7 @@ export class TypeaheadComponent implements OnChanges {
 
   constructor(
     protected translateService: TranslateService,
+    public cd: ChangeDetectorRef,
   ) {
   }
 

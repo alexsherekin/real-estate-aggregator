@@ -4,6 +4,7 @@ import { HTTP } from '@ionic-native/http/ngx';
 import { ImmobilienScout24ConnectorService, ImmobilienScout24DataProvider, ImmobilienScout24UrlCreatorService } from './third-party-apis/immobilienscout24';
 import { LocationAutocompleteService } from './third-party-apis/immobilienscout24/location-autocomplete/location-autocomplete.service';
 import { ImmoweltConnectorService, ImmoweltDataProvider, ImmoweltUrlCreatorService } from './third-party-apis/immowelt';
+import { Http } from './services/http';
 
 @NgModule({
   providers: [
@@ -14,7 +15,8 @@ import { ImmoweltConnectorService, ImmoweltDataProvider, ImmoweltUrlCreatorServi
     ImmoweltDataProvider,
     ImmoweltUrlCreatorService,
     LocationAutocompleteService,
-    HTTP
+    HTTP,
+    Http,
   ]
 })
 export class SharedModule { }

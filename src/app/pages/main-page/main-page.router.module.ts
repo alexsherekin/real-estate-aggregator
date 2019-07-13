@@ -13,7 +13,7 @@ const routes: Routes = [
         children: [
           {
             path: '',
-            loadChildren: '../home/immoscout24.module#Immoscout24PageModule'
+            loadChildren: '../../shared/third-party-apis/immobilienscout24/immoscout24.module#Immoscout24PageModule'
           }
         ]
       },
@@ -22,7 +22,7 @@ const routes: Routes = [
         children: [
           {
             path: '',
-            loadChildren: '../home/immowelt.module#ImmoweltPageModule'
+            loadChildren: '../../shared/third-party-apis/immowelt/immowelt.module#ImmoweltPageModule'
           }
         ]
       },

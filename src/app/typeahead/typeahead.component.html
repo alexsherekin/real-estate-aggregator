@@ -12,12 +12,24 @@
 
 </ion-item>
 
-<div *ngIf="!selectedOption"
-  class="popup">
-  <ion-item *ngFor="let option of dataSource$ | async"
-    (click)="selectValue(option)">
-    <ion-label>
-      {{ option[bindValue] }}
-    </ion-label>
-  </ion-item>
+<div class="popup"
+  [class.hidden]="selectedOption && !loading">
+  <div class="spinner-container"
+    [class.hidden]="!loading">
+    <ion-spinner></ion-spinner>
+  </div>
+  <div class="items-container">
+    <ion-item>
+      <ion-label>
+        Nothing found
+      </ion-label>
+    </ion-item>
+    <ion-item *ngFor="let option of dataSource$ | async"
+      [class.hidden]="loading"
+      (click)="selectValue(option)">
+      <ion-label>
+        {{ option[bindValue] }}
+      </ion-label>
+    </ion-item>
+  </div>
 </div>

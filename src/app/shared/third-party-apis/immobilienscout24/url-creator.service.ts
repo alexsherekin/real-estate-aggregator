@@ -1,23 +1,35 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { HTTP } from '@ionic-native/http/ngx';
+import { from, Observable } from 'rxjs';
+import { delay, map } from 'rxjs/operators';
 
-import { MarketingType, RealEstateType } from '../native/address';
 import { ApartmentRequirements } from '../../types/search-description';
 import { SearchSettings } from '../../types/search-settings';
 import { Sorting } from '../../types/sorting';
-import { RealEstateTypeString3 } from './data/data-items-response';
+import { MarketingType, RealEstateType } from '../native/address';
+import { RealEstateTypeString2, RealEstateTypeString3 } from './data/data-items-response';
+import { Http } from '../../services/http';
 
 @Injectable()
 export class ImmobilienScout24UrlCreatorService {
+  constructor(
+    private http: Http,
+  ) {
+
+  }
+
   public static createAdvertimentUrl(id: string) {
     return `${ImmobilienScout24UrlCreatorService.baseUrl}/expose/${id}`;
   }
 
   public static createSearchPlaceUrl(searchQuery: string) {
     const searchAs = [
-      'country',
-      'region',
+      'city',
+      // 'country',
+      // 'region',
       // 'district',
-      'quarterOrTown',
+      // 'quarterOrTown',
       'postcode',
       // 'street',
       // 'trainStation',
@@ -32,17 +44,185 @@ export class ImmobilienScout24UrlCreatorService {
   // https://www.immobilienscout24.de/Suche/{sortingType}/{marketingType}/{County}/{City}/{Districts}/{minRooms}-{maxRooms}/{minSquare}-{maxSquare}/EURO-{minPrice}-{maxPrice}
   private static readonly baseUrl = 'https://www.immobilienscout24.de';
 
-  public createSearchUrl(apartment: ApartmentRequirements, search: SearchSettings) {
-    const districts = (apartment.districts || []).join('_') || '-';
+  public createSearchUrl(apartment: ApartmentRequirements, search: SearchSettings): Observable<string> {
+    const url = `https://www.immobilienscout24.de/Suche/controller/search/change.go?sortingCode=2&otpEnabled=false&viewMode=LIST&ssm=DRAWN`;
     const rawPrice = apartment.marketingType === MarketingType.BUY ? apartment.buyPrice : apartment.rentPrice;
-    const priceRange = this.convertRange(rawPrice.minPrice, rawPrice.maxPrice);
-    const price = priceRange ? `EURO-${priceRange}` : '-';
-    const square = this.convertRange(apartment.minSquare, apartment.maxSquare);
-    const roomsCount = this.convertRange(apartment.minRoomsCount, apartment.maxRoomsCount);
-    const county = this.convertString(apartment.county);
-    const city = this.convertString(apartment.city);
+    const geoId = apartment.locationSettings && apartment.locationSettings.location && apartment.locationSettings.location.id || '0';
+    const body = {
+      "view": "IS24",
+      "realEstateType": this.getMarketingType(apartment),
+      "locationSelectionType": "GEO_HIERARCHY",
+      "netAreaRange": {
+        "min": apartment.minSquare,
+        "max": apartment.maxSquare,
+      },
+      "numberOfRoomsRange": {
+        "min": apartment.minRoomsCount,
+        "max": apartment.maxRoomsCount,
+      },
+      "netRentRange": {
+        "min": rawPrice.minPrice,
+        "max": rawPrice.maxPrice,
+      },
+      "geoInfoNodes": [
+        parseInt(geoId, 10)
+      ],
+      "geoHierarchySearch": true,
+      apartmentTypes: [],
+      apiField1: null,
+      apiField2: null,
+      apiField3: null,
+      assistedLivingCommercializationType: null,
+      auctionObjectTypes: [],
+      beginRent: null,
+      budgetRentRange: null,
+      buildingProjectId: null,
+      careTypes: [],
+      centerOfSearchAddress: null,
+      centerX: null,
+      centerY: null,
+      clipShape: null,
+      companyWideCustomerId: null,
+      constructionPhaseTypes: [],
+      energyEfficiencyClasses: [],
+      firstActivationRange: null,
+      flatMateGender: null,
+      flatShareSize: null,
+      floorRange: null,
+      fullTextQuery: null,
+      furnishing: null,
+      garageTypes: [],
+      gastronomyTypes: [],
+      handicappedAccessible: false,
+      handoverPermitted: null,
+      hasRented: null,
+      heatingTypes: [],
+      historicalSearch: false,
+      houseTypeTypes: [],
+      houseTypes: [],
+      industryTypes: [],
+      investObjectTypes: [],
+      lastModifiedAfter: null,
+      latestBeginRentRange: null,
+      locationClassifications: [],
+      lotSizeRange: null,
+      marketValueRange: null,
+      minRadius: null,
+      minimumInternetSpeed: null,
+      neighbourhoodIds: [],
+      numberOfBedsRange: null,
+      numberOfParkingSpacesRange: null,
+      numberOfPersons: null,
+      numberOfSeatsRange: null,
+      officeRentDurations: [],
+      officeTypes: [],
+      onlyBuildingProject: false,
+      onlyFlatShareSuitable: false,
+      onlyHandicappedAccessible: false,
+      onlyNewBuildingOrBuildingProject: false,
+      onlyNewHomeBuilder: false,
+      onlySecondAuctions: false,
+      onlyShortTermBuildable: false,
+      onlySplittingAuctions: false,
+      onlyWithAirConditioning: false,
+      onlyWithAmbulantNursingService: false,
+      onlyWithAvailableHighVoltageCurrent: false,
+      onlyWithBalcony: false,
+      onlyWithBarrierFree: false,
+      onlyWithBasement: false,
+      onlyWithCareOfAlzheimerDiseasePatients: false,
+      onlyWithCareOfArtificalRespirationPatients: false,
+      onlyWithCareOfDementiaPatients: false,
+      onlyWithCareOfMultipleSclerosisPatients: false,
+      onlyWithCareOfParkinsonsDiseasePatients: false,
+      onlyWithCareOfStrokePatients: false,
+      onlyWithCareOfVegetativeStatePatients: false,
+      onlyWithCooker: false,
+      onlyWithCookingPossibility: false,
+      onlyWithCraneRails: false,
+      onlyWithDishWasher: false,
+      onlyWithElevator: false,
+      onlyWithFridge: false,
+      onlyWithGarden: false,
+      onlyWithGuestToilet: false,
+      onlyWithHoist: false,
+      onlyWithInternet: false,
+      onlyWithItInfrastructure: false,
+      onlyWithKitchen: false,
+      onlyWithLiftingPlatform: false,
+      onlyWithLodgerFlat: false,
+      onlyWithOven: false,
+      onlyWithOwnFurnishingPossible: false,
+      onlyWithParking: false,
+      onlyWithPictures: false,
+      onlyWithPlanningPermission: false,
+      onlyWithRamp: false,
+      onlyWithShowcaseOrPremium: false,
+      onlyWithWashingMachine: false,
+      onlyWithoutCourtage: false,
+      onlyYellowPageEntries: false,
+      petsAllowedTypes: [],
+      premiumDeveloperProject: false,
+      priceMultiplierRange: null,
+      pricePerSqm: null,
+      priceRange: null,
+      priceRangeWithType: null,
+      radius: null,
+      realEstateIds: [],
+      rentDurationInMonths: null,
+      rentalPeriod: null,
+      roomTypes: [],
+      seniorCareLevels: [],
+      shape: null,
+      shapeIdentifiers: [],
+      shapeSearch: false,
+      shapes: [],
+      shortTermAccommodationType: null,
+      siteAreaRange: null,
+      siteConstructibleTypes: [],
+      siteDevelopmentTypes: [],
+      smokingAllowed: null,
+      smokingPermitted: null,
+      specialPurposePropertyTypes: [],
+      storeTypes: [],
+      toplisted: null,
+      totalAreaRange: null,
+      totalRentRange: null,
+      tradeSiteUtilizations: [],
+      trailLivingPossible: null,
+      travelTime: "NONE",
+      travelTimeSearch: false,
+      vendorGroup: null,
+      vicinitySearch: false,
+      virtualTourType: null,
+      withFurniture: null,
+      wohnberechtigungsscheinNeeded: null,
+      yearOfConstructionRange: null,
+    };
 
-    return `${ImmobilienScout24UrlCreatorService.baseUrl}/Suche/${this.convertSorting(search.sorting)}/${this.convertMarketingType(apartment.marketingType, apartment.realEstateType)}/${county}/${city}/${districts}/${roomsCount}/${square}/${price}`;
+    return this.http
+      .post<{ url: string }>(url, body, { 'Content-Type': 'application/json' })
+      .pipe(
+        map(result => {
+          return result && result.url ? this.addBaseUrl(result.url) : undefined;
+        }),
+        delay(1000)
+      );
+  }
+
+  private getMarketingType(apartment: ApartmentRequirements) {
+    const map = {
+      [RealEstateType.FLAT]: {
+        [MarketingType.BUY]: RealEstateTypeString2.ApartmentBuy,
+        [MarketingType.RENT]: RealEstateTypeString2.ApartmentRent,
+      },
+      [RealEstateType.HOUSE]: {
+        [MarketingType.BUY]: RealEstateTypeString2.HouseBuy,
+        [MarketingType.RENT]: RealEstateTypeString2.HouseRent,
+      }
+    };
+
+    return map[apartment.realEstateType][apartment.marketingType];
   }
 
   public createLocationAutocompleteUrl(queryString: string) {

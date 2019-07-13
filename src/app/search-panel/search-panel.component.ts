@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, Subject, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, tap, map } from 'rxjs/operators';
 
 import { MarketingType, RealEstateType } from '../shared/third-party-apis/native/address';
 import {
@@ -13,6 +13,7 @@ import { SearchSettings } from '../shared/types/search-settings';
 import { Sorting } from '../shared/types/sorting';
 import { settingsSelectors } from '../store/reducers';
 import { ISettingsState, SaveSettings, IFilters, Price } from '../store/settings';
+import { TypeaheadComponent } from '../typeahead/typeahead.component';
 
 enum UIMarketingType {
   ApartmentBuy = 'ApartmentBuy',
@@ -90,6 +91,9 @@ export class SearchPanelComponent implements OnInit {
 
   private cityChanged$ = new Subject<string>();
   public cityAutocomplete$: Observable<LocationAutocompleteItem[]>;
+  public cityAutocompleteLoading = false;
+
+  @ViewChild('cityTypeahead') public cityTypeahead: TypeaheadComponent;
 
   constructor(
     private store: Store<ISettingsState>,
@@ -106,12 +110,15 @@ export class SearchPanelComponent implements OnInit {
 
     this.cityAutocomplete$ = this.cityChanged$.pipe(
       switchMap(value => {
-        if (typeof value === 'string') {
-          return this.autocomplete.getLocationAutocomplete(value);
-        }
-        return of([]);
+        this.cityAutocompleteLoading = true;
+        return (typeof value === 'string') ? this.autocomplete.getLocationAutocomplete(value) : of([]);
       })
-    )
+    );
+
+    this.cityAutocomplete$.subscribe(() => {
+      this.cityAutocompleteLoading = false;
+      this.cityTypeahead.cd.markForCheck();
+    });
   }
 
   ngOnInit() {
