@@ -1,15 +1,13 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HTTP } from '@ionic-native/http/ngx';
-import { from, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { delay, map } from 'rxjs/operators';
 
+import { Http } from '../../services/http';
 import { ApartmentRequirements } from '../../types/search-description';
 import { SearchSettings } from '../../types/search-settings';
 import { Sorting } from '../../types/sorting';
 import { MarketingType, RealEstateType } from '../native/address';
 import { RealEstateTypeString2, RealEstateTypeString3 } from './data/data-items-response';
-import { Http } from '../../services/http';
 
 @Injectable()
 export class ImmobilienScout24UrlCreatorService {
@@ -203,9 +201,7 @@ export class ImmobilienScout24UrlCreatorService {
     return this.http
       .post<{ url: string }>(url, body, { 'Content-Type': 'application/json' })
       .pipe(
-        map(result => {
-          return result && result.url ? this.addBaseUrl(result.url) : undefined;
-        }),
+        map(result => result && result.url ? this.addBaseUrl(result.url) : undefined),
         delay(1000)
       );
   }

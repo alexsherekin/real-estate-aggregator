@@ -1,10 +1,9 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HTTP } from '@ionic-native/http/ngx';
-import { from, Observable, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { catchError, delay, map } from 'rxjs/operators';
 import * as urlParse from 'url-parse';
 
+import { Http } from '../../services/http';
 import { ApartmentRequirements } from '../../types/search-description';
 import { SearchSettings } from '../../types/search-settings';
 import {
@@ -32,8 +31,7 @@ interface ParserItemConfig {
 @Injectable()
 export class ImmoweltConnectorService {
   constructor(
-    private http: HTTP,
-    private httpClient: HttpClient,
+    private http: Http,
     private urlCreator: ImmoweltUrlCreatorService,
   ) {
 
@@ -65,29 +63,22 @@ export class ImmoweltConnectorService {
   }
 
   private _search(url: string): Observable<ItemsResponse> {
-    const data$ = (window.cordova) ?
-      from(this.http.get(url, [], {})).pipe(map(response => response.data)) :
-      this.httpClient.get<string>(url, {
-        headers: new HttpHeaders({
-          'Content-Type': 'text/html',
-        }),
-        responseType: 'text' as any,
-      });
-    return data$.pipe(
-      delay(2000),
-      map(response => {
-        const parsed = new urlParse(url);
-        const items: ItemsResponseResultListEntry[] = this.parseHTML(response).map(item => {
-          item.marketingType = parseInt(parsed.query.marketingtype, 10) as MarketingTypeNumber;
-          item.realEstateType = parseInt(parsed.query.parentcat, 10) as RealEstateTypeNumber;
-          return item as ItemsResponseResultListEntry;
-        });
-        return {
-          requestedUrl: url,
-          items,
-        };
-      })
-    );
+    return this.http.get<string>(url, { 'Content-Type': 'text/html' }, 'text')
+      .pipe(
+        delay(2000),
+        map(response => {
+          const parsed = new urlParse(url);
+          const items: ItemsResponseResultListEntry[] = this.parseHTML(response).map(item => {
+            item.marketingType = parseInt(parsed.query.marketingtype, 10) as MarketingTypeNumber;
+            item.realEstateType = parseInt(parsed.query.parentcat, 10) as RealEstateTypeNumber;
+            return item as ItemsResponseResultListEntry;
+          });
+          return {
+            requestedUrl: url,
+            items,
+          };
+        })
+      );
   }
 
   private parseHTML(html: string): Partial<ItemsResponseResultListEntry>[] {
@@ -229,30 +220,11 @@ export class ImmoweltConnectorService {
 
   public searchLocation(searchQuery: string): Observable<LocationAutocompleteResponse> {
     const url = this.urlCreator.createLocationAutocompleteUrl(searchQuery);
-    this.http.setDataSerializer('json');
-    if (window.cordova) {
-      return from(this.http.get(url, {}, { "Content-Type": "application/json" }))
-        .pipe(
-          delay(2000),
-          map(response => {
-            try {
-              return JSON.parse(response.data)
-            } catch (e) {
-              return undefined;
-            }
-          }),
-          catchError(error => {
-            return of([]);
-          })
-        );
-    } else {
-      return this.httpClient.get<LocationAutocompleteResponse>(url)
-        .pipe(
-          delay(2000),
-          catchError(error => {
-            return of({ data: [] });
-          })
-        );
-    }
+    return this.http.get<LocationAutocompleteResponse>(url, { "Content-Type": "application/json" }).pipe(
+      delay(2000),
+      catchError(error => {
+        return of({ data: [] });
+      })
+    );
   }
 }
