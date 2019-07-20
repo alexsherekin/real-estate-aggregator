@@ -1,10 +1,14 @@
 import { NgModule } from '@angular/core';
 import { HTTP } from '@ionic-native/http/ngx';
 
-import { ImmobilienScout24ConnectorService, ImmobilienScout24DataProvider, ImmobilienScout24UrlCreatorService } from './third-party-apis/immobilienscout24';
-import { LocationAutocompleteService } from './third-party-apis/immobilienscout24/location-autocomplete/location-autocomplete.service';
-import { ImmoweltConnectorService, ImmoweltDataProvider, ImmoweltUrlCreatorService } from './third-party-apis/immowelt';
 import { Http } from './services/http';
+import {
+  ImmobilienScout24ConnectorService,
+  ImmobilienScout24DataProvider,
+  ImmobilienScout24LocationAutocompleteService,
+  ImmobilienScout24UrlCreatorService,
+} from './third-party-apis/immobilienscout24';
+import { ImmoweltConnectorService, ImmoweltDataProvider, ImmoweltUrlCreatorService } from './third-party-apis/immowelt';
 
 @NgModule({
   providers: [
@@ -14,7 +18,7 @@ import { Http } from './services/http';
     ImmoweltConnectorService,
     ImmoweltDataProvider,
     ImmoweltUrlCreatorService,
-    LocationAutocompleteService,
+    ImmobilienScout24LocationAutocompleteService,
     HTTP,
     Http,
   ]

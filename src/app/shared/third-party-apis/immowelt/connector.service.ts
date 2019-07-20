@@ -4,8 +4,8 @@ import { catchError, delay, map } from 'rxjs/operators';
 import * as urlParse from 'url-parse';
 
 import { Http } from '../../services/http';
-import { ApartmentRequirements } from '../../types/search-description';
-import { SearchSettings } from '../../types/search-settings';
+import { ApartmentRequirements, SearchSettings } from '../../types';
+import { LocationAutocomplete } from '../native';
 import {
   ItemsResponse,
   ItemsResponseResultListEntry,
@@ -13,6 +13,7 @@ import {
   RealEstatePrice,
   RealEstateTypeNumber,
 } from './data/data-items-response';
+import { DataProviderKey } from './key';
 import { convertBackAutocompleteResponse } from './location-autocomplete/location-autocomplete-converter';
 import { LocationAutocompleteResponse } from './location-autocomplete/location-autocomplete-response';
 import { ImmoweltUrlCreatorService } from './url-creator.service';
@@ -38,11 +39,15 @@ export class ImmoweltConnectorService {
   }
 
   public search(apartment: ApartmentRequirements, search: SearchSettings): Observable<ItemsResponse> {
-    if (!apartment.locationSettings || !apartment.locationSettings.location) {
+    if (!apartment.locationSettings || !apartment.locationSettings[DataProviderKey]) {
       return of(undefined);
     }
 
-    const customLocation = convertBackAutocompleteResponse([apartment.locationSettings.location]);
+    const locationAutocomplete: LocationAutocomplete = {
+      key: DataProviderKey,
+      items: [apartment.locationSettings[DataProviderKey]]
+    };
+    const customLocation = convertBackAutocompleteResponse(locationAutocomplete);
     if (!customLocation || !customLocation.data || !customLocation.data.length) {
       return of(undefined);
     }

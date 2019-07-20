@@ -19,6 +19,7 @@ export interface LocationAutocompleteItem {
     type: LocationType,
     id: string,
     label: string,
+    value: string,
     geopath: {
       uri: string,
     }
@@ -28,14 +29,14 @@ export interface LocationAutocompleteItem {
 }
 
 export enum LocationType {
-  'country',
-  'region',
-  'city',
-  'district',
-  'quarterOrTown',
-  'street',
-  'postcode',
-  'trainStation'
+  'country' = 'country',
+  'region' = 'region',
+  'city' = 'city',
+  'district' = 'district',
+  'quarterOrTown' = 'quarterOrTown',
+  'street' = 'street',
+  'postcode' = 'postcode',
+  'trainStation' = 'trainStation'
 }
 
 export interface LocationMatch {

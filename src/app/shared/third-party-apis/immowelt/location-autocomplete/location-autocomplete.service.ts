@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
 
-import { BaseLocationAutocompleteService } from '../../native/location-autocomplete/base-location-autocomplete.service';
+import { BaseLocationAutocompleteService } from '../../native';
 import { ImmoweltConnectorService } from '../connector.service';
 import { convertAutocompleteResponse } from './location-autocomplete-converter';
+import { DataProviderKey } from '../key';
 
 @Injectable()
-export class LocationAutocompleteService extends BaseLocationAutocompleteService {
+export class ImmoweltLocationAutocompleteService extends BaseLocationAutocompleteService {
+  public dataProviderKey = DataProviderKey;
   constructor(
     private connector: ImmoweltConnectorService,
   ) {

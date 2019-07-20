@@ -1,17 +1,6 @@
-export enum LocationType {
-  country,
-  city,
-  district,
-  quarter,
-  postcode,
-  region,
-  unknown,
-}
+import { LocationAutocompleteItem } from './location-autocomplete-item';
 
-export interface LocationAutocompleteItem {
-  id: string,
-  type: LocationType,
-  label: string,
-}
-
-export type LocationAutocomplete = LocationAutocompleteItem[];
+export type LocationAutocomplete = {
+  key: string,
+  items: LocationAutocompleteItem[],
+};

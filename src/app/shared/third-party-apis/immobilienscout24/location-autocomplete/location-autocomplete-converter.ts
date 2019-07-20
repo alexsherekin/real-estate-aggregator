@@ -1,16 +1,23 @@
-import { LocationAutocomplete, LocationAutocompleteItem, LocationType } from '../../native/location-autocomplete/location-autocomplete';
+import { LocationAutocomplete, LocationAutocompleteItem, LocationType } from '../../native';
+import { DataProviderKey } from '../key';
 import {
-  LocationAutocompleteResponse as ImmobilienScout24LocationAutocompleteResponse,
   LocationAutocompleteItem as ImmobilienScout24LocationAutocompleteItem,
-  LocationType as ImmobilienScout24LocationType
+  LocationAutocompleteResponse as ImmobilienScout24LocationAutocompleteResponse,
+  LocationType as ImmobilienScout24LocationType,
 } from './location-autocomplete-response';
 
-export function convertAurocompleteResponse(input: ImmobilienScout24LocationAutocompleteResponse): LocationAutocomplete {
+export function convertAutocompleteResponse(input: ImmobilienScout24LocationAutocompleteResponse): LocationAutocomplete {
   if (!input || !input.length) {
-    return undefined;
+    return {
+      key: DataProviderKey,
+      items: [],
+    };
   }
 
-  return input.map(convertItem);
+  return {
+    key: DataProviderKey,
+    items: input.map(convertItem)
+  };
 }
 
 function convertItem(locationItem: ImmobilienScout24LocationAutocompleteItem): LocationAutocompleteItem {
@@ -21,6 +28,7 @@ function convertItem(locationItem: ImmobilienScout24LocationAutocompleteItem): L
     id: locationItem.entity.id,
     label: locationItem.entity.label,
     type: convertType(locationItem.entity.type),
+    value: locationItem.entity.value,
   };
 }
 

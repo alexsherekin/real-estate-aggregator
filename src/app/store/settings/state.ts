@@ -1,6 +1,5 @@
-import { Sorting } from '../../shared/types/sorting';
-import { MarketingType, RealEstateType } from '../../shared/third-party-apis/native/address';
-import { LocationAutocompleteItem } from '../..//shared/third-party-apis/native/location-autocomplete/location-autocomplete';
+import { Sorting } from '../../shared/types';
+import { MarketingType, RealEstateType, LocationAutocompleteItem } from '../../shared/third-party-apis/native';
 
 export enum Phase {
   unknown = 'unknown',

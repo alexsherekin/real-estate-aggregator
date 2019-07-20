@@ -1,6 +1,5 @@
-// start:ng42.barrel
 export * from './base-location-autocomplete.service';
-export * from './location-autocomplete.service';
+export * from './location-autocomplete-item';
+export * from './location-autocomplete-service-list.token';
 export * from './location-autocomplete';
-// end:ng42.barrel
-
+export * from './location-type';

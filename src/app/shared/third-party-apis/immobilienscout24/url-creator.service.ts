@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { delay, map } from 'rxjs/operators';
 
 import { Http } from '../../services/http';
-import { ApartmentRequirements } from '../../types/search-description';
-import { SearchSettings } from '../../types/search-settings';
-import { Sorting } from '../../types/sorting';
-import { MarketingType, RealEstateType } from '../native/address';
+import { ApartmentRequirements, SearchSettings, Sorting } from '../../types';
+import { LocationType, MarketingType, RealEstateType } from '../native';
 import { RealEstateTypeString2, RealEstateTypeString3 } from './data/data-items-response';
+import { DataProviderKey } from './key';
 
 @Injectable()
 export class ImmobilienScout24UrlCreatorService {
@@ -26,7 +25,7 @@ export class ImmobilienScout24UrlCreatorService {
       'city',
       // 'country',
       // 'region',
-      // 'district',
+      'district',
       // 'quarterOrTown',
       'postcode',
       // 'street',
@@ -45,11 +44,13 @@ export class ImmobilienScout24UrlCreatorService {
   public createSearchUrl(apartment: ApartmentRequirements, search: SearchSettings): Observable<string> {
     const url = `https://www.immobilienscout24.de/Suche/controller/search/change.go?sortingCode=2&otpEnabled=false&viewMode=LIST&ssm=DRAWN`;
     const rawPrice = apartment.marketingType === MarketingType.BUY ? apartment.buyPrice : apartment.rentPrice;
-    const geoId = apartment.locationSettings && apartment.locationSettings.location && apartment.locationSettings.location.id || '0';
+    const location = apartment.locationSettings && apartment.locationSettings[DataProviderKey];
+    const geoId = (location && location.id) || '';
+
     const body = {
       "view": "IS24",
       "realEstateType": this.getMarketingType(apartment),
-      "locationSelectionType": "GEO_HIERARCHY",
+      "locationSelectionType": '',
       "netAreaRange": {
         "min": apartment.minSquare,
         "max": apartment.maxSquare,
@@ -62,10 +63,9 @@ export class ImmobilienScout24UrlCreatorService {
         "min": rawPrice.minPrice,
         "max": rawPrice.maxPrice,
       },
-      "geoInfoNodes": [
-        parseInt(geoId, 10)
-      ],
-      "geoHierarchySearch": true,
+      geoInfoNodes: [],
+      geoHierarchySearch: true,
+
       apartmentTypes: [],
       apiField1: null,
       apiField2: null,
@@ -197,6 +197,19 @@ export class ImmobilienScout24UrlCreatorService {
       wohnberechtigungsscheinNeeded: null,
       yearOfConstructionRange: null,
     };
+
+    if (geoId && !isNaN(parseInt(geoId, 10)) && (location && location.type === LocationType.city)) {
+      body.locationSelectionType = "GEO_HIERARCHY";
+      body.geoInfoNodes = [parseInt(geoId, 10)];
+    } else if (location && location.type === LocationType.postcode) {
+      body.locationSelectionType = "VICINITY";
+      body.centerOfSearchAddress = {
+        postcode: location.value,
+        city: (location.label || '').replace(location.value, '').trim()
+      };
+    } else {
+      return of('');
+    }
 
     return this.http
       .post<{ url: string }>(url, body, { 'Content-Type': 'application/json' })

@@ -18,8 +18,8 @@
     [placeholder]="'ApartmentDescription.City' | translate"
     [bindValue]="'label'"
     [searchField]="'label'"
-    (search)="citySearchChanged($event)"
-    (itemSelected)="cityChanged($event)">
+    (search)="citySearchQueryChanged($event)"
+    (itemSelected)="citySelected($event)">
   </app-typeahead>
   <ion-item>
     <ion-label position="stacked">

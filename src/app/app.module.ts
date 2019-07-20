@@ -16,9 +16,13 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpLoaderFactory } from './i18n/http-loader-factory';
 import { SharedModule } from './shared/shared.module';
+import { LocationAutocompleteComposerService } from './shared/third-party-apis/composer';
+import { ImmobilienScout24LocationAutocompleteService } from './shared/third-party-apis/immobilienscout24';
+import { ImmoweltLocationAutocompleteService } from './shared/third-party-apis/immowelt';
+import { LocationAutocompleteServiceListInjectionToken } from './shared/third-party-apis/native';
 import { CustomRouterStateSerializer } from './shared/utils';
 import { metaReducers, reducers } from './store/reducers';
-import { TypeaheadModule } from './typeahead/typeahead.module';
+import { TypeaheadModule } from './typeahead';
 
 @NgModule({
   declarations: [AppComponent],
@@ -89,6 +93,9 @@ import { TypeaheadModule } from './typeahead/typeahead.module';
      * by `@ngrx/router-store` to include only the desired pieces of the snapshot.
      */
     { provide: RouterStateSerializer, useClass: CustomRouterStateSerializer },
+    LocationAutocompleteComposerService,
+    { provide: LocationAutocompleteServiceListInjectionToken, useClass: ImmobilienScout24LocationAutocompleteService, multi: true },
+    { provide: LocationAutocompleteServiceListInjectionToken, useClass: ImmoweltLocationAutocompleteService, multi: true, }
   ],
   bootstrap: [AppComponent]
 })

@@ -1,25 +1,33 @@
-import { LocationAutocomplete, LocationAutocompleteItem, LocationType } from '../../native/location-autocomplete/location-autocomplete';
+import { LocationAutocomplete, LocationAutocompleteItem, LocationType } from '../../native';
+import { DataProviderKey } from '../key';
 import {
   LocationAutocompleteItem as ImmoweltLocationAutocompleteItem,
   LocationAutocompleteResponse as ImmoweltLocationAutocompleteResponse,
   LocationType as ImmoweltLocationType,
 } from './location-autocomplete-response';
 
+
 export function convertAutocompleteResponse(input: ImmoweltLocationAutocompleteResponse): LocationAutocomplete {
   if (!input || !input.data) {
-    return undefined;
+    return {
+      key: DataProviderKey,
+      items: []
+    };
   }
 
-  return input.data.map(convertItem);
+  return {
+    key: DataProviderKey,
+    items: input.data.map(convertItem)
+  };
 }
 
 export function convertBackAutocompleteResponse(input: LocationAutocomplete): ImmoweltLocationAutocompleteResponse {
-  if (!input) {
+  if (!input || !input.items) {
     return undefined;
   }
 
   return {
-    data: input.map(convertBackItem)
+    data: input.items.map(convertBackItem)
   };
 }
 
