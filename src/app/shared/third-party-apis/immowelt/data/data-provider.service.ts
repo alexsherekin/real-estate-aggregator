@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { combineLatest, distinctUntilChanged, map, merge, withLatestFrom } from 'rxjs/operators';
+import { BehaviorSubject, Observable, Subscription, of } from 'rxjs';
+import { combineLatest, distinctUntilChanged, map, merge, withLatestFrom, filter, tap, switchMap, catchError, share } from 'rxjs/operators';
 import * as urlParse from 'parse-url';
 import * as buildUrl from 'build-url';
 
@@ -20,7 +20,7 @@ export class ImmoweltDataProvider implements IDataProvider {
   private searchByUrl_s$ = new BehaviorSubject(undefined);
 
   private searchLoadingState_i$ = new BehaviorSubject<Phase>(Phase.init);
-  private searchDataLoaded_i$ = new BehaviorSubject<ItemsResponse>(undefined);
+  private searchDataLoaded_i$: Observable<ItemsResponse>;
   private searchItemsLoaded_i$: Observable<Array<ItemsResponseResultListEntry>>;
 
   private infiniteLoadingState_i$ = new BehaviorSubject<Phase>(Phase.init);
@@ -40,34 +40,27 @@ export class ImmoweltDataProvider implements IDataProvider {
     private connector: ImmoweltConnectorService,
     private settingsStore: Store<ISettingsState>,
   ) {
-    const doSearchSub = this.searchBySettings_s$.pipe(
+    this.searchDataLoaded_i$ = this.searchBySettings_s$.pipe(
       distinctUntilChanged(() => false),
-      withLatestFrom(this.settingsStore.select(settingsSelectors.getFilters))
-    ).subscribe(([empty, apartment]) => {
-      const searchSettings = {
-        sorting: Sorting.dateDesc,
-      };
-      if (!apartment || !searchSettings) {
-        return;
-      }
+      withLatestFrom(this.settingsStore.select(settingsSelectors.getFilters)),
+      filter(([empty, apartment]) => !!apartment),
+      tap(() => this.searchLoadingState_i$.next(Phase.running)),
+      switchMap(([empty, apartment]) => {
+        const searchSettings = {
+          sorting: Sorting.dateDesc,
+        };
 
-      this.searchLoadingState_i$.next(Phase.running);
-      const searchSub = this.connector.search(apartment, searchSettings)
-        .subscribe(response => {
-          this.searchDataLoaded_i$.next(response);
-          this.searchLoadingState_i$.next(Phase.ready);
-        }, error => {
-          this.searchLoadingState_i$.next(Phase.failed);
-          if (searchSub) {
-            searchSub.unsubscribe();
-          }
-        }, () => {
-          if (searchSub) {
-            searchSub.unsubscribe();
-          }
-        });
-    });
-    this.subscriptions.push(doSearchSub);
+        return this.connector.search(apartment, searchSettings)
+          .pipe(
+            tap(() => this.searchLoadingState_i$.next(Phase.ready)),
+            catchError(error => {
+              this.searchLoadingState_i$.next(Phase.failed);
+              return of(undefined);
+            })
+          )
+      }),
+      share()
+    );
 
     this.searchItemsLoaded_i$ = this.searchDataLoaded_i$.pipe(
       map(response => {

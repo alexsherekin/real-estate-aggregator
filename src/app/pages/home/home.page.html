@@ -3,12 +3,23 @@
   <ion-button color="primary"
     expand="full"
     (click)="search()">{{ "HomePage.Search" | translate }}</ion-button>
-  <app-real-estate-list [items$]="itemsLoaded_i$"></app-real-estate-list>
-  <ion-infinite-scroll #infiniteScroll
-    threshold="100px"
-    (ionInfinite)="loadData($event)">
-    <ion-infinite-scroll-content loadingSpinner="bubbles"
-      loadingText="Loading more data...">
-    </ion-infinite-scroll-content>
-  </ion-infinite-scroll>
+
+  <ion-item *ngIf="(itemsLoadingState_i$ | async) === Phase.failed"
+    text-center>
+    <ion-label>
+      {{ 'HomePage.NothingFound' | translate }}
+    </ion-label>
+  </ion-item>
+
+  <ng-container *ngIf="(itemsLoadingState_i$ | async) !== Phase.failed">
+    <app-real-estate-list [items$]="itemsLoaded_i$"></app-real-estate-list>
+    <ion-infinite-scroll #infiniteScroll
+      threshold="100px"
+      (ionInfinite)="loadData($event)">
+      <ion-infinite-scroll-content loadingSpinner="bubbles"
+        loadingText="{{ 'HomePage.Loading' | translate }}">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+  </ng-container>
+
 </ion-content>

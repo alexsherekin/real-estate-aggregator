@@ -1,7 +1,9 @@
 {
   "HomePage": {
     "Title": "Available Offers",
-    "Search": "Search..."
+    "Search": "Search...",
+    "Loading": "Loading more data...",
+    "NothingFound": "Sorry... We could not find anything"
   },
   "SettingsPage": {
     "Title": "Settings"
