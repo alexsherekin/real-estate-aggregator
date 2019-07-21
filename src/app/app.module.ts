@@ -21,6 +21,7 @@ import { ImmobilienScout24LocationAutocompleteService } from './shared/third-par
 import { ImmoweltLocationAutocompleteService } from './shared/third-party-apis/immowelt';
 import { LocationAutocompleteServiceListInjectionToken } from './shared/third-party-apis/native';
 import { CustomRouterStateSerializer } from './shared/utils';
+import { NotificationEffects } from './store/notifications/notification.effects';
 import { metaReducers, reducers } from './store/reducers';
 import { TypeaheadModule } from './typeahead';
 
@@ -72,7 +73,7 @@ import { TypeaheadModule } from './typeahead';
      *
      * See: https://github.com/ngrx/platform/blob/master/docs/effects/api.md#forroot
      */
-    EffectsModule.forRoot([]),
+    EffectsModule.forRoot([NotificationEffects]),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

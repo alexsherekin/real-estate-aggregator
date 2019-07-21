@@ -16,11 +16,3 @@ export function getSelectors(name: string) {
     getRentPrice: createSelector(getSettingsState, (state: ISettingsState) => state.filters.rentPrice),
   };
 }
-
-
-
-
-
-
-
-

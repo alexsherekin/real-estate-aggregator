@@ -1,6 +1,9 @@
-import { Component, EventEmitter, Output, Input, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
+
+import { Phase } from '../store/settings';
 
 @Component({
   selector: 'app-typeahead',
@@ -9,7 +12,7 @@ import { Observable } from 'rxjs';
 })
 export class TypeaheadComponent implements OnChanges {
   @Input() dataSource$: Observable<any>;
-  @Input() loading: boolean;
+  @Input() loading: Phase;
   @Input() bindValue: string;
   @Input() searchField: string;
   @Input() placeholder: string;
@@ -18,15 +21,10 @@ export class TypeaheadComponent implements OnChanges {
   @Output() search = new EventEmitter<string>();
   @Output() itemSelected = new EventEmitter<any>();
 
+  public Phase = Phase;
   public searchValue: string;
   public selectedOption: any;
   public valueSelected: boolean = false;
-
-  public get showList() {
-    return !this.selectedOption && (
-      !!this.searchValue && this.searchValue.length > 0
-    );
-  };
 
   constructor(
     protected translateService: TranslateService,
@@ -51,9 +49,13 @@ export class TypeaheadComponent implements OnChanges {
   }
 
   public searchTermChanged() {
-    this.valueSelected = false;
     this.selectedOption = undefined;
+    this.valueSelected = false;
     this.search.emit(this.searchValue);
-    this.itemSelected.emit(this.selectedOption);
+    this.itemSelected.emit(undefined);
+  }
+
+  public get isEmpty() {
+    return !this.searchValue;
   }
 }

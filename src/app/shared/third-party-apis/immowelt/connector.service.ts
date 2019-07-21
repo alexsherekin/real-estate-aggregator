@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { catchError, delay, map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import * as urlParse from 'url-parse';
 
 import { Http } from '../../services/http';
@@ -70,7 +70,6 @@ export class ImmoweltConnectorService {
   private _search(url: string): Observable<ItemsResponse> {
     return this.http.get<string>(url, { 'Content-Type': 'text/html' }, 'text')
       .pipe(
-        delay(2000),
         map(response => {
           const parsed = new urlParse(url);
           const items: ItemsResponseResultListEntry[] = this.parseHTML(response).map(item => {
@@ -225,11 +224,6 @@ export class ImmoweltConnectorService {
 
   public searchLocation(searchQuery: string): Observable<LocationAutocompleteResponse> {
     const url = this.urlCreator.createLocationAutocompleteUrl(searchQuery);
-    return this.http.get<LocationAutocompleteResponse>(url, { "Content-Type": "application/json" }).pipe(
-      delay(2000),
-      catchError(error => {
-        return of({ data: [] });
-      })
-    );
+    return this.http.get<LocationAutocompleteResponse>(url, { "Content-Type": "application/json" });
   }
 }

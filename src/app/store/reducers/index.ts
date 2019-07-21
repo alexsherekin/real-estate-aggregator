@@ -24,6 +24,7 @@ import { storeFreeze } from 'ngrx-store-freeze';
  */
 
 import * as fromSettings from '../settings';
+import * as fromData from '../data';
 
 /**
  * As mentioned, we treat each reducer like a table in a database. This means
@@ -31,6 +32,7 @@ import * as fromSettings from '../settings';
  */
 export interface State {
   settings: fromSettings.ISettingsState;
+  data: fromData.IDataState,
   router: fromRouter.RouterReducerState<RouterStateUrl>;
 }
 
@@ -41,6 +43,7 @@ export interface State {
  */
 export const reducers: ActionReducerMap<State> = {
   settings: fromSettings.reducer,
+  data: fromData.reducer,
   router: fromRouter.routerReducer,
 };
 
@@ -64,3 +67,4 @@ export const metaReducers: MetaReducer<State>[] = [
 ];
 
 export const settingsSelectors = fromSettings.getSelectors('settings');
+export const dataSelectors = fromData.getSelectors('data');

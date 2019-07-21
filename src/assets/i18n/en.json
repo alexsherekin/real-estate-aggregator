@@ -31,5 +31,11 @@
     "ApartmentRent": "Rent apartment",
     "HouseBuy": "Buy house",
     "HouseRent": "Rent house"
+  },
+  "Message": {
+    "NoInternetText": "No internet"
+  },
+  "TypeaheadComponent": {
+    "NothingFound": "Nothing found"
   }
 }

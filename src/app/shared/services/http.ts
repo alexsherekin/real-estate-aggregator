@@ -1,8 +1,10 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { HTTP } from '@ionic-native/http/ngx';
-import { from, Observable } from 'rxjs';
-import { delay, map } from 'rxjs/operators';
+import { from, Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+
+import { NoInternetError } from './network-errors/no-internet.error';
 
 @Injectable()
 export class Http {
@@ -37,7 +39,15 @@ export class Http {
       });
     }
 
-    return result$;
+    return result$ = result$.pipe(
+      catchError((error: any) => {
+        if (error.status === 0) {
+          throw new NoInternetError();
+        }
+
+        return of(undefined);
+      })
+    );
   }
 
   public post<T>(url: string, body: any = {}, headers: any = {}, responseType: any = 'json') {
@@ -69,6 +79,14 @@ export class Http {
       });
     }
 
-    return result$;
+    return result$ = result$.pipe(
+      catchError((error: any) => {
+        if (error.status === 0) {
+          throw new NoInternetError();
+        }
+
+        return of(undefined);
+      })
+    );
   }
 }

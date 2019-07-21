@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, of, Subject } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { map, switchMap, tap, catchError, retry, distinctUntilChanged } from 'rxjs/operators';
 
 import { LocationAutocompleteComposerService } from '../shared/third-party-apis/composer';
 import {
@@ -12,8 +12,12 @@ import {
 } from '../shared/third-party-apis/native';
 import { ApartmentRequirements, SearchSettings, Sorting } from '../shared/types';
 import { settingsSelectors } from '../store/reducers';
-import { IFilters, ISettingsState, Price, SaveSettings } from '../store/settings';
+import { IFilters, ISettingsState, Price, SaveSettings, Phase } from '../store/settings';
 import { TypeaheadComponent } from '../typeahead';
+import { Subscriber } from '../shared/lib';
+import { NoInternetError } from '../shared/services/network-errors/no-internet.error';
+import { ToastController } from '@ionic/angular';
+import { NoInternetAction } from '../store/notifications/no-internet.action';
 
 enum UIMarketingType {
   ApartmentBuy = 'ApartmentBuy',
@@ -66,7 +70,7 @@ interface PriceRangeConfig {
   styleUrls: ['./search-panel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SearchPanelComponent implements OnInit {
+export class SearchPanelComponent extends Subscriber implements OnInit {
 
   public apartment: ApartmentRequirements = {};
   public searchSettings: SearchSettings = {
@@ -92,7 +96,7 @@ export class SearchPanelComponent implements OnInit {
   private citySearchQueryChanged$ = new Subject<string>();
   private citySelected$ = new Subject<LocationAutocompleteItem>();
   public cityAutocomplete$: Observable<LocationAutocompleteItem[]>;
-  public cityAutocompleteLoading = false;
+  public cityAutocompleteLoading: Phase = Phase.init;
 
   @ViewChild('cityTypeahead') public cityTypeahead: TypeaheadComponent;
 
@@ -102,6 +106,7 @@ export class SearchPanelComponent implements OnInit {
     private autocompleteComposer: LocationAutocompleteComposerService,
     private cd: ChangeDetectorRef,
   ) {
+    super();
     this.store.select(settingsSelectors.getFilters).subscribe(data => {
       this.apartment = data;
       this.uiMarketingType = marketingTypesReverseMap[data.marketingType] ? marketingTypesReverseMap[data.marketingType][data.realEstateType] : UIMarketingType.ApartmentRent;
@@ -110,21 +115,34 @@ export class SearchPanelComponent implements OnInit {
       this.cd.markForCheck();
     });
 
+    const defaultAutocompleteResponse = { key: '', items: [] };
     this.cityAutocomplete$ = this.citySearchQueryChanged$.pipe(
+      tap(() => {
+        this.cityAutocompleteLoading = Phase.running;
+      }),
       switchMap(value => {
-        this.cityAutocompleteLoading = true;
-        return (typeof value === 'string') ? this.autocomplete.getLocationAutocomplete(value) : of({ key: '', items: [] });
+        if (typeof value !== 'string') {
+          return of(defaultAutocompleteResponse);
+        }
+
+        return this.autocomplete.getLocationAutocomplete(value)
+          .pipe(
+            catchError(error => {
+              if (error instanceof NoInternetError) {
+                this.store.dispatch(new NoInternetAction());
+              }
+              return of(defaultAutocompleteResponse);
+            })
+          );
       }),
       tap(() => {
-        this.cityAutocompleteLoading = false;
+        this.cityAutocompleteLoading = Phase.ready;
         this.cityTypeahead.cd.markForCheck();
       }),
-      map(response => {
-        return response.items;
-      }),
+      map(response => response.items)
     );
 
-    const subscription2 = this.citySelected$.pipe(
+    const subscription = this.citySelected$.pipe(
       switchMap(value => {
         this.store.dispatch(new SaveSettings({
           city: value.label || '',
@@ -133,11 +151,9 @@ export class SearchPanelComponent implements OnInit {
           }
         }));
 
-        console.log('Get all locations');
         return this.autocompleteComposer.getLocationAutocomplete(this.autocomplete.dataProviderKey, value);
       })
     ).subscribe(responses => {
-      console.log('Update all locations');
       const locationSettings = responses.reduce((acc, response) => {
         acc[response.key] = response.item;
         return acc;
@@ -145,6 +161,7 @@ export class SearchPanelComponent implements OnInit {
 
       this.store.dispatch(new SaveSettings({ locationSettings }));
     });
+    this.addSubscription(subscription);
   }
 
   ngOnInit() {

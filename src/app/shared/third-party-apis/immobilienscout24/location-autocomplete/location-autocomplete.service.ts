@@ -18,9 +18,7 @@ export class ImmobilienScout24LocationAutocompleteService extends BaseLocationAu
 
   public getLocationAutocomplete(searchQuery: string) {
     return this.connector.searchLocation(searchQuery).pipe(
-      map(response => {
-        return convertAutocompleteResponse(response);
-      })
+      map(response => convertAutocompleteResponse(response))
     );
   }
 }
