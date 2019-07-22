@@ -17,4 +17,4 @@ import { ImmobilienScout24LocationAutocompleteService } from './location-autocom
     ),
   ]
 })
-export class Immoscout24PageModule { }
+export class Immoscout24Module { }

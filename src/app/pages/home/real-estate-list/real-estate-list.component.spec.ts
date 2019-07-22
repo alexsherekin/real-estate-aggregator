@@ -1,8 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RealEstateListComponent } from './real-estate-list.component';
-import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { Input } from '@ionic/angular';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, Input } from '@angular/core';
 
 @Component({
   selector: 'app-real-estate-item',

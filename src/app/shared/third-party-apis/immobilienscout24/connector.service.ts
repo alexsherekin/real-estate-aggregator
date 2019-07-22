@@ -1,14 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { switchMap, catchError } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 
 import { Http } from '../../services/http';
-import { ApartmentRequirements } from '../../types/search-description';
-import { SearchSettings } from '../../types/search-settings';
+import { ApartmentRequirements, SearchSettings } from '../../types';
 import { ItemsResponse } from './data/data-items-response';
 import { LocationAutocompleteResponse } from './location-autocomplete/location-autocomplete-response';
 import { ImmobilienScout24UrlCreatorService } from './url-creator.service';
-import { NoInternetError } from '../../services/network-errors/no-internet.error';
 
 @Injectable()
 export class ImmobilienScout24ConnectorService {

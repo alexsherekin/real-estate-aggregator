@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { BehaviorSubject, Observable, Subscription, of } from 'rxjs';
-import { combineLatest, distinctUntilChanged, map, merge, withLatestFrom, filter, tap, switchMap, catchError, share } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
+import { catchError, combineLatest, distinctUntilChanged, filter, map, merge, share, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 
 import { settingsSelectors } from '../../../../store/reducers';
 import { ISettingsState, Phase } from '../../../../store/settings';
-import { IDataProvider } from '../../../lib/data-provider';
+import { IDataProvider } from '../../../lib';
 import { Sorting } from '../../../types/sorting';
+import { Advertisement } from '../../native';
 import { ImmobilienScout24ConnectorService } from '../connector.service';
-import { ItemsResponse, RealEstateFullDescription, RealEstateTypeNumber } from './data-items-response';
-import { Advertisement } from '../../native/address';
 import { convertData } from './data-converter';
+import { ItemsResponse, RealEstateFullDescription, RealEstateTypeNumber } from './data-items-response';
 
 @Injectable()
 export class ImmobilienScout24DataProvider implements IDataProvider {

@@ -1,4 +1,5 @@
-import { Address, Advertisement, ExternalAsset, MarketingType, Price, RealEstate, RealEstateFeature, RealEstateType } from '../../native/address';
+import { Address, Advertisement, ExternalAsset, MarketingType, Price, RealEstate, RealEstateFeature, RealEstateType } from '../../native';
+import { ImmobilienScout24UrlCreatorService } from '../url-creator.service';
 import {
   ImageUrl,
   RealEstateAddress,
@@ -7,7 +8,6 @@ import {
   RealEstateShortDescription,
   RealEstateTypeNumber,
 } from './data-items-response';
-import { ImmobilienScout24UrlCreatorService } from '../url-creator.service';
 
 const titleImageSize = 500;
 
