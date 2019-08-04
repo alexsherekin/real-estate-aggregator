@@ -12,11 +12,11 @@
 //   "matches": [{ "offset": 0, "length": 1 }]
 // }
 
-export type LocationAutocompleteResponse = LocationAutocompleteItem[];
+export type ImmobilienScout24LocationAutocompleteResponse = ImmobilienScout24LocationAutocompleteItem[];
 
-export interface LocationAutocompleteItem {
+export interface ImmobilienScout24LocationAutocompleteItem {
   entity: {
-    type: LocationType,
+    type: ImmobilienScout24LocationType,
     id: string,
     label: string,
     value: string,
@@ -25,10 +25,10 @@ export interface LocationAutocompleteItem {
     }
   }
 
-  matches?: LocationMatch[],
+  matches?: ImmobilienScout24LocationMatch[],
 }
 
-export enum LocationType {
+export enum ImmobilienScout24LocationType {
   'country' = 'country',
   'region' = 'region',
   'city' = 'city',
@@ -39,7 +39,7 @@ export enum LocationType {
   'trainStation' = 'trainStation'
 }
 
-export interface LocationMatch {
+export interface ImmobilienScout24LocationMatch {
   offset: number,
   length: number
 }

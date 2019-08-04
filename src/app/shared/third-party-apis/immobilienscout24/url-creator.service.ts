@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { delay, map } from 'rxjs/operators';
+import { map, catchError } from 'rxjs/operators';
 
 import { Http } from '../../services/http';
 import { ApartmentRequirements, SearchSettings, Sorting } from '../../types';
@@ -214,8 +214,7 @@ export class ImmobilienScout24UrlCreatorService {
     return this.http
       .post<{ url: string }>(url, body, { 'Content-Type': 'application/json' })
       .pipe(
-        map(result => result && result.url ? this.addBaseUrl(result.url) : undefined),
-        delay(1000)
+        map(result => result && result.url ? this.addBaseUrl(result.url) : undefined)
       );
   }
 

@@ -1,9 +1,9 @@
 import { LocationAutocomplete, LocationAutocompleteItem, LocationType } from '../../native';
 import { DataProviderKey } from '../key';
 import {
-  LocationAutocompleteItem as ImmobilienScout24LocationAutocompleteItem,
-  LocationAutocompleteResponse as ImmobilienScout24LocationAutocompleteResponse,
-  LocationType as ImmobilienScout24LocationType,
+  ImmobilienScout24LocationAutocompleteItem,
+  ImmobilienScout24LocationAutocompleteResponse,
+  ImmobilienScout24LocationType,
 } from './location-autocomplete-response';
 
 export function convertAutocompleteResponse(input: ImmobilienScout24LocationAutocompleteResponse): LocationAutocomplete {
