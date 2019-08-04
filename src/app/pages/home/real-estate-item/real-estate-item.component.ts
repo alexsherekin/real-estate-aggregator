@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Advertisement, Address, RealEstate } from '../../../shared/third-party-apis/native/address';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-real-estate-item',
@@ -16,11 +17,13 @@ export class RealEstateItemComponent implements OnInit, OnChanges {
 
   public titleImage: string;
   public addressAsString: string;
-  public mapsIcon = require('./assets/maps.svg');
+  public mapsIcon = require('./assets/maps.png');
   public linkIcon = require('./assets/link.svg');
   public noImageIcon = require('./assets/no-image.svg');
 
-  constructor() { }
+  constructor(
+    private translate: TranslateService
+  ) { }
 
   ngOnInit() {
   }
@@ -47,7 +50,7 @@ export class RealEstateItemComponent implements OnInit, OnChanges {
       this.linkToSource = '';
     }
 
-    this.addressAsString = `${this.address.city || ''} ${this.address.quarter || ''} ${this.address.street || ''} ${this.address.houseNumber || ''}`;
+    this.addressAsString = [this.address.city, this.address.street, this.address.houseNumber].filter(Boolean).join(' ');
   }
 
   public hasTags(realEstate: RealEstate) {
@@ -56,5 +59,20 @@ export class RealEstateItemComponent implements OnInit, OnChanges {
 
   public getTags(realEstate: RealEstate) {
     return realEstate.features;
+  }
+
+  public formatAddress() {
+    const street = [this.address.street, this.address.houseNumber].filter(Boolean).join(' ');
+
+    const city = [this.address.city, this.address.quarter].filter(Boolean).join('/');
+
+    return [street, city].filter(Boolean).join(' - ');
+  }
+
+  public formatFeatures() {
+    return this.getTags(this.realEstate)
+      .filter(Boolean)
+      .map(label => this.translate.instant('RealEstateFeature.' + label))
+      .join(' | ');
   }
 }

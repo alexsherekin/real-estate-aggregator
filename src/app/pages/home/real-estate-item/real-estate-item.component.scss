@@ -1,98 +1,89 @@
 :host {
   display: block;
   width: 100%;
-  border: 3px solid gray;
-  background-color: lightgray;
-  margin-top: 5px;
-  padding: 10px;
-}
-
-.maps-icon, .link-icon {
-  width: 20px;
-  height: 20px;
-  float: right;
-}
-
-.main {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-}
-
-.info {
-  flex: 1 0 0;
-  display: flex;
-  flex-direction: row;
-}
-
-.address {
-  display: block;
-  padding-left: 10px;
-  flex: 0 0 auto;
-}
-
-.details {
-  display: block;
-  flex: 1 0 0;
-  padding-left: 15px;
-  text-align: right;
-}
-
-.tags {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-}
-
-.tag {
-  display: block;
-  padding: 5px;
-  margin: 5px;
-  flex: 0 0 auto;
-  background-color: lightgoldenrodyellow;
-}
-
-.tag:first-child {
-  margin-left: 0;
-}
-
-.title-picture {
-  max-width: 30%;
-  max-height: 200px;
-  background-color: white;
 }
 
 @media (max-width: 600px) {
-  .main {
-    flex-direction: column;
-  }
-  .title-picture {
-    max-width: 100%;
-    max-height: none;
-    align-self: center;
-  }
-  .info {
-    display: block;
-  }
-  .address {
-    padding-left: 0;
-  }
-  .details {
-    text-align: left;
-    padding-left: 0;
+  .image{
+    height: 250px;
   }
 }
 
-@media (min-width: 600px) and (max-width: 900px) {
-  .info {
-    flex-direction: column;
+@media (min-width: 601px) and (max-width: 900px) {
+  .image{
+    height: 400px;
+    background-size: 100%;
   }
-  .details {
-    text-align: left;
-  }
+}
 
-  .tags {
-    justify-content: flex-start;
+@media (min-width: 901px) {
+  .image{
+    height: 500px;
+    background-size: 100%;
   }
+}
+
+.link {
+  text-decoration: none;
+  color: black;
+}
+
+.image {
+  display: flex;
+  flex-direction: column;
+  background-position: center;
+  background-repeat: no-repeat;
+  justify-content: flex-end;
+}
+
+.description-bottom {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.info-box {
+  background-color: rgba(228, 226, 226, 0.8);
+  padding: 10px;
+  padding-bottom: 5px;
+  font-weight: 500;
+  border-radius: 15px 15px 0px 0px;
+}
+
+.info-box:first-child {
+  border-radius: 0px 15px 0px 0px;
+}
+
+.info-box:last-child {
+  border-radius: 15px 0px 0px 0px;
+}
+
+.maps-icon, .link-icon {
+  height: 1.5em;
+}
+
+.features {
+  background-color: rgb(228, 226, 226);
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-weight: 500;
+  border-top: 1px solid black;
+}
+
+.feature {
+  padding: 10px;
+  border-radius: 80px;
+}
+
+.address {
+  text-align: right;
+  padding-bottom: 10px;
+  display: block;
+  padding-left: 10px;
+  flex: 0 0 auto;
 }

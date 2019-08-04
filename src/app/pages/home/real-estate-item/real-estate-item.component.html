@@ -1,5 +1,9 @@
 <h3>
   {{ (item && item.title) || '' }}
+</h3>
+<address *ngIf="address"
+  class="address">
+  {{ formatAddress() }}
   <a class="maps"
     href="https://www.google.com/maps/place/{{addressAsString}}"
     target="_blank">
@@ -7,61 +11,36 @@
       alt="map"
       class="maps-icon" />
   </a>
-  <a *ngIf="linkToSource"
-    class="link"
-    href="{{linkToSource}}"
-    target="_blank">
-    <img [src]="linkIcon"
-      alt="link"
-      class="link-icon" />
-  </a>
-</h3>
+</address>
+<a *ngIf="linkToSource"
+  class="link"
+  href="{{linkToSource}}"
+  target="_blank">
+  <main class="image"
+    [ngStyle]="{ 'background-image': 'url(' +( titleImage || noImageIcon) + ')' }">
+    <div class="description-bottom">
+      <span *ngIf="realEstate.numberOfRooms"
+        class="info-box">
+        {{ realEstate.numberOfRooms }} rooms
+      </span>
 
-<main class="main">
-  <img [src]="titleImage || noImageIcon"
-    alt="Title picture"
-    class="title-picture" />
-  <section class="info">
-    <address *ngIf="address"
-      class="address">
-      <p *ngIf="address.street || address.houseNumber">
-        <span>{{ address.street }}</span>
-        &nbsp;
-        <span>{{ address.houseNumber }}</span>
-      </p>
-      <p *ngIf="address.postcode || address.city || address.quarter">
-        <span>{{ address.postcode }}</span>&nbsp;
-        <span>{{ address.city }}</span>
-        <span *ngIf="address.city && address.quarter">,&nbsp;</span>
-        <span>{{ address.quarter }}</span>
-      </p>
-    </address>
+      <span *ngIf="realEstate.livingSpace"
+        class="info-box">
+        {{ realEstate.livingSpace }} m<sup>2</sup>
+      </span>
 
-    <section class="details"
-      *ngIf="realEstate">
-      <p *ngIf="realEstate.numberOfRooms">
-        {{ 'Number of rooms: ' + realEstate.numberOfRooms}}
-      </p>
-      <p *ngIf="realEstate.livingSpace">
-        {{ 'Living space: ' + realEstate.livingSpace }} m<sup>2</sup>
-      </p>
-      <p *ngIf="realEstate.price">
-        {{ 'Price: ' + realEstate.price.value }}
+      <span *ngIf="realEstate.price.value"
+        class="info-box">
+        {{ realEstate.price.value + '€' }}
         <span *ngIf="realEstate.fullPrice">
-          {{ ' (' + realEstate.fullPrice.value + ') ' }}
+          {{ ' (' + realEstate.fullPrice.value + '€) ' }}
         </span>
-        {{ realEstate.price.currency }}
-      </p>
-      <div class="tags"
-        *ngIf="hasTags(realEstate)">
-        <div class="tag"
-          *ngFor="let tag of getTags(realEstate)">
-          {{ ('RealEstateFeature.' + tag) | translate }}
-        </div>
-      </div>
-    </section>
-  </section>
-  <section class="contacts">
+      </span>
+    </div>
+  </main>
+</a>
 
-  </section>
-</main>
+<section class="features"
+  *ngIf="hasTags(realEstate)">
+  {{ formatFeatures() }}
+</section>

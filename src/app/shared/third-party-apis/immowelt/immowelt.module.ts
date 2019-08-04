@@ -14,4 +14,4 @@ import { ImmoweltLocationAutocompleteService } from './location-autocomplete';
     ]),
   ],
 })
-export class ImmoweltPageModule { }
+export class ImmoweltModule { }
