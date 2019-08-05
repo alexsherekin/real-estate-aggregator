@@ -1,9 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { NgModule, ModuleWithProviders, Provider } from '@angular/core';
+import { ModuleWithProviders, NgModule, Provider } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
+import { StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 
+import * as fromFeature from '../../store/data';
 import { SearchPanelModule } from '../../search-panel/search-panel.module';
 import { HomePage } from './home.page';
 import { HomePageRoutingModule } from './home.router.module';
@@ -18,6 +20,9 @@ import { RealEstateListComponent } from './real-estate-list/real-estate-list.com
     HomePageRoutingModule,
     TranslateModule,
     SearchPanelModule,
+    StoreModule.forFeature(fromFeature.FEATURE_NAME, fromFeature.reducer, {
+      metaReducers: fromFeature.metaReducers
+    })
   ],
   declarations: [
     HomePage,

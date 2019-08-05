@@ -1,5 +1,5 @@
 import { IDataState } from './state';
 
-export const defaultSettings: IDataState = {
-
+export const defaultData: IDataState = {
+  cache: {}
 };

@@ -5,7 +5,7 @@ import { combineLatest, distinctUntilChanged, map, merge, withLatestFrom, filter
 import * as urlParse from 'parse-url';
 import * as buildUrl from 'build-url';
 
-import { settingsSelectors } from '../../../../store/reducers';
+import { settingsSelectors } from '../../../../store';
 import { ISettingsState, Phase } from '../../../../store/settings';
 import { IDataProvider } from '../../../lib/data-provider';
 import { Sorting } from '../../../types/sorting';
@@ -13,9 +13,12 @@ import { ImmoweltConnectorService } from '../connector.service';
 import { ItemsResponse, ItemsResponseResultListEntry } from './data-items-response';
 import { Advertisement } from '../../native/address';
 import { convertData } from './data-converter';
+import { DataProviderKey } from '../key';
 
 @Injectable()
 export class ImmoweltDataProvider implements IDataProvider {
+  public readonly DataProviderKey: string = DataProviderKey;
+
   private searchBySettings_s$ = new BehaviorSubject(undefined);
   private searchByUrl_s$ = new BehaviorSubject(undefined);
 

@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
 import { catchError, combineLatest, distinctUntilChanged, filter, map, merge, share, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 
-import { settingsSelectors } from '../../../../store/reducers';
+import { settingsSelectors } from '../../../../store';
 import { ISettingsState, Phase } from '../../../../store/settings';
 import { IDataProvider } from '../../../lib';
 import { Sorting } from '../../../types/sorting';
@@ -11,9 +11,12 @@ import { Advertisement } from '../../native';
 import { ImmobilienScout24ConnectorService } from '../connector.service';
 import { convertData } from './data-converter';
 import { ItemsResponse, RealEstateFullDescription, RealEstateTypeNumber } from './data-items-response';
+import { DataProviderKey } from '../key';
 
 @Injectable()
 export class ImmobilienScout24DataProvider implements IDataProvider {
+  public readonly DataProviderKey: string = DataProviderKey;
+
   private searchBySettings_s$ = new BehaviorSubject(undefined);
   private searchByUrl_s$ = new BehaviorSubject(undefined);
 
@@ -32,7 +35,7 @@ export class ImmobilienScout24DataProvider implements IDataProvider {
   public itemsLoadingState_i$: Observable<Phase>;
   private itemsLoadedCustom_i$ = new BehaviorSubject<Array<RealEstateFullDescription>>([]);
 
-  public itemsLoaded_i$ = new BehaviorSubject<Array<Advertisement>>([]);
+  public itemsLoaded_i$: Observable<Array<Advertisement>>;
 
   constructor(
     private connector: ImmobilienScout24ConnectorService,
@@ -88,27 +91,22 @@ export class ImmobilienScout24DataProvider implements IDataProvider {
 
     const forceLoadSub = this.searchByUrl_s$.pipe(
       distinctUntilChanged(() => false),
-      withLatestFrom(this.nextUrl_i$)
-    ).subscribe(([trigger, url]) => {
-      if (!trigger) {
-        return false;
-      }
-
-      this.infiniteLoadingState_i$.next(Phase.running);
-      const searchSub = this.connector.searchByUrl(url).subscribe(response => {
-        this.infiniteDataLoaded_i$.next(response);
-        this.infiniteLoadingState_i$.next(Phase.ready);
-      }, error => {
-        this.infiniteLoadingState_i$.next(Phase.failed);
-        if (searchSub) {
-          searchSub.unsubscribe();
-        }
-      }, () => {
-        if (searchSub) {
-          searchSub.unsubscribe();
-        }
-      });
-    });
+      withLatestFrom(this.nextUrl_i$),
+      filter(([trigger, url]) => {
+        return trigger;
+      }),
+      switchMap(([trigger, url]) => {
+        this.infiniteLoadingState_i$.next(Phase.running);
+        return this.connector.searchByUrl(url).pipe(
+          map(response => {
+            this.infiniteDataLoaded_i$.next(response);
+            this.infiniteLoadingState_i$.next(Phase.ready);
+          }, error => {
+            this.infiniteLoadingState_i$.next(Phase.failed);
+          })
+        );
+      })
+    ).subscribe(() => { });
     this.subscriptions.push(forceLoadSub);
 
     this.infiniteItemsLoaded_i$ = this.infiniteDataLoaded_i$.pipe(
@@ -121,17 +119,17 @@ export class ImmobilienScout24DataProvider implements IDataProvider {
       })
     );
 
-    const searchItemsLoadedSub = this.searchItemsLoaded_i$.pipe(
+    this.itemsLoaded_i$ = this.searchItemsLoaded_i$.pipe(
       map(result => ({ source: 'search', values: result || [] })),
       merge(this.infiniteItemsLoaded_i$.pipe(map(result => ({ source: 'infinite', values: result || [] })))),
       withLatestFrom(this.itemsLoadedCustom_i$),
-    ).subscribe(([newList, currentList]) => {
-      const result = (newList.source === 'search') ? newList.values : [...currentList, ...newList.values];
-      this.itemsLoadedCustom_i$.next(result);
-      const converted = convertData(Array.isArray(result) ? result : [result], RealEstateTypeNumber.ApartmentRent);
-      this.itemsLoaded_i$.next(converted);
-    });
-    this.subscriptions.push(searchItemsLoadedSub);
+      map(([newList, currentList]) => {
+        const result = (newList.source === 'search') ? newList.values : [...currentList, ...newList.values];
+        this.itemsLoadedCustom_i$.next(result);
+        const converted = convertData(Array.isArray(result) ? result : [result], RealEstateTypeNumber.ApartmentRent);
+        return converted;
+      })
+    );
 
     this.itemsLoadingState_i$ = this.searchLoadingState_i$.pipe(
       combineLatest(this.infiniteLoadingState_i$),

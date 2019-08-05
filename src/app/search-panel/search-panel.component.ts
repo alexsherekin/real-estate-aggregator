@@ -1,8 +1,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, of, Subject } from 'rxjs';
-import { map, switchMap, tap, catchError, retry, distinctUntilChanged } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
+import { Subscriber } from '../shared/lib';
+import { NoInternetError } from '../shared/services/network-errors/no-internet.error';
 import { LocationAutocompleteComposerService } from '../shared/third-party-apis/composer';
 import {
   BaseLocationAutocompleteService,
@@ -11,13 +13,10 @@ import {
   RealEstateType,
 } from '../shared/third-party-apis/native';
 import { ApartmentRequirements, SearchSettings, Sorting } from '../shared/types';
-import { settingsSelectors } from '../store/reducers';
-import { IFilters, ISettingsState, Price, SaveSettings, Phase } from '../store/settings';
-import { TypeaheadComponent } from '../typeahead';
-import { Subscriber } from '../shared/lib';
-import { NoInternetError } from '../shared/services/network-errors/no-internet.error';
-import { ToastController } from '@ionic/angular';
+import { settingsSelectors } from '../store';
 import { NoInternetAction } from '../store/notifications/no-internet.action';
+import { IFilters, ISettingsState, Phase, Price, SaveSettings } from '../store/settings';
+import { TypeaheadComponent } from '../typeahead';
 
 enum UIMarketingType {
   ApartmentBuy = 'ApartmentBuy',

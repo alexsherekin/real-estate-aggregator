@@ -5,6 +5,8 @@ import { Advertisement } from '../third-party-apis/native/address';
 import { InjectionToken } from '@angular/core';
 
 export interface IDataProvider {
+  DataProviderKey: string;
+
   itemsLoadingState_i$: Observable<Phase>;
   itemsLoaded_i$: Observable<Array<Advertisement>>;
 

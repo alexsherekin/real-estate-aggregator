@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { LocationAutocompleteItem } from '../../shared/third-party-apis/native';
+import { LocationAutocompleteItem, Advertisement } from '../../shared/third-party-apis/native';
 
 export class LocationAutocompleteAllAction implements Action {
   public static type = '[Data] Location autocomplete all';
@@ -8,4 +8,11 @@ export class LocationAutocompleteAllAction implements Action {
   }
 }
 
-export type DataActions = LocationAutocompleteAllAction;
+export class SaveRealEstateDataAction implements Action {
+  public static type = '[Data] Save real estate data';
+  public readonly type = SaveRealEstateDataAction.type;
+  constructor(public dataProviderKey: string, public data: Advertisement[]) {
+  }
+}
+
+export type DataActions = LocationAutocompleteAllAction | SaveRealEstateDataAction;

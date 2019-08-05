@@ -22,7 +22,7 @@ import { ImmoweltLocationAutocompleteService } from './shared/third-party-apis/i
 import { LocationAutocompleteServiceListInjectionToken } from './shared/third-party-apis/native';
 import { CustomRouterStateSerializer } from './shared/utils';
 import { NotificationEffects } from './store/notifications/notification.effects';
-import { metaReducers, reducers } from './store/reducers';
+import { metaReducers, reducers } from './store';
 import { TypeaheadModule } from './typeahead';
 
 @NgModule({

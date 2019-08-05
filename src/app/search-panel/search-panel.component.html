@@ -1,5 +1,5 @@
 <ion-list>
-  <ion-radio-group [ngModel]="uiMarketingType"
+  <!-- <ion-radio-group [ngModel]="uiMarketingType"
     (ngModelChange)="selectedMarketingTypeChanged($event)">
     <ion-row>
       <ion-col *ngFor="let type of marketingTypes">
@@ -9,7 +9,7 @@
         </ion-item>
       </ion-col>
     </ion-row>
-  </ion-radio-group>
+  </ion-radio-group> -->
 
   <app-typeahead #cityTypeahead
     [dataSource$]="cityAutocomplete$"
