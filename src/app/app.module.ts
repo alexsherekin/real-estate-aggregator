@@ -21,8 +21,8 @@ import { ImmobilienScout24LocationAutocompleteService } from './shared/third-par
 import { ImmoweltLocationAutocompleteService } from './shared/third-party-apis/immowelt';
 import { LocationAutocompleteServiceListInjectionToken } from './shared/third-party-apis/native';
 import { CustomRouterStateSerializer } from './shared/utils';
-import { NotificationEffects } from './store/notifications/notification.effects';
 import { metaReducers, reducers } from './store';
+import { NotificationEffects } from './store/notifications/notification.effects';
 import { TypeaheadModule } from './typeahead';
 
 @NgModule({

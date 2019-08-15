@@ -1,15 +1,17 @@
-import { Component, Inject, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnDestroy, ViewChild, Inject } from '@angular/core';
 import { IonInfiniteScroll, LoadingController } from '@ionic/angular';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, Subscription, of, combineLatest } from 'rxjs';
+import { map, merge, tap } from 'rxjs/operators';
 
-import { IDataProvider, IDataProviderInjectionToken } from '../../shared/lib/data-provider';
+import { ImmobilienScout24DataProvider } from '../../shared/third-party-apis/immobilienscout24';
+import { ImmoweltDataProvider } from '../../shared/third-party-apis/immowelt';
 import { Advertisement } from '../../shared/third-party-apis/native';
 import { dataSelectors } from '../../store';
 import { IDataState, SaveRealEstateDataAction } from '../../store/data';
 import { Phase } from '../../store/settings';
+import { IDataProvider, IDataProviderListInjectionToken } from '../../shared/lib';
 
 @Component({
   selector: 'app-home',
@@ -19,24 +21,51 @@ import { Phase } from '../../store/settings';
 export class HomePage implements OnDestroy {
   public itemsLoaded_i$: Observable<Advertisement[]>;
   public itemsLoadingState_i$: Observable<Phase>;
+
   public Phase = Phase;
 
   private subscriptions: Subscription[] = [];
   private loadingOverlayPromise: Promise<HTMLIonLoadingElement>;
 
   constructor(
-    @Inject(IDataProviderInjectionToken) private dataProvider: IDataProvider,
+    @Inject(IDataProviderListInjectionToken) private dataProviders: IDataProvider[],
     private loading: LoadingController,
     private translate: TranslateService,
-    private dataStore: Store<IDataState>
+    private dataStore: Store<IDataState>,
   ) {
-    this.itemsLoaded_i$ = this.dataStore.select(dataSelectors.getProviderCache(this.dataProvider.DataProviderKey))
+
+    const events = this.dataProviders.map(dataProvider => this.initDataProvider(dataProvider));
+
+    this.itemsLoaded_i$ = combineLatest(events.map(event => event.loaded$))
+      .pipe(
+        map(results => {
+          return results.reduce((acc, cur) => {
+            acc.push(...cur);
+            return acc;
+          }, [] as Advertisement[]);
+        }),
+        tap(results => {
+          console.log('Results:' + results.length);
+        })
+      );
+
+    this.itemsLoadingState_i$ = of(Phase.ready)
+      .pipe(
+        merge(...events.map(event => event.loading$)),
+      );
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
+  }
+
+  private initDataProvider(dataProvider: IDataProvider) {
+    const itemsLoaded_i$ = this.dataStore.select(dataSelectors.getProviderCache(dataProvider.DataProviderKey))
       .pipe(
         map(result => result.items)
       );
-    this.itemsLoadingState_i$ = this.dataProvider.itemsLoadingState_i$;
-
-    const itemsLoadingStateSub = this.dataProvider.itemsLoadingState_i$.subscribe(state => {
+    const itemsLoadingState_i$ = dataProvider.itemsLoadingState_i$;
+    const itemsLoadingStateSub = dataProvider.itemsLoadingState_i$.subscribe(state => {
       if (state === Phase.running && !this.loadingOverlayPromise) {
         this.loadingOverlayPromise = this.loading.create({
           message: this.translate.instant('LoadingController.Wait'),
@@ -61,16 +90,17 @@ export class HomePage implements OnDestroy {
     });
     this.subscriptions.push(itemsLoadingStateSub);
 
-    this.initPersistency();
+    this.initPersistency(dataProvider);
+
+    return {
+      loaded$: itemsLoaded_i$,
+      loading$: itemsLoadingState_i$,
+    };
   }
 
-  ngOnDestroy(): void {
-    this.subscriptions.forEach(sub => sub.unsubscribe());
-  }
-
-  private initPersistency() {
-    const sub = this.dataProvider.itemsLoaded_i$.subscribe(result => {
-      this.dataStore.dispatch(new SaveRealEstateDataAction(this.dataProvider.DataProviderKey, result));
+  private initPersistency(dataProvider: IDataProvider) {
+    const sub = dataProvider.itemsLoaded_i$.subscribe(result => {
+      this.dataStore.dispatch(new SaveRealEstateDataAction(dataProvider.DataProviderKey, result));
     });
     this.subscriptions.push(sub);
   }
@@ -78,10 +108,10 @@ export class HomePage implements OnDestroy {
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
 
   public search() {
-    this.dataProvider.get();
+    this.dataProviders.forEach(dataProvider => dataProvider.get());
   }
 
   public loadData() {
-    this.dataProvider.getNext();
+    this.dataProviders.forEach(dataProvider => dataProvider.getNext());
   }
 }

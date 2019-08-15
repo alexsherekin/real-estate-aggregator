@@ -17,7 +17,9 @@
   href="{{linkToSource}}"
   target="_blank">
   <main class="image"
-    [ngStyle]="{ 'background-image': 'url(' +( titleImage || noImageIcon) + ')' }">
+    appBgImgLazyLoading
+    [img]="titleImage || noImageIcon">
+    <!-- [ngStyle]="{ 'background-image': 'url(' +( titleImage || noImageIcon) + ')' }" -->
     <div class="description-bottom">
       <span *ngIf="realEstate.numberOfRooms"
         class="info-box">

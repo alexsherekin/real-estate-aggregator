@@ -2,7 +2,6 @@ import { Observable } from 'rxjs';
 
 import { Phase } from '../../store/settings';
 import { Advertisement } from '../third-party-apis/native/address';
-import { InjectionToken } from '@angular/core';
 
 export interface IDataProvider {
   DataProviderKey: string;
@@ -14,4 +13,3 @@ export interface IDataProvider {
   getNext(): void;
 }
 
-export const IDataProviderInjectionToken = new InjectionToken('IDataProvider');

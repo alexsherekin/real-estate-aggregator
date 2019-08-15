@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import * as urlParse from 'url-parse';
 
 import { Http } from '../../services/http';
 import { ApartmentRequirements, SearchSettings } from '../../types';
 import { LocationAutocomplete } from '../native';
+import { IConnectorService } from '../native/iConnector.service';
 import {
   ItemsResponse,
   ItemsResponseResultListEntry,
@@ -30,7 +31,7 @@ interface ParserItemConfig {
 }
 
 @Injectable()
-export class ImmoweltConnectorService {
+export class ImmoweltConnectorService implements IConnectorService {
   constructor(
     private http: Http,
     private urlCreator: ImmoweltUrlCreatorService,

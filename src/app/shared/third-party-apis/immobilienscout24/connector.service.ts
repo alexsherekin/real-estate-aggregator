@@ -4,12 +4,13 @@ import { switchMap } from 'rxjs/operators';
 
 import { Http } from '../../services/http';
 import { ApartmentRequirements, SearchSettings } from '../../types';
+import { IConnectorService } from '../native/iConnector.service';
 import { ItemsResponse } from './data/data-items-response';
 import { ImmobilienScout24LocationAutocompleteResponse } from './location-autocomplete/location-autocomplete-response';
 import { ImmobilienScout24UrlCreatorService } from './url-creator.service';
 
 @Injectable()
-export class ImmobilienScout24ConnectorService {
+export class ImmobilienScout24ConnectorService implements IConnectorService {
   constructor(
     private http: Http,
     private urlCreator: ImmobilienScout24UrlCreatorService,

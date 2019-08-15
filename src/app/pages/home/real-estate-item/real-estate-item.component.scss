@@ -6,21 +6,18 @@
 @media (max-width: 600px) {
   .image{
     height: 250px;
-    background-size: 100%;
   }
 }
 
 @media (min-width: 601px) and (max-width: 900px) {
   .image{
     height: 400px;
-    background-size: 100%;
   }
 }
 
 @media (min-width: 901px) {
   .image{
     height: 500px;
-    background-size: 100%;
   }
 }
 
@@ -35,6 +32,7 @@
   background-position: center;
   background-repeat: no-repeat;
   justify-content: flex-end;
+  background-size: cover;
 }
 
 .description-bottom {
