@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, of, merge, combineLatest } from 'rxjs';
+import { map, switchMap, mergeMap } from 'rxjs/operators';
 import * as urlParse from 'url-parse';
 
 import { Http } from '../../services/http';
@@ -73,11 +73,27 @@ export class ImmoweltConnectorService implements IConnectorService {
       .pipe(
         map(response => {
           const parsed = new urlParse(url);
-          const items: ItemsResponseResultListEntry[] = this.parseHTML(response).map(item => {
-            item.marketingType = parseInt(parsed.query.marketingtype, 10) as MarketingTypeNumber;
-            item.realEstateType = parseInt(parsed.query.parentcat, 10) as RealEstateTypeNumber;
-            return item as ItemsResponseResultListEntry;
+          const items: ItemsResponseResultListEntry[] = this.parseMainHTML(response)
+            .map(item => {
+              item.marketingType = parseInt(parsed.query.marketingtype, 10) as MarketingTypeNumber;
+              item.realEstateType = parseInt(parsed.query.parentcat, 10) as RealEstateTypeNumber;
+              return item as ItemsResponseResultListEntry;
+            });
+          return items;
+        }),
+        map(items => {
+          const res = items.map(item => {
+            return this.http.get<string>(item.link, { 'Content-Type': 'text/html' }, 'text')
+              .pipe(
+                map(html => this.parseItemHTML(html)),
+                map(extItem => Object.assign(item, extItem) as ItemsResponseResultListEntry)
+              );
           });
+
+          return combineLatest(res);
+        }),
+        switchMap(i => i),
+        map(items => {
           return {
             requestedUrl: url,
             items,
@@ -86,7 +102,99 @@ export class ImmoweltConnectorService implements IConnectorService {
       );
   }
 
-  private parseHTML(html: string): Partial<ItemsResponseResultListEntry>[] {
+  private parseItemHTML(html: string): Partial<ItemsResponseResultListEntry> {
+    const root = document.createElement('div');
+    root.innerHTML = html;
+
+    const config: ParserConfig = {
+      price: {
+        selector: '#keyfacts-bar #kfpriceValue',
+        post: (value: string) => {
+          if (value === undefined || value === null) {
+            value = '';
+          }
+          const isEuro = value.includes('€');
+          value = value.replace(/[,]/g, '.');
+          return {
+            value: parseInt((/\s*[0-9]+/.exec(value) || '').toString()),
+            currency: isEuro ? 'EUR' : 'USD'
+          } as RealEstatePrice;
+        }
+      },
+      livingSpace: {
+        selector: '#keyfacts-bar #kffirstareaValue',
+        post: (value: string) => {
+          if (value === undefined || value === null) {
+            value = '';
+          }
+          return parseInt((/\s*[0-9]+/.exec(value) || '').toString());
+        }
+      },
+      numberOfRooms: {
+        selector: '#keyfacts-bar #kfroomsValue',
+        post: (value: string) => {
+          if (value === undefined || value === null) {
+            value = '';
+          }
+          return parseInt((/\s*[0-9]+/.exec(value) || '').toString());
+        }
+      },
+      image: {
+        selector: '#mediaContainer img.fotorama__img',
+        attribute: 'src'
+      },
+      title: {
+        selector: '#expose-headline'
+      },
+      calculatedPrice: {
+        selector: "#panelPrices #priceid_4",
+        post: (value: string) => {
+          if (value === undefined || value === null) {
+            value = '';
+          }
+          const isEuro = value.includes('€');
+          value = value.replace(/[,]/g, '.');
+          return {
+            value: parseInt((/\s*[0-9]+/.exec(value) || '').toString()),
+            currency: isEuro ? 'EUR' : 'USD'
+          } as RealEstatePrice;
+        }
+      },
+      city: {
+        selector: '.mini-map-icon-svg + p',
+        post: (value: string) => {
+          if (value === undefined || value === null) {
+            value = '';
+          }
+          return value.split('<br>')[1] || '';
+        }
+      },
+      street: {
+        selector: '.mini-map + p',
+        post: (value: string) => {
+          if (value === undefined || value === null) {
+            value = '';
+          }
+          return value.split('<br>')[0] || '';
+        }
+      }
+    };
+
+    return {
+      title: this.getDataItem(config.title, root)[0],
+      address: {
+        city: this.getDataItem(config.city, root)[0],
+        street: this.getDataItem(config.street, root)[0],
+      },
+      livingSpace: this.getDataItem(config.livingSpace, root)[0],
+      numberOfRooms: this.getDataItem(config.numberOfRooms, root)[0],
+      price: this.getDataItem(config.price, root)[0],
+      calculatedPrice: this.getDataItem(config.calculatedPrice, root)[0],
+      titlePicture: this.getDataItem(config.image, root)[0],
+    } as Partial<ItemsResponseResultListEntry>;
+  }
+
+  private parseMainHTML(html: string): Partial<ItemsResponseResultListEntry>[] {
     const root = document.createElement('div');
     root.innerHTML = html;
 

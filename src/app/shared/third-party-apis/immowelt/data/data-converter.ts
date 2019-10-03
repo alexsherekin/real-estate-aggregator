@@ -38,7 +38,7 @@ function getRealEstate(description: ItemsResponseResultListEntry): RealEstate {
     livingSpace: description.livingSpace,
     numberOfRooms: description.numberOfRooms,
     price: getPrice(description.price),
-    fullPrice: getPrice(description.price),
+    fullPrice: description.calculatedPrice ? getPrice(description.calculatedPrice) : undefined,
     pictures: []
   };
 }
