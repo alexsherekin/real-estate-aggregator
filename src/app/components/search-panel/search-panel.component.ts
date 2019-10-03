@@ -3,19 +3,19 @@ import { Store } from '@ngrx/store';
 import { Observable, of, Subject } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
-import { Subscriber } from '../shared/lib';
-import { NoInternetError } from '../shared/services/network-errors/no-internet.error';
-import { LocationAutocompleteComposerService } from '../shared/third-party-apis/composer';
+import { Subscriber } from '../../shared/lib';
+import { NoInternetError } from '../../shared/services/network-errors/no-internet.error';
+import { LocationAutocompleteComposerService } from '../../shared/third-party-apis/composer';
 import {
   BaseLocationAutocompleteService,
   LocationAutocompleteItem,
   MarketingType,
   RealEstateType,
-} from '../shared/third-party-apis/native';
-import { ApartmentRequirements, SearchSettings, Sorting } from '../shared/types';
-import { settingsSelectors } from '../store';
-import { NoInternetAction } from '../store/notifications/no-internet.action';
-import { IFilters, ISettingsState, Phase, Price, SaveSettings } from '../store/settings';
+} from '../../shared/third-party-apis/native';
+import { ApartmentRequirements, SearchSettings, Sorting } from '../../shared/types';
+import { settingsSelectors } from '../../store';
+import { NoInternetAction } from '../../store/notifications';
+import { IFilters, ISettingsState, Phase, Price, SaveSettings } from '../../store/settings';
 import { TypeaheadComponent } from '../typeahead';
 
 enum UIMarketingType {

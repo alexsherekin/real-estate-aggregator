@@ -14,6 +14,7 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { TypeaheadModule } from './components';
 import { HttpLoaderFactory } from './i18n/http-loader-factory';
 import { SharedModule } from './shared/shared.module';
 import { LocationAutocompleteComposerService } from './shared/third-party-apis/composer';
@@ -22,8 +23,7 @@ import { ImmoweltLocationAutocompleteService } from './shared/third-party-apis/i
 import { LocationAutocompleteServiceListInjectionToken } from './shared/third-party-apis/native';
 import { CustomRouterStateSerializer } from './shared/utils';
 import { metaReducers, reducers } from './store';
-import { NotificationEffects } from './store/notifications/notification.effects';
-import { TypeaheadModule } from './typeahead';
+import { NotificationEffects } from './store/notifications';
 
 @NgModule({
   declarations: [AppComponent],

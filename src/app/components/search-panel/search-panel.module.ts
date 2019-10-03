@@ -5,7 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 
-import * as fromFeature from '../store/settings';
+import * as fromFeature from '../../store/settings';
 import { SearchPanelComponent } from './search-panel.component';
 import { TypeaheadModule } from '../typeahead/typeahead.module';
 

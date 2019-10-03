@@ -1,17 +1,16 @@
-import { Component, OnDestroy, ViewChild, Inject } from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { IonInfiniteScroll, LoadingController } from '@ionic/angular';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, Subscription, of, combineLatest } from 'rxjs';
+import { combineLatest, Observable, of, Subscription } from 'rxjs';
 import { map, merge, tap } from 'rxjs/operators';
 
-import { ImmobilienScout24DataProvider } from '../../shared/third-party-apis/immobilienscout24';
-import { ImmoweltDataProvider } from '../../shared/third-party-apis/immowelt';
+import { IDataProvider } from '../../shared/lib';
+import { DataProviderComposerService } from '../../shared/third-party-apis/composer/data-provider-composer.servive';
 import { Advertisement } from '../../shared/third-party-apis/native';
 import { dataSelectors } from '../../store';
 import { IDataState, SaveRealEstateDataAction } from '../../store/data';
 import { Phase } from '../../store/settings';
-import { IDataProvider, IDataProviderListInjectionToken } from '../../shared/lib';
 
 @Component({
   selector: 'app-home',
@@ -28,74 +27,50 @@ export class HomePage implements OnDestroy {
   private loadingOverlayPromise: Promise<HTMLIonLoadingElement>;
 
   constructor(
-    @Inject(IDataProviderListInjectionToken) private dataProviders: IDataProvider[],
+    private dataProvider: DataProviderComposerService,
     private loading: LoadingController,
     private translate: TranslateService,
     private dataStore: Store<IDataState>,
   ) {
 
-    const events = this.dataProviders.map(dataProvider => this.initDataProvider(dataProvider));
+    this.itemsLoaded_i$ = dataProvider.itemsLoaded_i$;
+    this.itemsLoadingState_i$ = dataProvider.itemsLoadingState_i$;
+    this.initDataProvider();
 
-    this.itemsLoaded_i$ = combineLatest(events.map(event => event.loaded$))
-      .pipe(
-        map(results => {
-          return results.reduce((acc, cur) => {
-            acc.push(...cur);
-            return acc;
-          }, [] as Advertisement[]);
-        }),
-        tap(results => {
-          console.log('Results:' + results.length);
-        })
-      );
+    this.itemsLoaded_i$.subscribe(() => { })
 
-    this.itemsLoadingState_i$ = of(Phase.ready)
-      .pipe(
-        merge(...events.map(event => event.loading$)),
-      );
   }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
-  private initDataProvider(dataProvider: IDataProvider) {
-    const itemsLoaded_i$ = this.dataStore.select(dataSelectors.getProviderCache(dataProvider.DataProviderKey))
-      .pipe(
-        map(result => result.items)
-      );
-    const itemsLoadingState_i$ = dataProvider.itemsLoadingState_i$;
-    const itemsLoadingStateSub = dataProvider.itemsLoadingState_i$.subscribe(state => {
-      if (state === Phase.running && !this.loadingOverlayPromise) {
-        this.loadingOverlayPromise = this.loading.create({
-          message: this.translate.instant('LoadingController.Wait'),
-        }).then(loadingOverlay => {
-          loadingOverlay.present();
-          return loadingOverlay;
-        });
-      } else if (state === Phase.ready || state === Phase.failed || state === Phase.stopped) {
-        if (this.loadingOverlayPromise) {
-          this.loadingOverlayPromise.then(loadingOverlay => {
-            loadingOverlay.dismiss();
-            this.loadingOverlayPromise = undefined;
+  private initDataProvider() {
+    const itemsLoadingStateSub = this.dataProvider.itemsLoadingState_i$
+      .subscribe(state => {
+        if (state === Phase.running && !this.loadingOverlayPromise) {
+          this.loadingOverlayPromise = this.loading.create({
+            message: this.translate.instant('LoadingController.Wait'),
+          }).then(loadingOverlay => {
+            loadingOverlay.present();
+            return loadingOverlay;
           });
-        }
+        } else if (state === Phase.ready || state === Phase.failed || state === Phase.stopped) {
+          if (this.loadingOverlayPromise) {
+            this.loadingOverlayPromise.then(loadingOverlay => {
+              loadingOverlay.dismiss();
+              this.loadingOverlayPromise = undefined;
+            });
+          }
 
-        if (this.infiniteScroll) {
-          if (state === Phase.ready || state === Phase.failed || state === Phase.stopped) {
-            this.infiniteScroll.complete();
+          if (this.infiniteScroll) {
+            if (state === Phase.ready || state === Phase.failed || state === Phase.stopped) {
+              this.infiniteScroll.complete();
+            }
           }
         }
-      }
-    });
+      });
     this.subscriptions.push(itemsLoadingStateSub);
-
-    this.initPersistency(dataProvider);
-
-    return {
-      loaded$: itemsLoaded_i$,
-      loading$: itemsLoadingState_i$,
-    };
   }
 
   private initPersistency(dataProvider: IDataProvider) {
@@ -108,10 +83,10 @@ export class HomePage implements OnDestroy {
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
 
   public search() {
-    this.dataProviders.forEach(dataProvider => dataProvider.get());
+    this.dataProvider.get();
   }
 
   public loadData() {
-    this.dataProviders.forEach(dataProvider => dataProvider.getNext());
+    this.dataProvider.getNext();
   }
 }

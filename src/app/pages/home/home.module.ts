@@ -5,21 +5,17 @@ import { IonicModule } from '@ionic/angular';
 import { StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { SearchPanelModule } from '../../search-panel/search-panel.module';
-import { IDataProviderListInjectionToken } from '../../shared/lib';
-import {
-  ImmobilienScout24DataProvider,
-  ImmobilienScout24LocationAutocompleteService,
-} from '../../shared/third-party-apis/immobilienscout24';
-import { ImmoweltDataProvider } from '../../shared/third-party-apis/immowelt';
+import { SearchPanelModule } from '../../components';
+import { SharedModule } from '../../shared/shared.module';
+import { ImmobilienScout24LocationAutocompleteService } from '../../shared/third-party-apis/immobilienscout24';
 import { BaseLocationAutocompleteService } from '../../shared/third-party-apis/native';
 import * as fromFeature from '../../store/data';
+import { BackgroundImageLazyLoadingDirective } from './directive/background-image-lazy-loading';
+import { ImgLazyLoadingDirective } from './directive/img-lazy-loading';
 import { HomePage } from './home.page';
 import { HomePageRoutingModule } from './home.router.module';
 import { RealEstateItemComponent } from './real-estate-item';
 import { RealEstateListComponent } from './real-estate-list';
-import { ImgLazyLoadingDirective } from './directive/img-lazy-loading';
-import { BackgroundImageLazyLoadingDirective } from './directive/background-image-lazy-loading';
 
 @NgModule({
   imports: [
@@ -31,7 +27,8 @@ import { BackgroundImageLazyLoadingDirective } from './directive/background-imag
     SearchPanelModule,
     StoreModule.forFeature(fromFeature.FEATURE_NAME, fromFeature.reducer, {
       metaReducers: fromFeature.metaReducers
-    })
+    }),
+    SharedModule
   ],
   declarations: [
     HomePage,
@@ -42,8 +39,6 @@ import { BackgroundImageLazyLoadingDirective } from './directive/background-imag
   ],
   providers: [
     { provide: BaseLocationAutocompleteService, useClass: ImmobilienScout24LocationAutocompleteService },
-    { provide: IDataProviderListInjectionToken, useClass: ImmobilienScout24DataProvider, multi: true },
-    { provide: IDataProviderListInjectionToken, useClass: ImmoweltDataProvider, multi: true },
   ],
   exports: [
     IonicModule,

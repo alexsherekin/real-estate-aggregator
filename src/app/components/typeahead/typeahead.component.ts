@@ -1,9 +1,8 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, Subject } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
-import { Phase } from '../store/settings';
+import { Phase } from '../../store/settings';
 
 @Component({
   selector: 'app-typeahead',

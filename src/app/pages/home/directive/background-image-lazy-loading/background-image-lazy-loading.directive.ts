@@ -1,17 +1,23 @@
-import { Directive, ElementRef, HostBinding, Input, AfterViewInit } from '@angular/core';
+import { Directive, ElementRef, HostBinding, Input, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
 
 @Directive({
   selector: '[appBgImgLazyLoading]'
 })
-export class BackgroundImageLazyLoadingDirective implements AfterViewInit {
+export class BackgroundImageLazyLoadingDirective implements OnChanges, AfterViewInit {
 
   @HostBinding('style.background-image') bgImage = null;
   @Input() img: string;
 
   constructor(private el: ElementRef) { }
 
-  ngAfterViewInit() {
+  public ngAfterViewInit() {
     this.canLazyLoad() ? this.lazyLoadImage() : this.loadImage();
+  }
+
+  public ngOnChanges(changes: SimpleChanges): void {
+    if (changes.hasOwnProperty('img')) {
+      this.lazyLoadImage();
+    }
   }
 
   private canLazyLoad() {

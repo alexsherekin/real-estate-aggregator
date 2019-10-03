@@ -111,13 +111,17 @@ export class ImmoweltDataProvider implements IDataProvider {
         this.infiniteLoadingState_i$.next(Phase.ready);
       }, error => {
         this.infiniteLoadingState_i$.next(Phase.failed);
-        if (searchSub) {
-          searchSub.unsubscribe();
-        }
+        setTimeout(() => {
+          if (searchSub) {
+            searchSub.unsubscribe();
+          }
+        }, 0);
       }, () => {
-        if (searchSub) {
-          searchSub.unsubscribe();
-        }
+        setTimeout(() => {
+          if (searchSub) {
+            searchSub.unsubscribe();
+          }
+        }, 0);
       });
     });
     this.subscriptions.push(forceLoadSub);
