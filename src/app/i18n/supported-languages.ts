@@ -1,4 +1,4 @@
 export const supportedLanguages = {
-  default: 'en',
+  default: 'de',
   languages: ['en', 'de', 'ru', 'ua']
 };

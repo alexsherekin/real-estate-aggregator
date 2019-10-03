@@ -1,0 +1,42 @@
+{
+  "HomePage": {
+    "Search": "Suchen...",
+    "Loading": "Laden die Daten...",
+    "NothingFound": "Leider gibt es zurzeit keine Anzeigen..."
+  },
+  "SettingsPage": {
+    "Title": "Einstellungen"
+  },
+  "LoadingController": {
+    "Wait": "Bitte warten Sie..."
+  },
+  "ApartmentDescription": {
+    "City": "Stadt",
+    "County": "Land",
+    "RoomsCount": "Zimmeranzahl",
+    "Price": "Preis",
+    "Square": "Wohnfläche"
+  },
+  "RealEstateFeature": {
+    "Balcony": "Balkon",
+    "BuiltInKitchen": "EBK",
+    "Elevator": "Aufzug",
+    "Cellar": "Keller",
+    "Garden": "Garten",
+    "GuestWC": "Gast WC",
+    "Accessible": "Accessible",
+    "WGPossible": "WG-geeignet"
+  },
+  "MarketingType": {
+    "ApartmentBuy": "Wohnung kaufen",
+    "ApartmentRent": "Wohnung mieten",
+    "HouseBuy": "Haus kaufen",
+    "HouseRent": "Haus mieten"
+  },
+  "Message": {
+    "NoInternetText": "Kein Internet"
+  },
+  "TypeaheadComponent": {
+    "NothingFound": "Nichts gefunden"
+  }
+}

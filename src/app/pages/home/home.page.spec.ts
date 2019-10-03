@@ -38,9 +38,4 @@ xdescribe('HomePage', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
-  it('should have title as "HomePage.Title"', async () => {
-    const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('ion-title').textContent).toContain('HomePage.Title');
-  });
 });

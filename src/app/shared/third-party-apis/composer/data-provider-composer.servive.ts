@@ -1,13 +1,11 @@
 import { Inject, Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { combineLatest, Observable, Subscription } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
-import { dataSelectors } from '../../../store';
-import { IDataState, SaveRealEstateDataAction } from '../../../store/data';
 import { Phase } from '../../../store/settings';
 import { IDataProvider, IDataProviderListInjectionToken } from '../../lib';
 import { Advertisement } from '../native';
+import { areSimilar } from './are-similar';
 
 @Injectable()
 export class DataProviderComposerService implements IDataProvider {
@@ -15,12 +13,9 @@ export class DataProviderComposerService implements IDataProvider {
   public itemsLoadingState_i$: Observable<Phase>;
   public itemsLoaded_i$: Observable<Array<Advertisement>>;
 
-  private subscriptions: Subscription[] = [];
-
   constructor(
     @Inject(IDataProviderListInjectionToken)
     private dataProviders: IDataProvider[],
-    private dataStore: Store<IDataState>,
   ) {
     const events = this.dataProviders.map(dataProvider => this.initDataProvider(dataProvider));
 
@@ -73,11 +68,9 @@ export class DataProviderComposerService implements IDataProvider {
     for (let j = 0; j < maxSize; j++) {
       for (let i = 0; i < ads.length; i++) {
         const ad = ads[i][j];
-        if (ad) {
-          const isDuplicate = result.some(resAd => this.areSimilar(resAd, ad));
-          if (!isDuplicate) {
-            result.push(ad);
-          }
+        const isDuplicate = !ad || result.some(resAd => areSimilar(resAd, ad));
+        if (!isDuplicate) {
+          result.push(ad);
         }
       }
     }
@@ -85,57 +78,21 @@ export class DataProviderComposerService implements IDataProvider {
     return result;
   }
 
-  private areSimilar(ad1: Advertisement, ad2: Advertisement) {
-    if (isDefined(ad1.realEstate, 'numberOfRooms') && isDefined(ad2.realEstate, 'numberOfRooms')) {
-      if (ad1.realEstate.numberOfRooms !== ad2.realEstate.numberOfRooms) {
-        return false;
-      }
-    }
-
-    if (isDefined(ad1.realEstate, 'livingSpace') && isDefined(ad2.realEstate, 'livingSpace')) {
-      if (ad1.realEstate.livingSpace !== ad2.realEstate.livingSpace) {
-        return false;
-      }
-    }
-
-    if (isDefined(ad1.realEstate, 'price') && isDefined(ad2.realEstate, 'price')) {
-      if (ad1.realEstate.price.value !== ad2.realEstate.price.value) {
-        return false;
-      }
-    }
-
-    if (isDefined(ad1, 'title') && isDefined(ad2, 'title')) {
-      if (ad1.title === ad2.title) {
-        return true;
-      }
-    }
-
-    return true;
-  }
-
-
-  public ngOnDestroy(): void {
-    this.subscriptions.forEach(sub => sub.unsubscribe());
-  }
-
   private initDataProvider(dataProvider: IDataProvider) {
-    this.initPersistency(dataProvider);
     return {
-      loaded$: this.dataStore
-        .select(dataSelectors.getProviderCache(dataProvider.DataProviderKey))
+      loaded$: dataProvider.itemsLoaded_i$
         .pipe(
-          map(result => (result && result.items) || [])
+          map(result => result || [])
         ),
       loading$: dataProvider.itemsLoadingState_i$,
     };
   }
 
-  private initPersistency(dataProvider: IDataProvider) {
-    const sub = dataProvider.itemsLoaded_i$.subscribe(result => {
-      this.dataStore.dispatch(new SaveRealEstateDataAction(dataProvider.DataProviderKey, result));
-    });
-    this.subscriptions.push(sub);
-  }
+  // private initPersistency(dataProvider: IDataProvider) {
+  //   dataProvider.itemsLoaded_i$.subscribe(result => {
+  //     this.dataStore.dispatch(new SaveRealEstateDataAction(dataProvider.DataProviderKey, result));
+  //   });
+  // }
 
   public get() {
     this.dataProviders.forEach(dataProvider => dataProvider.get());
@@ -144,8 +101,4 @@ export class DataProviderComposerService implements IDataProvider {
   public getNext() {
     this.dataProviders.forEach(dataProvider => dataProvider.getNext());
   }
-}
-
-function isDefined<T>(obj: T, prop: keyof T) {
-  return obj.hasOwnProperty(prop) && obj[prop] !== undefined && obj[prop] !== null;
 }
