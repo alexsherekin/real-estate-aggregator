@@ -86,7 +86,12 @@ export class ImmoweltConnectorService implements IConnectorService {
             return this.http.get<string>(item.link, { 'Content-Type': 'text/html' }, 'text')
               .pipe(
                 map(html => this.parseItemHTML(html)),
-                map(extItem => Object.assign(item, extItem) as ItemsResponseResultListEntry)
+                map(extItem => {
+                  Object.keys(extItem)
+                    .filter(key => extItem[key])
+                    .forEach(key => item[key] = extItem[key]);
+                  return item;
+                })
               );
           });
 
@@ -104,7 +109,11 @@ export class ImmoweltConnectorService implements IConnectorService {
 
   private parseItemHTML(html: string): Partial<ItemsResponseResultListEntry> {
     const root = document.createElement('div');
-    root.innerHTML = html;
+    root.innerHTML = `<style>
+      img {
+        display: none !important;
+      }
+    </style> ` + html;
 
     const config: ParserConfig = {
       price: {
@@ -196,7 +205,11 @@ export class ImmoweltConnectorService implements IConnectorService {
 
   private parseMainHTML(html: string): Partial<ItemsResponseResultListEntry>[] {
     const root = document.createElement('div');
-    root.innerHTML = html;
+    root.innerHTML = `<style>
+      img {
+        display: none !important;
+      }
+    </style> ` + html;
 
     const config: ParserConfig = {
       list: {
