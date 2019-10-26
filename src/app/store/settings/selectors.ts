@@ -1,5 +1,6 @@
-import { ISettingsState } from "./state";
-import { createFeatureSelector, createSelector } from "@ngrx/store";
+import { createFeatureSelector, createSelector } from '@ngrx/store';
+
+import { ISettingsState } from './state';
 
 export function getSelectors(name: string) {
   const getSettingsState = createFeatureSelector<ISettingsState>(name);

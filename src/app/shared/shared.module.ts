@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, ModuleWithProviders } from '@angular/core';
 import { HTTP } from '@ionic-native/http/ngx';
 
 import { Http } from './services/http';
@@ -13,19 +13,34 @@ import { DataProviderComposerService } from './third-party-apis/composer/data-pr
 import { IDataProviderListInjectionToken } from './lib';
 
 @NgModule({
-  providers: [
-    ImmobilienScout24ConnectorService,
-    ImmobilienScout24DataProvider,
-    ImmobilienScout24UrlCreatorService,
-    ImmoweltConnectorService,
-    ImmoweltDataProvider,
-    ImmoweltUrlCreatorService,
-    ImmobilienScout24LocationAutocompleteService,
-    HTTP,
-    Http,
-    { provide: IDataProviderListInjectionToken, useClass: ImmobilienScout24DataProvider, multi: true },
-    { provide: IDataProviderListInjectionToken, useClass: ImmoweltDataProvider, multi: true },
-    DataProviderComposerService,
-  ]
 })
-export class SharedModule { }
+export class SharedModule {
+  static forChild(): ModuleWithProviders<SharedModule> {
+    return {
+      ngModule: SharedModule,
+      providers: [
+
+      ]
+    };
+  }
+
+  static forRoot(): ModuleWithProviders<SharedModule> {
+    return {
+      ngModule: SharedModule,
+      providers: [
+        ImmobilienScout24ConnectorService,
+        ImmobilienScout24DataProvider,
+        ImmobilienScout24UrlCreatorService,
+        ImmoweltConnectorService,
+        ImmoweltDataProvider,
+        ImmoweltUrlCreatorService,
+        ImmobilienScout24LocationAutocompleteService,
+        HTTP,
+        Http,
+        { provide: IDataProviderListInjectionToken, useClass: ImmobilienScout24DataProvider, multi: true },
+        { provide: IDataProviderListInjectionToken, useClass: ImmoweltDataProvider, multi: true },
+        DataProviderComposerService,
+      ]
+    };
+  }
+}

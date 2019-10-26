@@ -4,7 +4,8 @@
 <address *ngIf="address"
   class="address">
   {{ formatAddress() }}
-  <a class="maps"
+  <a *ngIf="addressAsString"
+    class="maps"
     href="https://www.google.com/maps/place/{{addressAsString}}"
     target="_blank">
     <img [src]="mapsIcon"
@@ -33,9 +34,9 @@
 
       <span *ngIf="realEstate.price.value"
         class="info-box">
-        {{ realEstate.price.value + '€' }}
-        <span *ngIf="realEstate.fullPrice">
-          {{ ' (' + realEstate.fullPrice.value + '€) ' }}
+        {{ formatPrice(realEstate.price) }}
+        <span *ngIf="realEstate.fullPrice && realEstate.price.value !== realEstate.fullPrice.value">
+          {{ ' (' + formatPrice(realEstate.fullPrice) + ')' }}
         </span>
       </span>
     </div>

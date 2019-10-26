@@ -4,7 +4,7 @@ import { HTTP } from '@ionic-native/http/ngx';
 import { from, Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import { NoInternetError } from './network-errors/no-internet.error';
+import { NoInternetError } from '../types/errors/no-internet.error';
 
 @Injectable()
 export class Http {

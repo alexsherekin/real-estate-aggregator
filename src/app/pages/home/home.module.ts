@@ -5,10 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { SearchPanelModule } from '../../components';
 import { SharedModule } from '../../shared/shared.module';
-import { ImmobilienScout24LocationAutocompleteService } from '../../shared/third-party-apis/immobilienscout24';
-import { BaseLocationAutocompleteService } from '../../shared/third-party-apis/native';
 import * as fromFeature from '../../store/data';
 import { BackgroundImageLazyLoadingDirective } from './directive/background-image-lazy-loading';
 import { ImgLazyLoadingDirective } from './directive/img-lazy-loading';
@@ -24,11 +21,10 @@ import { RealEstateListComponent } from './real-estate-list';
     FormsModule,
     HomePageRoutingModule,
     TranslateModule,
-    SearchPanelModule,
     StoreModule.forFeature(fromFeature.FEATURE_NAME, fromFeature.reducer, {
       metaReducers: fromFeature.metaReducers
     }),
-    SharedModule
+    SharedModule.forChild()
   ],
   declarations: [
     HomePage,
@@ -37,16 +33,12 @@ import { RealEstateListComponent } from './real-estate-list';
     ImgLazyLoadingDirective,
     BackgroundImageLazyLoadingDirective,
   ],
-  providers: [
-    { provide: BaseLocationAutocompleteService, useClass: ImmobilienScout24LocationAutocompleteService },
-  ],
   exports: [
     IonicModule,
     CommonModule,
     FormsModule,
     HomePageRoutingModule,
     TranslateModule,
-    SearchPanelModule,
   ]
 })
 export class HomePageModule {

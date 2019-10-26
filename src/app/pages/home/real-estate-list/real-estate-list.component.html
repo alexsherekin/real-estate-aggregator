@@ -1,5 +1,5 @@
 <ion-list lines="none">
-  <ng-container *ngFor="let realEstate of items$ | async; trackBy trackById">
+  <ng-container *ngFor="let realEstate of items; trackBy trackById">
     <ion-item>
       <app-real-estate-item [item]="realEstate"></app-real-estate-item>
     </ion-item>

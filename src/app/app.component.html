@@ -1,3 +1,24 @@
 <ion-app>
-  <ion-router-outlet></ion-router-outlet>
+  <ion-menu side="start"
+    menuId="first"
+    contentId="content1"
+    (ionWillOpen)="onMenuWillOpen()"
+    (ionWillClose)="onMenuWillClose()">
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>
+          {{ "HomePage.Search" | translate }}
+        </ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <app-search-panel [data]="settings$ | async"
+        [cityAutocomplete]="cityAutocomplete$ | async"
+        [cityAutocompleteLoading]="cityAutocompleteLoading"
+        (change)="onSearchSettingsChanged($event)"
+        (citySearchChange)="onCitySearchChanged($event)">
+      </app-search-panel>
+    </ion-content>
+  </ion-menu>
+  <ion-router-outlet id="content1"></ion-router-outlet>
 </ion-app>

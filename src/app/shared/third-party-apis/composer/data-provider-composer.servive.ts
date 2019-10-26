@@ -7,7 +7,7 @@ import { IDataProvider, IDataProviderListInjectionToken } from '../../lib';
 import { Advertisement } from '../native';
 import { areSimilar } from './are-similar';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class DataProviderComposerService implements IDataProvider {
   public DataProviderKey: string = 'composer';
   public itemsLoadingState_i$: Observable<Phase>;

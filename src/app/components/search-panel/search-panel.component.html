@@ -12,13 +12,13 @@
   </ion-radio-group> -->
 
   <app-typeahead #cityTypeahead
-    [dataSource$]="cityAutocomplete$"
+    [dataSource]="cityAutocomplete"
     [loading]="cityAutocompleteLoading"
     [value]="apartment.city"
     [placeholder]="'ApartmentDescription.City' | translate"
     [bindValue]="'label'"
     [searchField]="'label'"
-    (search)="citySearchQueryChanged($event)"
+    (search)="onCitySearchQueryChanged($event)"
     (itemSelected)="citySelected($event)">
   </app-typeahead>
   <ion-item>

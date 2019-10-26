@@ -15,4 +15,11 @@ export class SaveRealEstateDataAction implements Action {
   }
 }
 
-export type DataActions = LocationAutocompleteAllAction | SaveRealEstateDataAction;
+export class BeginSearchAction implements Action {
+  public static type = '[Data] Begin search';
+  public readonly type = BeginSearchAction.type;
+  constructor() {
+  }
+}
+
+export type DataActions = LocationAutocompleteAllAction | SaveRealEstateDataAction | BeginSearchAction;

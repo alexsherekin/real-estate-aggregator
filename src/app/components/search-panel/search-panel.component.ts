@@ -1,21 +1,20 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { Observable, of, Subject } from 'rxjs';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
-
-import { Subscriber } from '../../shared/lib';
-import { NoInternetError } from '../../shared/services/network-errors/no-internet.error';
-import { LocationAutocompleteComposerService } from '../../shared/third-party-apis/composer';
 import {
-  BaseLocationAutocompleteService,
-  LocationAutocompleteItem,
-  MarketingType,
-  RealEstateType,
-} from '../../shared/third-party-apis/native';
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
+
+import { LocationAutocompleteItem, MarketingType, RealEstateType } from '../../shared/third-party-apis/native';
 import { ApartmentRequirements, SearchSettings, Sorting } from '../../shared/types';
-import { settingsSelectors } from '../../store';
-import { NoInternetAction } from '../../store/notifications';
-import { IFilters, ISettingsState, Phase, Price, SaveSettings } from '../../store/settings';
+import { IFilters, Phase, Price } from '../../store/settings';
 import { TypeaheadComponent } from '../typeahead';
 
 enum UIMarketingType {
@@ -69,7 +68,22 @@ interface PriceRangeConfig {
   styleUrls: ['./search-panel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SearchPanelComponent extends Subscriber implements OnInit {
+export class SearchPanelComponent implements OnInit, OnChanges {
+
+  @Input()
+  public data: ApartmentRequirements;
+
+  @Input()
+  public cityAutocomplete: LocationAutocompleteItem[];
+
+  @Input()
+  public cityAutocompleteLoading: Phase = Phase.init;
+
+  @Output()
+  public change = new EventEmitter<ApartmentRequirements>();
+
+  @Output()
+  public citySearchChange = new EventEmitter<string>();
 
   public apartment: ApartmentRequirements = {};
   public searchSettings: SearchSettings = {
@@ -92,82 +106,31 @@ export class SearchPanelComponent extends Subscriber implements OnInit {
   public price: Price;
   public marketingTypes = [UIMarketingType.ApartmentBuy, UIMarketingType.ApartmentRent, UIMarketingType.HouseBuy, UIMarketingType.HouseRent];
 
-  private citySearchQueryChanged$ = new Subject<string>();
-  private citySelected$ = new Subject<LocationAutocompleteItem>();
-  public cityAutocomplete$: Observable<LocationAutocompleteItem[]>;
-  public cityAutocompleteLoading: Phase = Phase.init;
-
   @ViewChild('cityTypeahead') public cityTypeahead: TypeaheadComponent;
 
-  constructor(
-    private store: Store<ISettingsState>,
-    private autocomplete: BaseLocationAutocompleteService,
-    private autocompleteComposer: LocationAutocompleteComposerService,
-    private cd: ChangeDetectorRef,
-  ) {
-    super();
-    this.store.select(settingsSelectors.getFilters).subscribe(data => {
-      this.apartment = data;
-      this.uiMarketingType = marketingTypesReverseMap[data.marketingType] ? marketingTypesReverseMap[data.marketingType][data.realEstateType] : UIMarketingType.ApartmentRent;
-      this.priceRangeConfig = this.priceRangeConfigs[data.marketingType] || this.priceRangeConfigs[MarketingType.RENT];
-      this.price = data.marketingType === MarketingType.RENT ? data.rentPrice : data.buyPrice;
-      this.cd.markForCheck();
-    });
-
-    const defaultAutocompleteResponse = { key: '', items: [] };
-    this.cityAutocomplete$ = this.citySearchQueryChanged$.pipe(
-      tap(() => {
-        this.cityAutocompleteLoading = Phase.running;
-      }),
-      switchMap(value => {
-        if (typeof value !== 'string') {
-          return of(defaultAutocompleteResponse);
-        }
-
-        return this.autocomplete.getLocationAutocomplete(value)
-          .pipe(
-            catchError(error => {
-              if (error instanceof NoInternetError) {
-                this.store.dispatch(new NoInternetAction());
-              }
-              return of(defaultAutocompleteResponse);
-            })
-          );
-      }),
-      tap(() => {
-        this.cityAutocompleteLoading = Phase.ready;
-        this.cityTypeahead.cd.markForCheck();
-      }),
-      map(response => response.items)
-    );
-
-    const subscription = this.citySelected$.pipe(
-      switchMap(value => {
-        this.store.dispatch(new SaveSettings({
-          city: value.label || '',
-          locationSettings: {
-            [this.autocomplete.dataProviderKey]: value
-          }
-        }));
-
-        return this.autocompleteComposer.getLocationAutocomplete(this.autocomplete.dataProviderKey, value);
-      })
-    ).subscribe(responses => {
-      const locationSettings = responses.reduce((acc, response) => {
-        acc[response.key] = response.item;
-        return acc;
-      }, {});
-
-      this.store.dispatch(new SaveSettings({ locationSettings }));
-    });
-    this.addSubscription(subscription);
+  public ngOnInit() {
   }
 
-  ngOnInit() {
+  public ngOnChanges(changes: SimpleChanges): void {
+
+    if (changes.hasOwnProperty('data')) {
+      this.apartment = changes.data.currentValue;
+      if (this.apartment) {
+        const { marketingType, realEstateType, rentPrice, buyPrice } = this.apartment;
+        this.uiMarketingType = marketingTypesReverseMap[marketingType] ? marketingTypesReverseMap[marketingType][realEstateType] : UIMarketingType.ApartmentRent;
+        this.priceRangeConfig = this.priceRangeConfigs[marketingType] || this.priceRangeConfigs[MarketingType.RENT];
+        this.price = marketingType === MarketingType.RENT ? rentPrice : buyPrice;
+      } else {
+        this.uiMarketingType = UIMarketingType.ApartmentRent;
+        this.priceRangeConfig = this.priceRangeConfigs[this.uiMarketingType];
+        this.price = undefined;
+      }
+    }
+
   }
 
-  public citySearchQueryChanged(value: string) {
-    this.citySearchQueryChanged$.next(value);
+  public onCitySearchQueryChanged(value: string) {
+    this.citySearchChange.emit(value);
   }
 
   public citySelected(value: LocationAutocompleteItem | Event) {
@@ -175,18 +138,20 @@ export class SearchPanelComponent extends Subscriber implements OnInit {
       return;
     }
 
-    this.citySelected$.next(value);
+    this.change.emit(Object.assign({}, this.apartment, {
+      city: value.label || ''
+    }));
   }
 
   public roomsCountChanged({ lower, upper } = { lower: 0, upper: 5 }) {
-    this.store.dispatch(new SaveSettings({
+    this.change.emit(Object.assign({}, this.apartment, {
       minRoomsCount: lower,
       maxRoomsCount: upper,
     }));
   }
 
   public squareChanged({ lower, upper } = { lower: 0, upper: 70 }) {
-    this.store.dispatch(new SaveSettings({
+    this.change.emit(Object.assign({}, this.apartment, {
       minSquare: lower,
       maxSquare: upper,
     }));
@@ -209,10 +174,10 @@ export class SearchPanelComponent extends Subscriber implements OnInit {
         }
       };
     }
-    this.store.dispatch(new SaveSettings(payload));
+    this.change.emit(Object.assign({}, this.apartment, payload));
   }
 
   public selectedMarketingTypeChanged(value: UIMarketingType) {
-    this.store.dispatch(new SaveSettings(marketingTypesMap[value]));
+    this.change.emit(Object.assign({}, this.apartment, marketingTypesMap[value]));
   }
 }

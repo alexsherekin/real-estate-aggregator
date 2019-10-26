@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { Advertisement } from '../../../shared/third-party-apis/native/address';
 
@@ -7,10 +7,13 @@ import { Advertisement } from '../../../shared/third-party-apis/native/address';
   templateUrl: './real-estate-list.component.html',
   styleUrls: ['./real-estate-list.component.scss']
 })
-export class RealEstateListComponent implements OnInit {
+export class RealEstateListComponent implements OnInit, OnChanges {
+  ngOnChanges(changes: SimpleChanges): void {
+    console.dir(changes);
+  }
 
   @Input()
-  public items$: Observable<Array<Advertisement>> = of([]);
+  public items: Advertisement[] = [];
 
   constructor() { }
 

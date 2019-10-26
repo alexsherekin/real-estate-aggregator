@@ -11,20 +11,12 @@ export class LocationAutocompleteComposerService {
   ) {
   }
 
-  public getLocationAutocomplete(key: string, result: LocationAutocompleteItem): Observable<{ key: string, item: LocationAutocompleteItem }[]> {
-    const label = ((result && result.label) || '')
-      .replace('-', ' ')
-      .replace(',', ' ');
+  public getLocationAutocomplete(label: string): Observable<{ key: string, item: LocationAutocompleteItem }[]> {
+    label = label.replace('-', ' ').replace(',', ' ');
 
     return forkJoin<Observable<{ key: string, items: LocationAutocompleteItem }>[]>(
       this.allDataProviders
         .map(provider => {
-          if (provider.dataProviderKey === key) {
-            return of({
-              key: key,
-              items: [result]
-            });
-          }
           return provider.getLocationAutocomplete(label)
             .pipe(
               catchError(error => of(undefined))

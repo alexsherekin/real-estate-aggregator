@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { Advertisement, Address, RealEstate } from '../../../shared/third-party-apis/native/address';
+import { Advertisement, Address, RealEstate, Price, currencyToString } from '../../../shared/third-party-apis/native/address';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -74,5 +74,12 @@ export class RealEstateItemComponent implements OnInit, OnChanges {
       .filter(Boolean)
       .map(label => this.translate.instant('RealEstateFeature.' + label))
       .join(' | ');
+  }
+
+  public formatPrice(price: Price) {
+    if (!price) {
+      return '';
+    }
+    return `${price.value} ${currencyToString(price.currency)}`;
   }
 }

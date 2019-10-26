@@ -14,6 +14,15 @@ export enum Currency {
   USD = 'USD',
 }
 
+const currencyMap = {
+  [Currency.EUR]: '€',
+  [Currency.USD]: '$',
+};
+
+export function currencyToString(currency: Currency) {
+  return currencyMap[currency];
+}
+
 export enum MarketingType {
   RENT = 'RENT',
   BUY = 'BUY',

@@ -2,13 +2,11 @@ import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { IonInfiniteScroll, LoadingController } from '@ionic/angular';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-import { combineLatest, Observable, of, Subscription } from 'rxjs';
-import { map, merge, tap } from 'rxjs/operators';
+import { Observable, Subscription } from 'rxjs';
 
 import { IDataProvider } from '../../shared/lib';
 import { DataProviderComposerService } from '../../shared/third-party-apis/composer/data-provider-composer.servive';
 import { Advertisement } from '../../shared/third-party-apis/native';
-import { dataSelectors } from '../../store';
 import { IDataState, SaveRealEstateDataAction } from '../../store/data';
 import { Phase } from '../../store/settings';
 
@@ -37,7 +35,9 @@ export class HomePage implements OnDestroy {
     this.itemsLoadingState_i$ = dataProvider.itemsLoadingState_i$;
     this.initDataProvider();
 
-    this.itemsLoaded_i$.subscribe(() => { })
+    this.dataProvider.itemsLoaded_i$.subscribe(() => {
+      console.log('changes!!!');
+    });
 
   }
 

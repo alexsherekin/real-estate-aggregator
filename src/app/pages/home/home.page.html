@@ -1,25 +1,31 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Home
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
 <ion-content>
-  <app-search-panel></app-search-panel>
-  <ion-button color="primary"
-    expand="full"
-    (click)="search()">{{ "HomePage.Search" | translate }}</ion-button>
 
-  <ion-item *ngIf="(itemsLoadingState_i$ | async) === Phase.failed"
+  <!-- <ion-item *ngIf="(itemsLoadingState_i$ | async) === Phase.failed"
     text-center>
     <ion-label>
       {{ 'HomePage.NothingFound' | translate }}
     </ion-label>
   </ion-item>
 
-  <ng-container *ngIf="(itemsLoadingState_i$ | async) !== Phase.failed">
-    <app-real-estate-list [items$]="itemsLoaded_i$"></app-real-estate-list>
-    <ion-infinite-scroll #infiniteScroll
-      threshold="100px"
-      (ionInfinite)="loadData($event)">
-      <ion-infinite-scroll-content loadingSpinner="bubbles"
-        loadingText="{{ 'HomePage.Loading' | translate }}">
-      </ion-infinite-scroll-content>
-    </ion-infinite-scroll>
-  </ng-container>
+  <ng-container *ngIf="(itemsLoadingState_i$ | async) !== Phase.failed"> -->
+  <app-real-estate-list [items]="dataProvider.itemsLoaded_i$ | async"></app-real-estate-list>
+  <ion-infinite-scroll #infiniteScroll
+    threshold="100px"
+    (ionInfinite)="loadData($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles"
+      loadingText="{{ 'HomePage.Loading' | translate }}">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+  <!-- </ng-container> -->
 
 </ion-content>

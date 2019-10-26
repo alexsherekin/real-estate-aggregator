@@ -14,21 +14,23 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { TypeaheadModule } from './components';
+import { TypeaheadModule, SearchPanelModule } from './components';
 import { HttpLoaderFactory } from './i18n/http-loader-factory';
 import { SharedModule } from './shared/shared.module';
 import { LocationAutocompleteComposerService } from './shared/third-party-apis/composer';
 import { ImmobilienScout24LocationAutocompleteService } from './shared/third-party-apis/immobilienscout24';
 import { ImmoweltLocationAutocompleteService } from './shared/third-party-apis/immowelt';
-import { LocationAutocompleteServiceListInjectionToken } from './shared/third-party-apis/native';
+import { LocationAutocompleteServiceListInjectionToken, BaseLocationAutocompleteService } from './shared/third-party-apis/native';
 import { CustomRouterStateSerializer } from './shared/utils';
 import { metaReducers, reducers } from './store';
 import { NotificationEffects } from './store/notifications';
+import { DataEffects } from './store/data/effects';
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
   imports: [
+    SearchPanelModule,
     BrowserModule,
     IonicModule.forRoot(),
     AppRoutingModule,
@@ -73,7 +75,7 @@ import { NotificationEffects } from './store/notifications';
      *
      * See: https://github.com/ngrx/platform/blob/master/docs/effects/api.md#forroot
      */
-    EffectsModule.forRoot([NotificationEffects]),
+    EffectsModule.forRoot([NotificationEffects, DataEffects]),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -81,7 +83,7 @@ import { NotificationEffects } from './store/notifications';
         deps: [HttpClient]
       }
     }),
-    SharedModule,
+    SharedModule.forRoot(),
     TypeaheadModule,
   ],
   providers: [
@@ -96,7 +98,8 @@ import { NotificationEffects } from './store/notifications';
     { provide: RouterStateSerializer, useClass: CustomRouterStateSerializer },
     LocationAutocompleteComposerService,
     { provide: LocationAutocompleteServiceListInjectionToken, useClass: ImmobilienScout24LocationAutocompleteService, multi: true },
-    { provide: LocationAutocompleteServiceListInjectionToken, useClass: ImmoweltLocationAutocompleteService, multi: true, }
+    { provide: LocationAutocompleteServiceListInjectionToken, useClass: ImmoweltLocationAutocompleteService, multi: true, },
+    { provide: BaseLocationAutocompleteService, useClass: ImmobilienScout24LocationAutocompleteService },
   ],
   bootstrap: [AppComponent]
 })

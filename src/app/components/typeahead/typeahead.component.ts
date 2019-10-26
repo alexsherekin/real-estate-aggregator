@@ -10,7 +10,7 @@ import { Phase } from '../../store/settings';
   styleUrls: ['./typeahead.component.scss'],
 })
 export class TypeaheadComponent implements OnChanges {
-  @Input() dataSource$: Observable<any>;
+  @Input() dataSource: any;
   @Input() loading: Phase;
   @Input() bindValue: string;
   @Input() searchField: string;
@@ -31,7 +31,7 @@ export class TypeaheadComponent implements OnChanges {
   ) {
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  public ngOnChanges(changes: SimpleChanges): void {
     if (changes['value']) {
       this.selectedOption = {
         [this.searchField]: changes.value.currentValue
