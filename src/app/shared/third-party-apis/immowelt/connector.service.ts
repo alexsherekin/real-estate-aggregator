@@ -108,12 +108,9 @@ export class ImmoweltConnectorService implements IConnectorService {
   }
 
   private parseItemHTML(html: string): Partial<ItemsResponseResultListEntry> {
+    html = html.replace(/\<img/g, '<img1');
     const root = document.createElement('div');
-    root.innerHTML = `<style>
-      img {
-        display: none !important;
-      }
-    </style> ` + html;
+    root.innerHTML = html;
 
     const config: ParserConfig = {
       price: {
@@ -149,7 +146,7 @@ export class ImmoweltConnectorService implements IConnectorService {
         }
       },
       image: {
-        selector: '#mediaContainer img.fotorama__img',
+        selector: '#mediaContainer img1.fotorama__img',
         attribute: 'src'
       },
       title: {
@@ -170,21 +167,34 @@ export class ImmoweltConnectorService implements IConnectorService {
         }
       },
       city: {
-        selector: '.mini-map-icon-svg + p',
+        selector: 'main .box-50 .box-50 .box-100 > span',
         post: (value: string) => {
           if (value === undefined || value === null) {
             value = '';
           }
-          return value.split('<br>')[1] || '';
+          value = value.split('Auf Karte anzeigen')[0];
+          const parts = value.split('\n')
+            .map(part => part && part.trim())
+            .filter(Boolean);
+          const numbers = '0123456789';
+          const zipIndex = parts.findIndex(part => numbers.indexOf(part[0]) > -1);
+          return parts[zipIndex + 1];
         }
       },
       street: {
-        selector: '.mini-map + p',
+        selector: 'main .box-50 .box-50 .box-100 > span',
         post: (value: string) => {
           if (value === undefined || value === null) {
             value = '';
           }
-          return value.split('<br>')[0] || '';
+          value = value.split('Auf Karte anzeigen')[0];
+          const parts = value.split('\n')
+            .map(part => part && part.trim())
+            .filter(Boolean);
+          const numbers = '0123456789';
+          const zipIndex = parts.findIndex(part => numbers.indexOf(part[0]) > -1);
+          parts.splice(zipIndex, 2);
+          return parts[0];
         }
       }
     };
@@ -204,12 +214,9 @@ export class ImmoweltConnectorService implements IConnectorService {
   }
 
   private parseMainHTML(html: string): Partial<ItemsResponseResultListEntry>[] {
+    html = html.replace(/\<img/g, '<img1');
     const root = document.createElement('div');
-    root.innerHTML = `<style>
-      img {
-        display: none !important;
-      }
-    </style> ` + html;
+    root.innerHTML = html;
 
     const config: ParserConfig = {
       list: {
@@ -226,7 +233,7 @@ export class ImmoweltConnectorService implements IConnectorService {
         }
       },
       image: {
-        selector: '.images-wrapper .image-wrapper > img',
+        selector: '.images-wrapper .image-wrapper > img1',
         attribute: 'data-original'
       },
       title: {

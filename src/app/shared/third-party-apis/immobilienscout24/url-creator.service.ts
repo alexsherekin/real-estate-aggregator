@@ -25,9 +25,9 @@ export class ImmobilienScout24UrlCreatorService {
       'city',
       // 'country',
       // 'region',
-      'district',
+      // 'district',
       // 'quarterOrTown',
-      'postcode',
+      // 'postcode',
       // 'street',
       // 'trainStation',
     ];
