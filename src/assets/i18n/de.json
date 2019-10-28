@@ -1,5 +1,6 @@
 {
   "HomePage": {
+    "Title": "Suchergebnisse",
     "Search": "Suchen...",
     "Loading": "Laden die Daten...",
     "NothingFound": "Leider gibt es zurzeit keine Anzeigen..."
@@ -38,5 +39,10 @@
   },
   "TypeaheadComponent": {
     "NothingFound": "Nichts gefunden"
+  },
+  "FavouritesPage": {
+    "Title": "Favorite",
+    "ToAllItems": "Zur gesammten Liste",
+    "Empty": "Sie haben nichts ausgewählt"
   }
 }

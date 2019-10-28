@@ -4,30 +4,41 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>
-      Home
+      {{ 'HomePage.Title' | translate }}
     </ion-title>
   </ion-toolbar>
 </ion-header>
 <ion-content>
 
-  <!-- <ion-item *ngIf="(itemsLoadingState_i$ | async) === Phase.failed"
+  <ion-item *ngIf="(itemsLoadingState_i$ | async) === Phase.failed"
     text-center>
     <ion-label>
       {{ 'HomePage.NothingFound' | translate }}
     </ion-label>
   </ion-item>
 
-  <ng-container *ngIf="(itemsLoadingState_i$ | async) !== Phase.failed"> -->
-  <app-real-estate-list [items]="itemsLoaded_i$ | async"
-    (toggleFavourite)="onToggleFavourite($event)">
-  </app-real-estate-list>
-  <ion-infinite-scroll #infiniteScroll
-    threshold="100px"
-    (ionInfinite)="loadData($event)">
-    <ion-infinite-scroll-content loadingSpinner="bubbles"
-      loadingText="{{ 'HomePage.Loading' | translate }}">
-    </ion-infinite-scroll-content>
-  </ion-infinite-scroll>
-  <!-- </ng-container> -->
+  <ng-container *ngIf="(itemsLoadingState_i$ | async) !== Phase.failed">
+    <app-real-estate-list [items]="itemsLoaded_i$ | async"
+      (toggleFavourite)="onToggleFavourite($event)">
+    </app-real-estate-list>
+    <ion-infinite-scroll #infiniteScroll
+      threshold="100px"
+      (ionInfinite)="loadData($event)">
+      <ion-infinite-scroll-content loadingSpinner="bubbles"
+        loadingText="{{ 'HomePage.Loading' | translate }}">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+  </ng-container>
 
 </ion-content>
+<ion-footer>
+  <a [routerLink]="['/favourites']">
+    <ion-button expand="full"
+      color="primary">
+      <ion-icon name="heart"
+        size="large"></ion-icon>
+      &nbsp;
+      <ion-label>To favourites</ion-label>
+    </ion-button>
+  </a>
+</ion-footer>

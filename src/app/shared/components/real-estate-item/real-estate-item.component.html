@@ -2,10 +2,13 @@
   {{ title }}
 </h3>
 <div class="top-panel">
-  <div [class.liked]="item.isFavourite"
-    (click)="onFavouriteButtonClicked($event)"
-    class="heart">
-  </div>
+  <ion-icon slot="icon-only"
+    name="heart"
+    [class.selected]="item.isFavourite"
+    class="heart-icon"
+    size="large"
+    (click)="onFavouriteButtonClicked($event)">
+  </ion-icon>
   <address *ngIf="address"
     class="address">
     {{ formatAddress() }}

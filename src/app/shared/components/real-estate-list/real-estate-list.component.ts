@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
-import { UIAdvertisement } from '../types/ui-advertisement';
+import { UIAdvertisement } from '../../types/ui-advertisement';
 
 @Component({
   selector: 'app-real-estate-list',

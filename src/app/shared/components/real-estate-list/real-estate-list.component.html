@@ -1,4 +1,5 @@
-<ion-list lines="none">
+<ion-list *ngIf="items && items.length"
+  lines="none">
   <ng-container *ngFor="let realEstate of items; trackBy trackById">
     <ion-item>
       <app-real-estate-item [item]="realEstate"
@@ -8,3 +9,8 @@
     <hr style="background: black; width: 80%;" />
   </ng-container>
 </ion-list>
+
+<ng-content *ngIf="!items || !items.length"
+  select="[empty]">
+
+</ng-content>

@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
-import { Address, RealEstate, Price, currencyToString } from '../../../shared/third-party-apis/native/address';
+import { Address, RealEstate, Price, currencyToString } from '../../third-party-apis/native/address';
 import { TranslateService } from '@ngx-translate/core';
-import { UIAdvertisement } from '../types/ui-advertisement';
+import { UIAdvertisement } from '../../types/ui-advertisement';
 
 @Component({
   selector: 'app-real-estate-item',

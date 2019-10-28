@@ -4,27 +4,26 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
+import { SharedModule } from 'src/app/shared/shared.module';
 
-import { SharedModule } from '../../shared/shared.module';
 import * as fromFeature from '../../store/data';
-import { HomePage } from './home.page/home.page';
-import { HomePageRoutingModule } from './home.router.module';
+import { FavouritesPage } from './favourites.page/favourites.page';
+import { FavouritesPageRoutingModule } from './favourites.router.module';
 
 @NgModule({
   imports: [
     IonicModule,
     CommonModule,
     FormsModule,
-    HomePageRoutingModule,
+    FavouritesPageRoutingModule,
     TranslateModule.forChild(),
     StoreModule.forFeature(fromFeature.FEATURE_NAME, fromFeature.reducer, {
       metaReducers: fromFeature.metaReducers
     }),
-    SharedModule.forChild()
+    SharedModule.forChild(),
   ],
   declarations: [
-    HomePage,
+    FavouritesPage,
   ]
 })
-export class HomePageModule {
-}
+export class FavouritesPageModule { }

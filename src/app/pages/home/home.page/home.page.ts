@@ -6,11 +6,10 @@ import { Observable, Subscription } from 'rxjs';
 import { combineLatest, map } from 'rxjs/operators';
 import { dataSelectors } from 'src/app/store';
 
-import { IDataProvider } from '../../../shared/lib';
 import { DataProviderComposerService } from '../../../shared/third-party-apis/composer/data-provider-composer.servive';
-import { IDataState, SaveRealEstateDataAction, ToggleFavouriteAdvertisementAction } from '../../../store/data';
+import { IDataState, ToggleFavouriteAdvertisementAction } from '../../../store/data';
 import { Phase } from '../../../store/settings';
-import { UIAdvertisement } from '../types/ui-advertisement';
+import { UIAdvertisement } from '../../../shared/types/ui-advertisement';
 
 @Component({
   selector: 'app-home',
@@ -26,7 +25,9 @@ export class HomePage implements OnDestroy {
   private subscriptions: Subscription[] = [];
   private loadingOverlayPromise: Promise<HTMLIonLoadingElement>;
 
-  constructor(
+  @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
+
+  public constructor(
     private dataProvider: DataProviderComposerService,
     private loading: LoadingController,
     private translate: TranslateService,
@@ -49,17 +50,14 @@ export class HomePage implements OnDestroy {
     this.itemsLoadingState_i$ = dataProvider.itemsLoadingState_i$;
     this.initDataProvider();
 
-    this.itemsLoaded_i$.subscribe(() => {
-    });
-
   }
 
-  ngOnDestroy(): void {
+  public ngOnDestroy(): void {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   private initDataProvider() {
-    const itemsLoadingStateSub = this.dataProvider.itemsLoadingState_i$
+    const itemsLoadingStateSub = this.itemsLoadingState_i$
       .subscribe(state => {
         if (state === Phase.running && !this.loadingOverlayPromise) {
           this.loadingOverlayPromise = this.loading.create({
@@ -86,14 +84,13 @@ export class HomePage implements OnDestroy {
     this.subscriptions.push(itemsLoadingStateSub);
   }
 
-  private initPersistency(dataProvider: IDataProvider) {
-    const sub = dataProvider.itemsLoaded_i$.subscribe(result => {
-      this.dataStore.dispatch(new SaveRealEstateDataAction(dataProvider.DataProviderKey, result));
-    });
-    this.subscriptions.push(sub);
-  }
+  // private initPersistency(dataProvider: IDataProvider) {
+  //   const sub = dataProvider.itemsLoaded_i$.subscribe(result => {
+  //     this.dataStore.dispatch(new SaveRealEstateDataAction(dataProvider.DataProviderKey, result));
+  //   });
+  //   this.subscriptions.push(sub);
+  // }
 
-  @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
 
   public search() {
     this.dataProvider.get();

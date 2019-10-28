@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      {{ 'FavouritesPage.Title' | translate }}
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+
+  <app-real-estate-list [items]="itemsLoaded_i$ | async"
+    (toggleFavourite)="onToggleFavourite($event)">
+    <ion-item text-center
+      empty>
+      <ion-label>
+        {{ 'FavouritesPage.Empty' | translate }}
+      </ion-label>
+    </ion-item>
+  </app-real-estate-list>
+
+</ion-content>
+<ion-footer>
+  <a [routerLink]="['/all-items']">
+    <ion-button expand="full"
+      color="primary">
+      <ion-icon name="albums"
+        size="large"></ion-icon>
+      &nbsp;
+      <ion-label>
+        {{ 'FavouritesPage.ToAllItems' | translate }}
+      </ion-label>
+    </ion-button>
+  </a>
+</ion-footer>

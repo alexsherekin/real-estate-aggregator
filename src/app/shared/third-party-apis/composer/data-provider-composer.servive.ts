@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { combineLatest, Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 import { Phase } from '../../../store/settings';
 import { IDataProvider, IDataProviderListInjectionToken } from '../../lib';
@@ -21,10 +21,7 @@ export class DataProviderComposerService implements IDataProvider {
 
     this.itemsLoaded_i$ = combineLatest(events.map(event => event.loaded$))
       .pipe(
-        map(this.flattenResults),
-        tap(results => {
-          console.log('Results:' + results.length);
-        })
+        map(this.flattenResults)
       );
 
     this.itemsLoadingState_i$ = combineLatest(events.map(event => event.loading$))

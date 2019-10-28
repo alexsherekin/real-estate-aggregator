@@ -1,5 +1,6 @@
 {
   "HomePage": {
+    "Title": "Search results",
     "Search": "Search...",
     "Loading": "Loading more data...",
     "NothingFound": "Sorry... We could not find anything"
@@ -38,5 +39,10 @@
   },
   "TypeaheadComponent": {
     "NothingFound": "Nothing found"
+  },
+  "FavouritesPage": {
+    "Title": "Favourite",
+    "ToAllItems": "To all items",
+    "Empty": "You don't have any selected items"
   }
 }
