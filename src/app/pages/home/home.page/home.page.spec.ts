@@ -2,7 +2,7 @@ import { CUSTOM_ELEMENTS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HomePage } from './home.page';
-import { ImmobilienScout24ConnectorService } from '../../shared/third-party-apis/immobilienscout24/connector.service';
+import { ImmobilienScout24ConnectorService } from '../../../shared/third-party-apis/immobilienscout24/connector.service';
 
 @Pipe({ name: 'translate' })
 export class TranslateMockPipe implements PipeTransform {

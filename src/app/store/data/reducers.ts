@@ -1,16 +1,18 @@
-import { DataActions, LocationAutocompleteAllAction, SaveRealEstateDataAction } from "./actions";
+import { DataActions, LocationAutocompleteAllAction, SaveRealEstateDataAction, ToggleFavouriteAdvertisementAction } from "./actions";
 import { ActionReducer, MetaReducer, Action } from '@ngrx/store';
 import { localStorageSync } from 'ngrx-store-localstorage';
 import { IDataState } from './state';
 import { defaultData } from './default';
 
 export const FEATURE_NAME = 'data';
-const STORE_KEYS_TO_PERSIST = ['cache'];
+const STORE_KEYS_TO_PERSIST: Array<keyof IDataState> = ['cache', 'favourites'];
 
 const lookup: { [key: string]: (state: IDataState, action: DataActions) => IDataState } = {
+
   [LocationAutocompleteAllAction.type]: (state: IDataState, action: LocationAutocompleteAllAction) => {
     return state;
   },
+
   [SaveRealEstateDataAction.type]: (state: IDataState, action: SaveRealEstateDataAction) => {
     const providerKey = action.dataProviderKey;
 
@@ -25,6 +27,24 @@ const lookup: { [key: string]: (state: IDataState, action: DataActions) => IData
       }
     }
   },
+
+  [ToggleFavouriteAdvertisementAction.type]: (state: IDataState, action: ToggleFavouriteAdvertisementAction) => {
+    let favourites = [...state.favourites];
+    if (action.isFavourite) {
+      const alreadyFavourite = favourites.findIndex(f => f.id === action.ad.id) > -1;
+      if (!alreadyFavourite) {
+        favourites.push(action.ad);
+      }
+    } else {
+      favourites = favourites.filter(f => f.id !== action.ad.id);
+    }
+
+    return {
+      ...state,
+      favourites,
+    };
+  },
+
 }
 
 export function reducer(state: IDataState = defaultData, action: DataActions): IDataState {

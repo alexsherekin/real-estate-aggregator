@@ -9,7 +9,7 @@ import { SharedModule } from '../../shared/shared.module';
 import * as fromFeature from '../../store/data';
 import { BackgroundImageLazyLoadingDirective } from './directive/background-image-lazy-loading';
 import { ImgLazyLoadingDirective } from './directive/img-lazy-loading';
-import { HomePage } from './home.page';
+import { HomePage } from './home.page/home.page';
 import { HomePageRoutingModule } from './home.router.module';
 import { RealEstateItemComponent } from './real-estate-item';
 import { RealEstateListComponent } from './real-estate-list';

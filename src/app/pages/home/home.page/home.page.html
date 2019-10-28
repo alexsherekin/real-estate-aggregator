@@ -18,7 +18,9 @@
   </ion-item>
 
   <ng-container *ngIf="(itemsLoadingState_i$ | async) !== Phase.failed"> -->
-  <app-real-estate-list [items]="dataProvider.itemsLoaded_i$ | async"></app-real-estate-list>
+  <app-real-estate-list [items]="itemsLoaded_i$ | async"
+    (toggleFavourite)="onToggleFavourite($event)">
+  </app-real-estate-list>
   <ion-infinite-scroll #infiniteScroll
     threshold="100px"
     (ionInfinite)="loadData($event)">

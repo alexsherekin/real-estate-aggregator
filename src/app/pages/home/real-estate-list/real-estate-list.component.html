@@ -1,7 +1,9 @@
 <ion-list lines="none">
   <ng-container *ngFor="let realEstate of items; trackBy trackById">
     <ion-item>
-      <app-real-estate-item [item]="realEstate"></app-real-estate-item>
+      <app-real-estate-item [item]="realEstate"
+        (toggleFavourite)="onToggleFavourite(realEstate)">
+      </app-real-estate-item>
     </ion-item>
     <hr style="background: black; width: 80%;" />
   </ng-container>

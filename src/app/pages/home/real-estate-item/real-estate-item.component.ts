@@ -1,6 +1,7 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { Advertisement, Address, RealEstate, Price, currencyToString } from '../../../shared/third-party-apis/native/address';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
+import { Address, RealEstate, Price, currencyToString } from '../../../shared/third-party-apis/native/address';
 import { TranslateService } from '@ngx-translate/core';
+import { UIAdvertisement } from '../types/ui-advertisement';
 
 @Component({
   selector: 'app-real-estate-item',
@@ -9,43 +10,49 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class RealEstateItemComponent implements OnInit, OnChanges {
   @Input()
-  public item: Advertisement;
+  public item: UIAdvertisement;
+
+  @Output()
+  public toggleFavourite = new EventEmitter<boolean>();
+
   // https://www.immonet.de/immobiliensuche/sel.do?sortby=0&suchart=1&fromarea=10&parentcat=1&marketingtype=1&toprice=150000&fromrooms=2&pageoffset=0&listsize=10&page=1&locationName=W%C3%BCrzburg&city=153145
   public realEstate: RealEstate;
   public address: Address;
   public linkToSource: string;
 
+  public title: string;
   public titleImage: string;
   public addressAsString: string;
   public mapsIcon = require('./assets/maps.png');
   public linkIcon = require('./assets/link.svg');
   public noImageIcon = require('./assets/no-image.svg');
 
-  constructor(
+  public constructor(
     private translate: TranslateService
   ) { }
 
-  ngOnInit() {
+  public ngOnInit() {
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  public ngOnChanges(changes: SimpleChanges): void {
     if (changes['item']) {
-      this.realEstate = changes['item'].currentValue && (changes['item'].currentValue as Advertisement).realEstate;
+      this.realEstate = changes['item'].currentValue && (changes['item'].currentValue as UIAdvertisement).advertisement.realEstate;
       this.updateInfo();
     }
   }
 
   private updateInfo() {
     this.address = this.realEstate && this.realEstate.address;
+    this.title = this.item.advertisement.title || '';
 
     try {
-      this.titleImage = this.item.picture.url;
+      this.titleImage = this.item.advertisement.picture.url;
     } catch (error) {
       this.titleImage = '';
     }
 
     try {
-      this.linkToSource = this.item.url;
+      this.linkToSource = this.item.advertisement.url;
     } catch (error) {
       this.linkToSource = '';
     }
@@ -81,5 +88,13 @@ export class RealEstateItemComponent implements OnInit, OnChanges {
       return '';
     }
     return `${price.value} ${currencyToString(price.currency)}`;
+  }
+
+  public onFavouriteButtonClicked(event: Event) {
+    event.stopPropagation();
+    event.preventDefault();
+
+
+    this.toggleFavourite.emit();
   }
 }

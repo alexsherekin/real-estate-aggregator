@@ -22,4 +22,11 @@ export class BeginSearchAction implements Action {
   }
 }
 
-export type DataActions = LocationAutocompleteAllAction | SaveRealEstateDataAction | BeginSearchAction;
+export class ToggleFavouriteAdvertisementAction implements Action {
+  public static type = '[Data] Toggle favourite advertisement';
+  public readonly type = ToggleFavouriteAdvertisementAction.type;
+  constructor(public ad: Advertisement, public isFavourite: boolean) {
+  }
+}
+
+export type DataActions = LocationAutocompleteAllAction | SaveRealEstateDataAction | BeginSearchAction | ToggleFavouriteAdvertisementAction;

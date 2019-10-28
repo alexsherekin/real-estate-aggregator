@@ -7,5 +7,6 @@ export function getSelectors(name: string) {
     getState: createSelector(getDataState, (state: IDataState) => state),
     getCache: createSelector(getDataState, (state: IDataState) => state.cache),
     getProviderCache: (providerKey: string) => createSelector(getDataState, (state: IDataState) => state.cache && state.cache[providerKey]),
+    getFavourites: createSelector(getDataState, (state: IDataState) => state.favourites),
   };
 }

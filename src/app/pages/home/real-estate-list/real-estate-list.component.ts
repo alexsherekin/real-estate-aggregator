@@ -1,26 +1,29 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { Advertisement } from '../../../shared/third-party-apis/native/address';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+
+import { UIAdvertisement } from '../types/ui-advertisement';
 
 @Component({
   selector: 'app-real-estate-list',
   templateUrl: './real-estate-list.component.html',
   styleUrls: ['./real-estate-list.component.scss']
 })
-export class RealEstateListComponent implements OnInit, OnChanges {
-  ngOnChanges(changes: SimpleChanges): void {
-    console.dir(changes);
-  }
-
+export class RealEstateListComponent implements OnInit {
   @Input()
-  public items: Advertisement[] = [];
+  public items: UIAdvertisement[] = [];
 
-  constructor() { }
+  @Output()
+  public toggleFavourite = new EventEmitter<UIAdvertisement>();
 
-  ngOnInit() {
+  public constructor() { }
+
+  public ngOnInit() {
   }
 
-  public trackById(value: Advertisement) {
+  public trackById(value: UIAdvertisement) {
     return value.id;
+  }
+
+  public onToggleFavourite(value: UIAdvertisement) {
+    this.toggleFavourite.emit(value);
   }
 }

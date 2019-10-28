@@ -1,7 +1,8 @@
 import { Advertisement } from '../../shared/third-party-apis/native';
 
 export interface IDataState {
-  cache: ProvidersCache
+  cache: ProvidersCache,
+  favourites: Advertisement[],
 }
 
 export interface ProvidersCache {

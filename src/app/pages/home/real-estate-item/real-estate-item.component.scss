@@ -21,6 +21,50 @@
   }
 }
 
+.top-panel {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  .address {
+    text-align: right;
+    padding-bottom: 10px;
+    display: block;
+    padding-left: 10px;
+    flex: 0 0 auto;
+  }
+
+  $red: #ff3252;
+
+  .heart {
+    width: 50px;
+    height: 1em;
+    display: inline-block;
+    font-size: 24px;
+    position: relative;
+    cursor: pointer;
+    &::before, &::after {
+      position: absolute;
+      font-size: 2em;
+      top: -0.35em;
+      content: '♥';
+    }
+
+    &::before {
+      color: #555;
+    }
+    &::after {
+      color: $red;
+      transform: scale(0);
+      transition: transform 0.5s;
+    }
+    &.liked::after {
+      transform: scale(1.1);
+    }
+  }
+}
+
 .link {
   text-decoration: none;
   color: black;
@@ -77,12 +121,4 @@
 .feature {
   padding: 10px;
   border-radius: 80px;
-}
-
-.address {
-  text-align: right;
-  padding-bottom: 10px;
-  display: block;
-  padding-left: 10px;
-  flex: 0 0 auto;
 }

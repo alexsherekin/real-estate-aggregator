@@ -1,18 +1,24 @@
 <h3>
-  {{ (item && item.title) || '' }}
+  {{ title }}
 </h3>
-<address *ngIf="address"
-  class="address">
-  {{ formatAddress() }}
-  <a *ngIf="addressAsString"
-    class="maps"
-    href="https://www.google.com/maps/place/{{addressAsString}}"
-    target="_blank">
-    <img [src]="mapsIcon"
-      alt="map"
-      class="maps-icon" />
-  </a>
-</address>
+<div class="top-panel">
+  <div [class.liked]="item.isFavourite"
+    (click)="onFavouriteButtonClicked($event)"
+    class="heart">
+  </div>
+  <address *ngIf="address"
+    class="address">
+    {{ formatAddress() }}
+    <a *ngIf="addressAsString"
+      class="maps"
+      href="https://www.google.com/maps/place/{{addressAsString}}"
+      target="_blank">
+      <img [src]="mapsIcon"
+        alt="map"
+        class="maps-icon" />
+    </a>
+  </address>
+</div>
 <a *ngIf="linkToSource"
   class="link"
   href="{{linkToSource}}"
@@ -20,7 +26,6 @@
   <main class="image"
     appBgImgLazyLoading
     [img]="titleImage || noImageIcon">
-    <!-- [ngStyle]="{ 'background-image': 'url(' +( titleImage || noImageIcon) + ')' }" -->
     <div class="description-bottom">
       <span *ngIf="realEstate.numberOfRooms"
         class="info-box">
