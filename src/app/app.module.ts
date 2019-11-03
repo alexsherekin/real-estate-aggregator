@@ -25,6 +25,7 @@ import { CustomRouterStateSerializer } from './shared/utils';
 import { metaReducers, reducers } from './store';
 import { NotificationEffects } from './store/notifications';
 import { DataEffects } from './store/data/effects';
+import { SettingsEffects } from './store/settings/effects';
 
 @NgModule({
   declarations: [AppComponent],
@@ -75,7 +76,7 @@ import { DataEffects } from './store/data/effects';
      *
      * See: https://github.com/ngrx/platform/blob/master/docs/effects/api.md#forroot
      */
-    EffectsModule.forRoot([NotificationEffects, DataEffects]),
+    EffectsModule.forRoot([NotificationEffects, DataEffects, SettingsEffects]),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

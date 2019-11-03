@@ -6,7 +6,13 @@
     "NothingFound": "Leider gibt es zurzeit keine Anzeigen..."
   },
   "SettingsPage": {
-    "Title": "Einstellungen"
+    "Title": "Einstellungen",
+    "Options": {
+      "Languages": {
+        "Label": "Sprache",
+        "Placeholder": "Wählen Sie die Sprache aus..."
+      }
+    }
   },
   "LoadingController": {
     "Wait": "Bitte warten Sie..."
@@ -44,5 +50,8 @@
     "Title": "Favorite",
     "ToAllItems": "Zur gesammten Liste",
     "Empty": "Sie haben nichts ausgewählt"
+  },
+  "RealEstateItemComponent": {
+    "CountOfRooms": "{{count}} Zimmer"
   }
 }

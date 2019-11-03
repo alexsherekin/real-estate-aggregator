@@ -3,6 +3,12 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button [routerLink]="['/settings']">
+        <ion-icon slot="icon-only"
+          name="settings"></ion-icon>
+      </ion-button>
+    </ion-buttons>
     <ion-title>
       {{ 'HomePage.Title' | translate }}
     </ion-title>
@@ -35,10 +41,13 @@
   <a [routerLink]="['/favourites']">
     <ion-button expand="full"
       color="primary">
-      <ion-icon name="heart"
+      <ion-icon class="heart-icon"
+        name="heart"
         size="large"></ion-icon>
       &nbsp;
-      <ion-label>To favourites</ion-label>
+      <ion-label>
+        {{ 'HomePage.GoToFavourites' }}
+      </ion-label>
     </ion-button>
   </a>
 </ion-footer>

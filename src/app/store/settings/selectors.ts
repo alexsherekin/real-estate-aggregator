@@ -15,5 +15,8 @@ export function getSelectors(name: string) {
     getRealEstateType: createSelector(getSettingsState, (state: ISettingsState) => state.filters.realEstateType),
     getBuyPrice: createSelector(getSettingsState, (state: ISettingsState) => state.filters.buyPrice),
     getRentPrice: createSelector(getSettingsState, (state: ISettingsState) => state.filters.rentPrice),
+
+    getAppSettings: createSelector(getSettingsState, (state: ISettingsState) => state.appSettings),
+    getLanguageSettings: createSelector(getSettingsState, (state: ISettingsState) => state.appSettings.language),
   };
 }

@@ -1,4 +1,4 @@
-import { Sorting } from '../../shared/types';
+import { Sorting, AppSettings } from '../../shared/types';
 import { MarketingType, RealEstateType, LocationAutocompleteItem } from '../../shared/third-party-apis/native';
 
 export enum Phase {
@@ -38,5 +38,6 @@ export interface ISettingsState {
   loading: IActionPhase,
   saving: IActionPhase,
   filters: IFilters,
-  sorting?: Sorting
+  sorting?: Sorting,
+  appSettings?: AppSettings,
 }

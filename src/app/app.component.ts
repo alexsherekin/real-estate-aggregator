@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Platform } from '@ionic/angular';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subscription } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
 import { supportedLanguages } from './i18n';
@@ -20,11 +20,13 @@ import { ISettingsState, SaveSettings, Phase } from './store/settings';
   selector: 'app-root',
   templateUrl: 'app.component.html'
 })
-export class AppComponent {
+export class AppComponent implements OnDestroy {
   private filtersChanged = false;
   private defaultAutocompleteResponse: LocationAutocomplete = { key: '', items: [] };
   public cityAutocomplete$: Observable<LocationAutocompleteItem[]>;
   public cityAutocompleteLoading: Phase = Phase.init;
+
+  private languageSub: Subscription;
 
   constructor(
     private platform: Platform,
@@ -38,12 +40,26 @@ export class AppComponent {
   }
 
   private initializeApp() {
-    this.translate.setDefaultLang(supportedLanguages.default);
-    this.translate.addLangs(supportedLanguages.languages);
+    const defaultLanguage = supportedLanguages.languages.find(l => l.default);
+    this.translate.setDefaultLang(defaultLanguage.id);
+    this.translate.addLangs(supportedLanguages.languages.map(l => l.id));
+
+    this.languageSub = this.store.select(settingsSelectors.getLanguageSettings)
+      .subscribe(lang => {
+        this.translate.use(lang);
+      });
+
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
     });
+  }
+
+  public ngOnDestroy(): void {
+    if (this.languageSub) {
+      this.languageSub.unsubscribe();
+      this.languageSub = undefined;
+    }
   }
 
   public onCitySearchChanged(value: string): void {

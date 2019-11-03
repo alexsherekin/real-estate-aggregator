@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { EMPTY, of } from 'rxjs';
-import { catchError, filter, map, scan, switchMap, takeLast, tap, take, distinctUntilChanged } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { LocationAutocompleteComposerService } from 'src/app/shared/third-party-apis/composer';
+import { DataProviderComposerService } from 'src/app/shared/third-party-apis/composer/data-provider-composer.servive';
+import { LocationAutocompleteItem } from 'src/app/shared/third-party-apis/native';
 
 import { settingsSelectors } from '../../store';
-import { IFilters, ISettingsState, SaveSettings } from '../settings';
-import { LocationAutocompleteItem } from 'src/app/shared/third-party-apis/native';
+import { ISettingsState, SaveSettings } from '../settings';
 import { BeginSearchAction } from './actions';
-import { DataProviderComposerService } from 'src/app/shared/third-party-apis/composer/data-provider-composer.servive';
 
 @Injectable()
 export class DataEffects {

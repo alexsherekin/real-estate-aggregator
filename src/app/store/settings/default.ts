@@ -26,5 +26,8 @@ export const defaultSettings: ISettingsState = {
     },
     marketingType: MarketingType.RENT,
     realEstateType: RealEstateType.FLAT,
-  }
+  },
+  appSettings: {
+    language: undefined,
+  },
 };

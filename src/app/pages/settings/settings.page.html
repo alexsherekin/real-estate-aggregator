@@ -1,3 +1,30 @@
 <ion-header>
-  <ion-toolbar> {{ 'SettingsPage.Title' | translate }}</ion-toolbar>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      {{ 'SettingsPage.Title' | translate }}
+    </ion-title>
+  </ion-toolbar>
 </ion-header>
+<ion-content>
+  <form [formGroup]="settingsForm">
+    <ion-list>
+      <ion-item>
+        <ion-label>
+          {{ 'SettingsPage.Options.Languages.Label' | translate }}
+        </ion-label>
+        <ion-select (ionChange)="onLanguageChanged(selectedLanguage)"
+          formControlName="language"
+          name="language"
+          placeholder="{{ 'SettingsPage.Options.Languages.Placeholder' | translate }}">
+          <ion-select-option *ngFor="let lang of model.languages"
+            [value]="lang.id">
+            {{ lang.label }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-list>
+  </form>
+</ion-content>

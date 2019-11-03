@@ -1,7 +1,7 @@
 import { EnvironmentConfig } from './config';
 
 export const environment: EnvironmentConfig = {
-  production: true,
-  debug: false,
+  production: false,
+  debug: true,
   build: new Date().getTime(),
 };

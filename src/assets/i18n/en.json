@@ -6,7 +6,13 @@
     "NothingFound": "Sorry... We could not find anything"
   },
   "SettingsPage": {
-    "Title": "Settings"
+    "Title": "Settings",
+    "Options": {
+      "Languages": {
+        "Label": "Language",
+        "Placeholder": "Select language..."
+      }
+    }
   },
   "LoadingController": {
     "Wait": "Please wait..."
@@ -44,5 +50,8 @@
     "Title": "Favourite",
     "ToAllItems": "To all items",
     "Empty": "You don't have any selected items"
+  },
+  "RealEstateItemComponent": {
+    "CountOfRooms": "{{count}} rooms"
   }
 }
