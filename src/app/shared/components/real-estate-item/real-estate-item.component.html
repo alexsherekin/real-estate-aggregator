@@ -2,13 +2,6 @@
   {{ title }}
 </h3>
 <div class="top-panel">
-  <ion-icon slot="icon-only"
-    name="heart"
-    [class.selected]="item.isFavourite"
-    class="heart-icon"
-    size="large"
-    (click)="onFavouriteButtonClicked($event)">
-  </ion-icon>
   <address *ngIf="address"
     class="address">
     {{ formatAddress() }}
@@ -29,19 +22,34 @@
   <main class="image"
     appBgImgLazyLoading
     [img]="titleImage || noImageIcon">
+    <div class="description-top">
+      <ion-icon slot="icon-only"
+        name="heart"
+        [class.selected]="item.isFavourite"
+        class="heart-icon shiny"
+        size="large"
+        (click)="onFavouriteButtonClicked($event)">
+      </ion-icon>
+
+      <section class="features shiny"
+        *ngIf="hasTags(realEstate)">
+        {{ formatFeatures() }}
+      </section>
+
+    </div>
     <div class="description-bottom">
       <span *ngIf="realEstate.numberOfRooms"
-        class="info-box">
+        class="info-box shiny">
         {{ realEstate.numberOfRooms }} rooms
       </span>
 
       <span *ngIf="realEstate.livingSpace"
-        class="info-box">
+        class="info-box shiny">
         {{ realEstate.livingSpace }} m<sup>2</sup>
       </span>
 
       <span *ngIf="realEstate.price.value"
-        class="info-box">
+        class="info-box shiny">
         {{ formatPrice(realEstate.price) }}
         <span *ngIf="realEstate.fullPrice && realEstate.price.value !== realEstate.fullPrice.value">
           {{ ' (' + formatPrice(realEstate.fullPrice) + ')' }}
@@ -50,8 +58,3 @@
     </div>
   </main>
 </a>
-
-<section class="features"
-  *ngIf="hasTags(realEstate)">
-  {{ formatFeatures() }}
-</section>

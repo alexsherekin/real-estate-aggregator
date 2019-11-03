@@ -1,6 +1,17 @@
 :host {
   display: block;
   width: 100%;
+
+  box-shadow: 10px 10px 5px 0px grey;
+  border-radius: 10px;
+  padding: 20px;
+  padding-top: 0;
+  margin: 0;
+  margin-right: 20px;
+  margin-bottom: 30px;
+  overflow: hidden;
+  background: rgb(191,191,195);
+  background: linear-gradient(90deg, rgba(191,191,195,1) 0%, rgba(181,181,194,0.327249649859944) 100%);
 }
 
 @media (max-width: 600px) {
@@ -24,7 +35,7 @@
 .top-panel {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
 
   .address {
@@ -46,11 +57,12 @@
   flex-direction: column;
   background-position: center;
   background-repeat: no-repeat;
-  justify-content: flex-end;
+  justify-content: space-between;
   background-size: cover;
+  border-radius: 10px;
 }
 
-.description-bottom {
+.description-top, .description-bottom {
   flex: 0 0 auto;
   display: flex;
   flex-direction: row;
@@ -58,19 +70,10 @@
 }
 
 .info-box {
-  background-color: rgba(228, 226, 226, 0.8);
+  background-color: white;
   padding: 10px;
   padding-bottom: 5px;
   font-weight: 500;
-  border-radius: 15px 15px 0px 0px;
-}
-
-.info-box:first-child {
-  border-radius: 0px 15px 0px 0px;
-}
-
-.info-box:last-child {
-  border-radius: 15px 0px 0px 0px;
 }
 
 .maps-icon, .link-icon {
@@ -78,15 +81,8 @@
 }
 
 .features {
-  background-color: rgb(228, 226, 226);
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  flex-wrap: wrap;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding: 10px;
   font-weight: 500;
-  border-top: 1px solid black;
 }
 
 .feature {
@@ -95,10 +91,15 @@
 }
 
 .heart-icon {
-  color: grey;
+  color: gray;
 
   &.selected {
     color: red;
   }
 }
 
+.shiny {
+  box-shadow: 0px 0px 10px 6px white;
+  background: white;
+  border-radius: 10px;
+}
