@@ -11,7 +11,9 @@ const lookup: { [key: string]: (state: ISettingsState, action: SettingsActions) 
   [SaveSettings.type]: (state: ISettingsState, action: SaveSettings) => {
     return {
       ...state,
-      filters: action.filters,
+      filters: {
+        ...action.filters
+      },
       saving: {
         phase: Phase.ready,
       }

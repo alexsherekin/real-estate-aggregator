@@ -99,7 +99,7 @@ export class SearchPanelComponent implements OnInit, OnChanges {
     },
     [MarketingType.RENT]: {
       min: 0,
-      max: 2000,
+      max: 1000,
       step: 10
     },
   };
@@ -114,7 +114,7 @@ export class SearchPanelComponent implements OnInit, OnChanges {
   public ngOnChanges(changes: SimpleChanges): void {
 
     if (changes.hasOwnProperty('data')) {
-      this.apartment = changes.data.currentValue;
+      Object.assign(this.apartment, changes.data.currentValue);
       if (this.apartment) {
         const { marketingType, realEstateType, rentPrice, buyPrice } = this.apartment;
         this.uiMarketingType = marketingTypesReverseMap[marketingType] ? marketingTypesReverseMap[marketingType][realEstateType] : UIMarketingType.ApartmentRent;

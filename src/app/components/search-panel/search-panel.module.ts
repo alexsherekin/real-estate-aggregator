@@ -14,7 +14,7 @@ import { TypeaheadModule } from '../typeahead/typeahead.module';
     IonicModule,
     CommonModule,
     FormsModule,
-    TranslateModule,
+    TranslateModule.forChild(),
     TypeaheadModule,
     StoreModule.forFeature(fromFeature.FEATURE_NAME, fromFeature.reducer, {
       metaReducers: fromFeature.metaReducers

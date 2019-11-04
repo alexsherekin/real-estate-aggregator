@@ -11,7 +11,7 @@ import { TypeaheadComponent } from './typeahead.component';
     IonicModule,
     CommonModule,
     FormsModule,
-    TranslateModule,
+    TranslateModule.forChild(),
   ],
   declarations: [
     TypeaheadComponent

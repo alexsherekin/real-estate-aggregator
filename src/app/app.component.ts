@@ -1,17 +1,17 @@
 import { Component, OnDestroy } from '@angular/core';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
-import { Platform } from '@ionic/angular';
+import { Platform, MenuController } from '@ionic/angular';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, of, Subscription } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, map, tap, filter } from 'rxjs/operators';
 
 import { supportedLanguages } from './i18n';
 import { BaseLocationAutocompleteService, LocationAutocomplete, LocationAutocompleteItem } from './shared/third-party-apis/native';
 import { ApartmentRequirements } from './shared/types';
 import { NoInternetError } from './shared/types/errors/no-internet.error';
-import { settingsSelectors } from './store';
+import { settingsSelectors, dataSelectors } from './store';
 import { BeginSearchAction } from './store/data';
 import { NoInternetAction } from './store/notifications';
 import { ISettingsState, SaveSettings, Phase } from './store/settings';
@@ -27,6 +27,7 @@ export class AppComponent implements OnDestroy {
   public cityAutocompleteLoading: Phase = Phase.init;
 
   private languageSub: Subscription;
+  private initSub: Subscription;
 
   constructor(
     private platform: Platform,
@@ -35,6 +36,7 @@ export class AppComponent implements OnDestroy {
     private translate: TranslateService,
     private store: Store<ISettingsState>,
     private autocomplete: BaseLocationAutocompleteService,
+    private menu: MenuController,
   ) {
     this.initializeApp();
   }
@@ -53,12 +55,28 @@ export class AppComponent implements OnDestroy {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
     });
+
+    this.initSub = this.store.select(dataSelectors.getCache)
+      .pipe(
+        filter(cache => !cache || !Object.keys(cache).length)
+      )
+      .subscribe(cache => {
+        this.openMenu();
+        setTimeout(() => {
+          this.initSub.unsubscribe();
+        }, 0);
+      });
   }
 
   public ngOnDestroy(): void {
     if (this.languageSub) {
       this.languageSub.unsubscribe();
       this.languageSub = undefined;
+    }
+
+    if (this.initSub) {
+      this.initSub.unsubscribe();
+      this.initSub = undefined;
     }
   }
 
@@ -99,5 +117,9 @@ export class AppComponent implements OnDestroy {
 
   private startSearch() {
     this.store.dispatch(new BeginSearchAction());
+  }
+
+  private openMenu() {
+    this.menu.open();
   }
 }

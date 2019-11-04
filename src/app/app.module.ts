@@ -9,7 +9,8 @@ import { EffectsModule } from '@ngrx/effects';
 import { RouterStateSerializer, StoreRouterConnectingModule } from '@ngrx/router-store';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateLoader, TranslateModule, TranslateCompiler } from '@ngx-translate/core';
+import { TranslateMessageFormatCompiler, MESSAGE_FORMAT_CONFIG } from 'ngx-translate-messageformat-compiler';
 
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
@@ -82,6 +83,10 @@ import { SettingsEffects } from './store/settings/effects';
         provide: TranslateLoader,
         useFactory: HttpLoaderFactory,
         deps: [HttpClient]
+      },
+      compiler: {
+        provide: TranslateCompiler,
+        useClass: TranslateMessageFormatCompiler
       }
     }),
     SharedModule.forRoot(),
@@ -101,6 +106,7 @@ import { SettingsEffects } from './store/settings/effects';
     { provide: LocationAutocompleteServiceListInjectionToken, useClass: ImmobilienScout24LocationAutocompleteService, multi: true },
     { provide: LocationAutocompleteServiceListInjectionToken, useClass: ImmoweltLocationAutocompleteService, multi: true, },
     { provide: BaseLocationAutocompleteService, useClass: ImmobilienScout24LocationAutocompleteService },
+    { provide: MESSAGE_FORMAT_CONFIG, useValue: { locales: ['en', 'de', 'ru'] } },
   ],
   bootstrap: [AppComponent]
 })

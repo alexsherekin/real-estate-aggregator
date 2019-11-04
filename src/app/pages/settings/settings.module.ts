@@ -13,7 +13,7 @@ import { TranslateModule } from '@ngx-translate/core';
     FormsModule,
     ReactiveFormsModule,
     SettingsPageRoutingModule,
-    TranslateModule,
+    TranslateModule.forChild(),
   ],
   declarations: [SettingsPage]
 })

@@ -52,6 +52,6 @@
     "Empty": "You don't have any selected items"
   },
   "RealEstateItemComponent": {
-    "CountOfRooms": "{{count}} rooms"
+    "CountOfRooms": "{ count } { count, plural, =0{rooms} one{room} other{rooms} }"
   }
 }
