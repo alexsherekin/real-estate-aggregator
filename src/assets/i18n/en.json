@@ -3,7 +3,10 @@
     "Title": "Search results",
     "Search": "Search...",
     "Loading": "Loading more data...",
-    "NothingFound": "Sorry... We could not find anything"
+    "NothingFound": "Sorry... We could not find anything",
+    "EmptySearchResult": "",
+    "OpenSideBar": "",
+    "GoToFavourites": ""
   },
   "SettingsPage": {
     "Title": "Settings",

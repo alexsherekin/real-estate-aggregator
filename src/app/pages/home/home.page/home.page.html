@@ -26,6 +26,13 @@
   <ng-container *ngIf="(itemsLoadingState_i$ | async) !== Phase.failed">
     <app-real-estate-list [items]="itemsLoaded_i$ | async"
       (toggleFavourite)="onToggleFavourite($event)">
+      <div empty>
+        {{ 'HomePage.EmptySearchResult' | translate }}
+        <br>
+        <ion-button (click)="onOpenSideMenuButtonClicked()">
+          {{ 'HomePage.OpenSideBar' | translate }}
+        </ion-button>
+      </div>
     </app-real-estate-list>
     <ion-infinite-scroll #infiniteScroll
       threshold="100px"

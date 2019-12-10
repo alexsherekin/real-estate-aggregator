@@ -1,5 +1,5 @@
 import { Component, OnDestroy, ViewChild } from '@angular/core';
-import { IonInfiniteScroll, LoadingController } from '@ionic/angular';
+import { IonInfiniteScroll, LoadingController, MenuController } from '@ionic/angular';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
@@ -32,6 +32,7 @@ export class HomePage implements OnDestroy {
     private loading: LoadingController,
     private translate: TranslateService,
     private dataStore: Store<IDataState>,
+    private menu: MenuController,
   ) {
 
     this.itemsLoaded_i$ = dataProvider.itemsLoaded_i$
@@ -102,5 +103,9 @@ export class HomePage implements OnDestroy {
 
   public onToggleFavourite(ad: UIAdvertisement) {
     this.dataStore.dispatch(new ToggleFavouriteAdvertisementAction(ad.advertisement, !ad.isFavourite));
+  }
+
+  public onOpenSideMenuButtonClicked() {
+    this.menu.open();
   }
 }

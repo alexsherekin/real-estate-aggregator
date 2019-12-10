@@ -7,7 +7,9 @@
   </ion-item>
 </ion-list>
 
-<ng-content *ngIf="!items || !items.length"
-  select="[empty]">
+<div *ngIf="isEmpty"
+  class="fullsize">
+  <ng-content select="[empty]">
 
-</ng-content>
+  </ng-content>
+</div>

@@ -80,7 +80,7 @@ export class SearchPanelComponent implements OnInit, OnChanges {
   public cityAutocompleteLoading: Phase = Phase.init;
 
   @Output()
-  public change = new EventEmitter<ApartmentRequirements>();
+  public changeValue = new EventEmitter<ApartmentRequirements>();
 
   @Output()
   public citySearchChange = new EventEmitter<string>();
@@ -138,20 +138,20 @@ export class SearchPanelComponent implements OnInit, OnChanges {
       return;
     }
 
-    this.change.emit(Object.assign({}, this.apartment, {
+    this.changeValue.emit(Object.assign({}, this.apartment, {
       city: value.label || ''
     }));
   }
 
   public roomsCountChanged({ lower, upper } = { lower: 0, upper: 5 }) {
-    this.change.emit(Object.assign({}, this.apartment, {
+    this.changeValue.emit(Object.assign({}, this.apartment, {
       minRoomsCount: lower,
       maxRoomsCount: upper,
     }));
   }
 
   public squareChanged({ lower, upper } = { lower: 0, upper: 70 }) {
-    this.change.emit(Object.assign({}, this.apartment, {
+    this.changeValue.emit(Object.assign({}, this.apartment, {
       minSquare: lower,
       maxSquare: upper,
     }));
@@ -174,10 +174,10 @@ export class SearchPanelComponent implements OnInit, OnChanges {
         }
       };
     }
-    this.change.emit(Object.assign({}, this.apartment, payload));
+    this.changeValue.emit(Object.assign({}, this.apartment, payload));
   }
 
   public selectedMarketingTypeChanged(value: UIMarketingType) {
-    this.change.emit(Object.assign({}, this.apartment, marketingTypesMap[value]));
+    this.changeValue.emit(Object.assign({}, this.apartment, marketingTypesMap[value]));
   }
 }

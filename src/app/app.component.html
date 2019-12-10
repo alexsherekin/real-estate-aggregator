@@ -18,7 +18,7 @@
       <app-search-panel [data]="settings$ | async"
         [cityAutocomplete]="cityAutocomplete$ | async"
         [cityAutocompleteLoading]="cityAutocompleteLoading"
-        (change)="onSearchSettingsChanged($event)"
+        (changeValue)="onSearchSettingsChanged($event)"
         (citySearchChange)="onCitySearchChanged($event)">
       </app-search-panel>
     </ion-content>

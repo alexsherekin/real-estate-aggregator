@@ -6,7 +6,8 @@
     {{ placeholder }}
   </ion-label>
 
-  <ion-input type="search"
+  <ion-input #searchInput
+    type="search"
     clearInput="true"
     debounce="1000"
     [(ngModel)]="searchValue"

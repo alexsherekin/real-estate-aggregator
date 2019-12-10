@@ -12,7 +12,8 @@ const lookup: { [key: string]: (state: ISettingsState, action: SettingsActions) 
     return {
       ...state,
       filters: {
-        ...action.filters
+        ...state.filters,
+        ...action.filters,
       },
       saving: {
         phase: Phase.ready,

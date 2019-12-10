@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, HostBinding } from '@angular/core';
 
 import { UIAdvertisement } from '../../types/ui-advertisement';
 
@@ -25,5 +25,10 @@ export class RealEstateListComponent implements OnInit {
 
   public onToggleFavourite(value: UIAdvertisement) {
     this.toggleFavourite.emit(value);
+  }
+
+  @HostBinding('class.is-empty')
+  public get isEmpty() {
+    return !this.items || !this.items.length;
   }
 }

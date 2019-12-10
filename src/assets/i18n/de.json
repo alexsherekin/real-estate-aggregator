@@ -3,7 +3,10 @@
     "Title": "Suchergebnisse",
     "Search": "Suchen...",
     "Loading": "Laden die Daten...",
-    "NothingFound": "Leider gibt es zurzeit keine Anzeigen..."
+    "NothingFound": "Leider gibt es zurzeit keine Anzeigen...",
+    "EmptySearchResult": "",
+    "OpenSideBar": "",
+    "GoToFavourites": ""
   },
   "SettingsPage": {
     "Title": "Einstellungen",

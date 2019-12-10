@@ -230,7 +230,7 @@ export class ImmobilienScout24UrlCreatorService {
       }
     };
 
-    return map[apartment.realEstateType][apartment.marketingType];
+    return (map[apartment.realEstateType] && map[apartment.realEstateType][apartment.marketingType]) || RealEstateTypeString2.ApartmentRent;
   }
 
   public createLocationAutocompleteUrl(queryString: string) {

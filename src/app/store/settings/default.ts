@@ -11,7 +11,7 @@ export const defaultSettings: ISettingsState = {
     payload: undefined,
   },
   filters: {
-    city: 'Berlin',
+    city: '',
     minSquare: 0,
     maxSquare: 100,
     minRoomsCount: 1,
