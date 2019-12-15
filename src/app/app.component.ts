@@ -1,20 +1,20 @@
 import { Component, OnDestroy } from '@angular/core';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
-import { Platform, MenuController } from '@ionic/angular';
+import { MenuController, Platform } from '@ionic/angular';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, of, Subscription } from 'rxjs';
-import { catchError, map, tap, filter } from 'rxjs/operators';
+import { catchError, filter, first, map, tap } from 'rxjs/operators';
 
 import { supportedLanguages } from './i18n';
 import { BaseLocationAutocompleteService, LocationAutocomplete, LocationAutocompleteItem } from './shared/third-party-apis/native';
 import { ApartmentRequirements } from './shared/types';
 import { NoInternetError } from './shared/types/errors/no-internet.error';
-import { settingsSelectors, dataSelectors } from './store';
-import { BeginSearchAction } from './store/data';
+import { dataSelectors, IState, settingsSelectors } from './store';
+import { BeginSearchAction, MergeSeenAdvertisementAction } from './store/data';
 import { NoInternetAction } from './store/notifications';
-import { ISettingsState, SaveSettings, Phase } from './store/settings';
+import { Phase, SaveSettings } from './store/settings';
 
 @Component({
   selector: 'app-root',
@@ -27,14 +27,13 @@ export class AppComponent implements OnDestroy {
   public cityAutocompleteLoading: Phase = Phase.init;
 
   private languageSub: Subscription;
-  private initSub: Subscription;
 
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     private translate: TranslateService,
-    private store: Store<ISettingsState>,
+    private store: Store<IState>,
     private autocomplete: BaseLocationAutocompleteService,
     private menu: MenuController,
   ) {
@@ -51,32 +50,31 @@ export class AppComponent implements OnDestroy {
         this.translate.use(lang);
       });
 
+    this.store.select(dataSelectors.getCache)
+      .pipe(
+        filter(cache => !cache || !Object.keys(cache).length),
+        first(),
+      ).subscribe(() => this.openMenu());
+
+
+    this.store.select(dataSelectors.getIsRehydrated)
+      .pipe(
+        filter(Boolean),
+        first(),
+      ).subscribe(() => {
+        this.store.dispatch(new MergeSeenAdvertisementAction());
+      });
+
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
     });
-
-    this.initSub = this.store.select(dataSelectors.getCache)
-      .pipe(
-        filter(cache => !cache || !Object.keys(cache).length)
-      )
-      .subscribe(cache => {
-        this.openMenu();
-        setTimeout(() => {
-          this.initSub.unsubscribe();
-        }, 0);
-      });
   }
 
   public ngOnDestroy(): void {
     if (this.languageSub) {
       this.languageSub.unsubscribe();
       this.languageSub = undefined;
-    }
-
-    if (this.initSub) {
-      this.initSub.unsubscribe();
-      this.initSub = undefined;
     }
   }
 

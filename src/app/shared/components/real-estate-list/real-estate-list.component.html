@@ -2,7 +2,8 @@
   lines="none">
   <ion-item *ngFor="let realEstate of items; trackBy trackById">
     <app-real-estate-item [item]="realEstate"
-      (toggleFavourite)="onToggleFavourite(realEstate)">
+      (toggleFavourite)="onToggleFavourite(realEstate)"
+      (intersect)="onItemIntersected(realEstate)">
     </app-real-estate-item>
   </ion-item>
 </ion-list>

@@ -34,6 +34,7 @@ export class FavouritesPage {
               id: item.id,
               advertisement: item,
               isFavourite: true,
+              isSeen: true,
             } as UIAdvertisement;
           })
         })

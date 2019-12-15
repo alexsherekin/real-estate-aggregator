@@ -30,4 +30,7 @@ export const defaultSettings: ISettingsState = {
   appSettings: {
     language: undefined,
   },
+  displaySettings: {
+    onlyNew: false,
+  }
 };

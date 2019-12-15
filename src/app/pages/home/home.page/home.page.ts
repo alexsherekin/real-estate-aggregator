@@ -4,12 +4,12 @@ import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 import { combineLatest, map } from 'rxjs/operators';
-import { dataSelectors } from 'src/app/store';
+import { dataSelectors, IState, settingsSelectors } from 'src/app/store';
 
 import { DataProviderComposerService } from '../../../shared/third-party-apis/composer/data-provider-composer.servive';
-import { IDataState, ToggleFavouriteAdvertisementAction } from '../../../store/data';
-import { Phase } from '../../../store/settings';
 import { UIAdvertisement } from '../../../shared/types/ui-advertisement';
+import { MarkAdvertisementSeenAction, ToggleFavouriteAdvertisementAction } from '../../../store/data';
+import { Phase, ToggleDisplaySettingsOnlyNew } from '../../../store/settings';
 
 @Component({
   selector: 'app-home',
@@ -19,6 +19,7 @@ import { UIAdvertisement } from '../../../shared/types/ui-advertisement';
 export class HomePage implements OnDestroy {
   public itemsLoaded_i$: Observable<UIAdvertisement[]>;
   public itemsLoadingState_i$: Observable<Phase>;
+  public onlyNew$: Observable<boolean>;
 
   public Phase = Phase;
 
@@ -31,26 +32,32 @@ export class HomePage implements OnDestroy {
     private dataProvider: DataProviderComposerService,
     private loading: LoadingController,
     private translate: TranslateService,
-    private dataStore: Store<IDataState>,
+    private store: Store<IState>,
     private menu: MenuController,
   ) {
 
+    this.onlyNew$ = this.store.select(settingsSelectors.getDisplaySettingsOnlyNew);
+
     this.itemsLoaded_i$ = dataProvider.itemsLoaded_i$
       .pipe(
-        combineLatest(this.dataStore.select(dataSelectors.getFavourites)),
-        map(([data, favourites]) => {
-          return data.map(item => {
+        combineLatest(
+          this.store.select(dataSelectors.getFavourites),
+          this.store.select(dataSelectors.getSeen),
+          this.onlyNew$,
+        ),
+        map(([data, favourites, seen, onlyNew]) => {
+          return data.map<UIAdvertisement>(item => {
             return {
               id: item.id,
               advertisement: item,
-              isFavourite: favourites.findIndex(f => f.id === item.id) > -1,
-            } as UIAdvertisement;
-          })
+              isFavourite: !!favourites.find(f => f.id === item.id),
+              isSeen: !!seen.find(s => s.id === item.id),
+            };
+          }).filter(item => !onlyNew || !item.isSeen)
         })
       );
     this.itemsLoadingState_i$ = dataProvider.itemsLoadingState_i$;
     this.initDataProvider();
-
   }
 
   public ngOnDestroy(): void {
@@ -102,10 +109,18 @@ export class HomePage implements OnDestroy {
   }
 
   public onToggleFavourite(ad: UIAdvertisement) {
-    this.dataStore.dispatch(new ToggleFavouriteAdvertisementAction(ad.advertisement, !ad.isFavourite));
+    this.store.dispatch(new ToggleFavouriteAdvertisementAction(ad.advertisement, !ad.isFavourite));
+  }
+
+  public onItemIntersect(ad: UIAdvertisement) {
+    this.store.dispatch(new MarkAdvertisementSeenAction(ad.advertisement));
   }
 
   public onOpenSideMenuButtonClicked() {
     this.menu.open();
+  }
+
+  public onEyeIconClicked() {
+    this.store.dispatch(new ToggleDisplaySettingsOnlyNew());
   }
 }

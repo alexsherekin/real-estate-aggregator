@@ -4,9 +4,21 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-buttons slot="end">
+      <ion-button class="only-new-switch"
+        (click)="onEyeIconClicked()">
+        <span *ngIf="onlyNew$ | async">
+          {{ 'HomePage.ShowAll' | translate }}
+        </span>
+
+        <span *ngIf="!(onlyNew$ | async)">
+          {{ 'HomePage.ShowNew' | translate }}
+        </span>
+
+      </ion-button>
       <ion-button [routerLink]="['/settings']">
         <ion-icon slot="icon-only"
-          name="settings"></ion-icon>
+          name="settings">
+        </ion-icon>
       </ion-button>
     </ion-buttons>
     <ion-title>
@@ -25,7 +37,8 @@
 
   <ng-container *ngIf="(itemsLoadingState_i$ | async) !== Phase.failed">
     <app-real-estate-list [items]="itemsLoaded_i$ | async"
-      (toggleFavourite)="onToggleFavourite($event)">
+      (toggleFavourite)="onToggleFavourite($event)"
+      (itemIntersect)="onItemIntersect($event)">
       <div empty>
         {{ 'HomePage.EmptySearchResult' | translate }}
         <br>

@@ -4,4 +4,5 @@ export interface UIAdvertisement {
   id: string;
   advertisement: Advertisement;
   isFavourite: boolean;
+  isSeen: boolean;
 }

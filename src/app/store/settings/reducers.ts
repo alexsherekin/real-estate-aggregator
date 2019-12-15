@@ -1,11 +1,11 @@
 import { ISettingsState, Phase } from "./state";
-import { SettingsActions, SaveSettings, SetLanguageSettings } from "./actions";
+import { SettingsActions, SaveSettings, SetLanguageSettings, ToggleDisplaySettingsOnlyNew } from "./actions";
 import { defaultSettings } from "./default";
 import { ActionReducer, MetaReducer, Action } from '@ngrx/store';
 import { localStorageSync } from 'ngrx-store-localstorage';
 
 export const FEATURE_NAME = 'settings';
-const STORE_KEYS_TO_PERSIST: Array<keyof ISettingsState> = ['filters', 'sorting', 'appSettings'];
+const STORE_KEYS_TO_PERSIST: Array<keyof ISettingsState> = ['filters', 'sorting', 'appSettings', 'displaySettings'];
 
 const lookup: { [key: string]: (state: ISettingsState, action: SettingsActions) => ISettingsState } = {
   [SaveSettings.type]: (state: ISettingsState, action: SaveSettings) => {
@@ -29,7 +29,17 @@ const lookup: { [key: string]: (state: ISettingsState, action: SettingsActions) 
         language: action.language,
       }
     };
-  }
+  },
+  [ToggleDisplaySettingsOnlyNew.type]: (state: ISettingsState, action: ToggleDisplaySettingsOnlyNew) => {
+    const displaySettings = state.displaySettings || {};
+    return {
+      ...state,
+      displaySettings: {
+        ...displaySettings,
+        onlyNew: !displaySettings.onlyNew,
+      }
+    };
+  },
 }
 
 export function reducer(state: ISettingsState = defaultSettings, action: SettingsActions): ISettingsState {

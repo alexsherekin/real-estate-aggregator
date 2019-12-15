@@ -1,11 +1,11 @@
-import { DataActions, LocationAutocompleteAllAction, SaveRealEstateDataAction, ToggleFavouriteAdvertisementAction } from "./actions";
+import { DataActions, LocationAutocompleteAllAction, SaveRealEstateDataAction, ToggleFavouriteAdvertisementAction, MarkAdvertisementSeenAction, MergeSeenAdvertisementAction } from "./actions";
 import { ActionReducer, MetaReducer, Action } from '@ngrx/store';
 import { localStorageSync } from 'ngrx-store-localstorage';
 import { IDataState } from './state';
 import { defaultData } from './default';
 
 export const FEATURE_NAME = 'data';
-const STORE_KEYS_TO_PERSIST: Array<keyof IDataState> = ['cache', 'favourites'];
+const STORE_KEYS_TO_PERSIST: Array<keyof IDataState> = ['cache', 'favourites', 'seenAds', 'seenAdsCache'];
 
 const lookup: { [key: string]: (state: IDataState, action: DataActions) => IDataState } = {
 
@@ -45,6 +45,27 @@ const lookup: { [key: string]: (state: IDataState, action: DataActions) => IData
     };
   },
 
+  [MarkAdvertisementSeenAction.type]: (state: IDataState, action: MarkAdvertisementSeenAction) => {
+    const seenAds = [...state.seenAds, ...state.seenAdsCache];
+    const found = !!seenAds.find(ad => ad.id === action.ad.id);
+    if (found) {
+      return state;
+    }
+
+    return {
+      ...state,
+      seenAdsCache: [...state.seenAdsCache, action.ad],
+    };
+  },
+
+  [MergeSeenAdvertisementAction.type]: (state: IDataState, action: MergeSeenAdvertisementAction) => {
+    return {
+      ...state,
+      seenAds: [...state.seenAds, ...state.seenAdsCache],
+      seenAdsCache: [],
+    };
+  },
+
 }
 
 export function reducer(state: IDataState = defaultData, action: DataActions): IDataState {
@@ -64,4 +85,17 @@ export function localStorageSyncReducer(reducer: ActionReducer<IDataState>): Act
   })(reducer);
 }
 
-export const metaReducers: Array<MetaReducer<IDataState, Action>> = [localStorageSyncReducer];
+export function setRehydrateReducer(reducer: ActionReducer<IDataState>): ActionReducer<IDataState> {
+  return (state: IDataState, action: any) => {
+    if (state.isRehydrated) {
+      return reducer(state, action);
+    }
+
+    return reducer({
+      ...state,
+      isRehydrated: true,
+    }, action);
+  };
+}
+
+export const metaReducers: Array<MetaReducer<IDataState, Action>> = [localStorageSyncReducer, setRehydrateReducer];

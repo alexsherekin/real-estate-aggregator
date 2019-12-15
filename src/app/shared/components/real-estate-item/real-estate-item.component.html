@@ -1,5 +1,13 @@
 <h3>
-  {{ title }}
+  <ion-icon slot="icon-only"
+    name="eye"
+    [class.selected]="item.isSeen"
+    class="eye-icon"
+    size="large">
+  </ion-icon>
+  <span class="title">
+    {{ title }}
+  </span>
 </h3>
 <div class="top-panel">
   <address *ngIf="address"
@@ -15,46 +23,53 @@
     </a>
   </address>
 </div>
-<a *ngIf="linkToSource"
-  class="link"
-  href="{{linkToSource}}"
-  target="_blank">
-  <main class="image"
-    appBgImgLazyLoading
-    [img]="titleImage || noImageIcon">
-    <div class="description-top">
-      <ion-icon slot="icon-only"
-        name="heart"
-        [class.selected]="item.isFavourite"
-        class="heart-icon shiny"
-        size="large"
-        (click)="onFavouriteButtonClicked($event)">
-      </ion-icon>
+<ion-slides appIntersection
+  (intersectionChange)="intersected()">
+  <ion-slide style="display: contents">
+    <a *ngIf="linkToSource"
+      class="link"
+      href="{{linkToSource}}"
+      target="_blank">
+      <main class="image"
+        appBgImgLazyLoading
+        [img]="titleImage || noImageIcon">
+        <div class="description-top">
+          <div class="icons">
+            <ion-icon slot="icon-only"
+              name="heart"
+              [class.selected]="item.isFavourite"
+              class="heart-icon shiny"
+              size="large"
+              (click)="onFavouriteButtonClicked($event)">
+            </ion-icon>
+          </div>
 
-      <section class="features shiny"
-        *ngIf="hasTags(realEstate)">
-        {{ formatFeatures() }}
-      </section>
+          <section class="features shiny"
+            *ngIf="hasTags(realEstate)">
+            {{ formatFeatures() }}
+          </section>
 
-    </div>
-    <div class="description-bottom">
-      <span *ngIf="realEstate.numberOfRooms"
-        class="info-box shiny">
-        {{ 'RealEstateItemComponent.CountOfRooms' | translate: { count: realEstate.numberOfRooms } }}
-      </span>
+        </div>
+        <div class="description-bottom">
+          <span *ngIf="realEstate.numberOfRooms"
+            class="info-box shiny">
+            {{ 'RealEstateItemComponent.CountOfRooms' | translate: { count: realEstate.numberOfRooms } }}
+          </span>
 
-      <span *ngIf="realEstate.livingSpace"
-        class="info-box shiny">
-        {{ realEstate.livingSpace }} m<sup>2</sup>
-      </span>
+          <span *ngIf="realEstate.livingSpace"
+            class="info-box shiny">
+            {{ realEstate.livingSpace }} m<sup>2</sup>
+          </span>
 
-      <span *ngIf="realEstate.price.value"
-        class="info-box shiny">
-        {{ formatPrice(realEstate.price) }}
-        <span *ngIf="realEstate.fullPrice && realEstate.price.value !== realEstate.fullPrice.value">
-          {{ ' (' + formatPrice(realEstate.fullPrice) + ')' }}
-        </span>
-      </span>
-    </div>
-  </main>
-</a>
+          <span *ngIf="realEstate.price.value"
+            class="info-box shiny">
+            {{ formatPrice(realEstate.price) }}
+            <span *ngIf="realEstate.fullPrice && realEstate.price.value !== realEstate.fullPrice.value">
+              {{ ' (' + formatPrice(realEstate.fullPrice) + ')' }}
+            </span>
+          </span>
+        </div>
+      </main>
+    </a>
+  </ion-slide>
+</ion-slides>

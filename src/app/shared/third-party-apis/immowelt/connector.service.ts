@@ -116,15 +116,7 @@ export class ImmoweltConnectorService implements IConnectorService {
       price: {
         selector: '#keyfacts-bar #kfpriceValue',
         post: (value: string) => {
-          if (value === undefined || value === null) {
-            value = '';
-          }
-          const isEuro = value.includes('€');
-          value = value.replace(/[,]/g, '.');
-          return {
-            value: parseInt((/\s*[0-9]+/.exec(value) || '').toString()),
-            currency: isEuro ? 'EUR' : 'USD'
-          } as RealEstatePrice;
+          return this.toPrice(value);
         }
       },
       livingSpace: {
@@ -155,15 +147,7 @@ export class ImmoweltConnectorService implements IConnectorService {
       calculatedPrice: {
         selector: "#panelPrices #priceid_4",
         post: (value: string) => {
-          if (value === undefined || value === null) {
-            value = '';
-          }
-          const isEuro = value.includes('€');
-          value = value.replace(/[,]/g, '.');
-          return {
-            value: parseInt((/\s*[0-9]+/.exec(value) || '').toString()),
-            currency: isEuro ? 'EUR' : 'USD'
-          } as RealEstatePrice;
+          return this.toPrice(value);
         }
       },
       city: {
@@ -254,29 +238,13 @@ export class ImmoweltConnectorService implements IConnectorService {
       price: {
         selector: '[id^="selPrice_"] .text-250',
         post: (value: string) => {
-          if (value === undefined || value === null) {
-            value = '';
-          }
-          const isEuro = value.includes('€');
-          value = value.replace(/[,]/g, '.');
-          return {
-            value: parseInt((/\s*[0-9]+/.exec(value) || '').toString()),
-            currency: isEuro ? 'EUR' : 'USD'
-          } as RealEstatePrice;
+          return this.toPrice(value);
         }
       },
       calculatedPrice: {
         selector: '[id^="selPrice_"] .text-250',
         post: (value: string) => {
-          if (value === undefined || value === null) {
-            value = '';
-          }
-          const isEuro = value.includes('€');
-          value = value.replace(/[,]/g, '.');
-          return {
-            value: parseInt((/\s*[0-9]+/.exec(value) || '').toString()),
-            currency: isEuro ? 'EUR' : 'USD'
-          } as RealEstatePrice;
+          return this.toPrice(value);
         }
       },
       livingSpace: {
@@ -354,5 +322,30 @@ export class ImmoweltConnectorService implements IConnectorService {
   public searchLocation(searchQuery: string): Observable<LocationAutocompleteResponse> {
     const url = this.urlCreator.createLocationAutocompleteUrl(searchQuery);
     return this.http.get<LocationAutocompleteResponse>(url, { "Content-Type": "application/json" });
+  }
+
+  private toPrice(value: string): RealEstatePrice {
+    if (value === undefined || value === null) {
+      value = '';
+    }
+
+    const isEuro = value.includes('€');
+    let priceValue = '';
+    const parts = value.split(/[,.]/).map(part => (/\s*[0-9]+/.exec(part)[0] || '').trim().toString());
+    // Integer
+    if (parts.length === 1) {
+      priceValue = parts[0];
+    } else {
+      const lastPart = parts[parts.length - 1];
+      if (lastPart.length <= 2) {
+        priceValue = parts.slice(0, parts.length - 1).join('');
+      } else {
+        priceValue = parts.slice(0, parts.length).join('');
+      }
+    }
+    return {
+      value: parseInt((/\s*[0-9]+/.exec(priceValue) || '').toString()),
+      currency: isEuro ? 'EUR' : 'USD'
+    } as RealEstatePrice;
   }
 }

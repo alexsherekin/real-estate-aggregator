@@ -14,6 +14,9 @@ export class RealEstateListComponent implements OnInit {
   @Output()
   public toggleFavourite = new EventEmitter<UIAdvertisement>();
 
+  @Output()
+  public itemIntersect = new EventEmitter<UIAdvertisement>();
+
   public constructor() { }
 
   public ngOnInit() {
@@ -25,6 +28,10 @@ export class RealEstateListComponent implements OnInit {
 
   public onToggleFavourite(value: UIAdvertisement) {
     this.toggleFavourite.emit(value);
+  }
+
+  public onItemIntersected(value: UIAdvertisement) {
+    this.itemIntersect.emit(value);
   }
 
   @HostBinding('class.is-empty')

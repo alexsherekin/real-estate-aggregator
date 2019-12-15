@@ -29,4 +29,18 @@ export class ToggleFavouriteAdvertisementAction implements Action {
   }
 }
 
-export type DataActions = LocationAutocompleteAllAction | SaveRealEstateDataAction | BeginSearchAction | ToggleFavouriteAdvertisementAction;
+export class MarkAdvertisementSeenAction implements Action {
+  public static type = '[Data] Mark advertisement seen';
+  public readonly type = MarkAdvertisementSeenAction.type;
+  constructor(public ad: Advertisement) {
+  }
+}
+
+export class MergeSeenAdvertisementAction implements Action {
+  public static type = '[Data] Merge seen advertisement';
+  public readonly type = MergeSeenAdvertisementAction.type;
+  constructor() {
+  }
+}
+
+export type DataActions = LocationAutocompleteAllAction | SaveRealEstateDataAction | BeginSearchAction | ToggleFavouriteAdvertisementAction | MarkAdvertisementSeenAction | MergeSeenAdvertisementAction;

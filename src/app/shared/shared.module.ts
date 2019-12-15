@@ -21,6 +21,7 @@ import {
   ImmobilienScout24UrlCreatorService,
 } from './third-party-apis/immobilienscout24';
 import { ImmoweltConnectorService, ImmoweltDataProvider, ImmoweltUrlCreatorService } from './third-party-apis/immowelt';
+import { IntersectionDirective } from './directive/intersection.directive/intersection.directive';
 
 @NgModule({
   imports: [
@@ -37,6 +38,7 @@ import { ImmoweltConnectorService, ImmoweltDataProvider, ImmoweltUrlCreatorServi
     RealEstateItemComponent,
     ImgLazyLoadingDirective,
     BackgroundImageLazyLoadingDirective,
+    IntersectionDirective,
   ],
   exports: [
     RealEstateListComponent,

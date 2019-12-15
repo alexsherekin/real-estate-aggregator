@@ -18,5 +18,7 @@ export function getSelectors(name: string) {
 
     getAppSettings: createSelector(getSettingsState, (state: ISettingsState) => state.appSettings),
     getLanguageSettings: createSelector(getSettingsState, (state: ISettingsState) => state.appSettings.language),
+    getDisplaySettings: createSelector(getSettingsState, (state: ISettingsState) => state.displaySettings),
+    getDisplaySettingsOnlyNew: createSelector(getSettingsState, (state: ISettingsState) => state.displaySettings.onlyNew),
   };
 }

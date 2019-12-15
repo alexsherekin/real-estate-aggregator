@@ -1,5 +1,6 @@
-import { Action } from "@ngrx/store";
-import { IFilters } from "./state";
+import { Action } from '@ngrx/store';
+
+import { IFilters } from './state';
 
 export class SaveSettings implements Action {
   public static type = '[Settings] Save';
@@ -15,5 +16,12 @@ export class SetLanguageSettings implements Action {
   }
 }
 
+export class ToggleDisplaySettingsOnlyNew implements Action {
+  public static type = '[Settings] Toggle display settings only new';
+  public readonly type = ToggleDisplaySettingsOnlyNew.type;
+  constructor() {
+  }
+}
 
-export type SettingsActions = SaveSettings | SetLanguageSettings;
+
+export type SettingsActions = SaveSettings | SetLanguageSettings | ToggleDisplaySettingsOnlyNew;

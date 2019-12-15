@@ -34,10 +34,15 @@ export interface IFilters {
   rentPrice?: Price,
 }
 
+export interface DisplaySettings {
+  onlyNew?: boolean,
+}
+
 export interface ISettingsState {
   loading: IActionPhase,
   saving: IActionPhase,
   filters: IFilters,
   sorting?: Sorting,
   appSettings?: AppSettings,
+  displaySettings?: DisplaySettings,
 }

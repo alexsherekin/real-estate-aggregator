@@ -15,6 +15,9 @@ export class RealEstateItemComponent implements OnInit, OnChanges {
   @Output()
   public toggleFavourite = new EventEmitter<boolean>();
 
+  @Output()
+  public intersect = new EventEmitter<void>();
+
   // https://www.immonet.de/immobiliensuche/sel.do?sortby=0&suchart=1&fromarea=10&parentcat=1&marketingtype=1&toprice=150000&fromrooms=2&pageoffset=0&listsize=10&page=1&locationName=W%C3%BCrzburg&city=153145
   public realEstate: RealEstate;
   public address: Address;
@@ -28,7 +31,7 @@ export class RealEstateItemComponent implements OnInit, OnChanges {
   public noImageIcon = require('./assets/no-image.svg');
 
   public constructor(
-    private translate: TranslateService
+    private translate: TranslateService,
   ) { }
 
   public ngOnInit() {
@@ -94,7 +97,10 @@ export class RealEstateItemComponent implements OnInit, OnChanges {
     event.stopPropagation();
     event.preventDefault();
 
-
     this.toggleFavourite.emit();
+  }
+
+  public intersected() {
+    this.intersect.emit();
   }
 }
