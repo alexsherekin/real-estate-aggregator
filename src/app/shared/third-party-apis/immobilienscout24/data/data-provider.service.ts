@@ -29,6 +29,8 @@ export class ImmobilienScout24DataProvider implements IResetableDataProvider {
   private infiniteItemsLoaded_i$: Observable<Array<RealEstateFullDescription>>;
 
   private nextUrl_i$: Observable<string>;
+  private forceLoad_i$: Observable<ItemsResponse>;
+  private forceLoadSub: Subscription;
 
   private subscriptions: Subscription[] = [];
 
@@ -55,9 +57,7 @@ export class ImmobilienScout24DataProvider implements IResetableDataProvider {
 
           return this.connector.search(apartment, searchSettings)
             .pipe(
-              tap(() => {
-                this.searchLoadingState_i$.next(Phase.ready);
-              }),
+              tap(() => this.searchLoadingState_i$.next(Phase.ready)),
               catchError(error => {
                 this.searchLoadingState_i$.next(Phase.failed);
                 return of(undefined);
@@ -88,7 +88,7 @@ export class ImmobilienScout24DataProvider implements IResetableDataProvider {
       })
     );
 
-    const forceLoadSub = this.searchByUrl_s$.pipe(
+    this.forceLoad_i$ = this.searchByUrl_s$.pipe(
       distinctUntilChanged(() => false),
       withLatestFrom(this.nextUrl_i$),
       filter(([trigger, url]) => trigger),
@@ -106,8 +106,7 @@ export class ImmobilienScout24DataProvider implements IResetableDataProvider {
           })
         );
       })
-    ).subscribe(() => { });
-    this.subscriptions.push(forceLoadSub);
+    );
 
     this.infiniteItemsLoaded_i$ = this.infiniteDataLoaded_i$.pipe(
       map(response => {
@@ -144,6 +143,10 @@ export class ImmobilienScout24DataProvider implements IResetableDataProvider {
   }
 
   public get() {
+    if (!this.forceLoadSub) {
+      this.forceLoadSub = this.forceLoad_i$.subscribe(() => { });
+      this.subscriptions.push(this.forceLoadSub);
+    }
     this.infiniteLoadingState_i$.next(Phase.unknown);
     this.searchBySettings_s$.next(true);
   }

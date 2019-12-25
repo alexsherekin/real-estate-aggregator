@@ -31,13 +31,15 @@ export class ImmoweltDataProvider implements IResetableDataProvider {
   private infiniteItemsLoaded_i$: Observable<Array<ItemsResponseResultListEntry>>;
 
   private nextUrl_i$: Observable<string>;
+  private forceLoad_i$: Observable<ItemsResponse>;
+  private forceLoadSub: Subscription;
 
   private subscriptions: Subscription[] = [];
 
   public itemsLoadingState_i$: Observable<Phase>;
   private itemsLoadedCustom_i$ = new BehaviorSubject<Array<ItemsResponseResultListEntry>>([]);
 
-  public itemsLoaded_i$ = new BehaviorSubject<Array<Advertisement>>([]);
+  public itemsLoaded_i$: Observable<Array<Advertisement>>;
 
   constructor(
     private connector: ImmoweltConnectorService,
@@ -98,7 +100,7 @@ export class ImmoweltDataProvider implements IResetableDataProvider {
       })
     );
 
-    const forceLoadSub = this.searchByUrl_s$.pipe(
+    this.forceLoad_i$ = this.searchByUrl_s$.pipe(
       distinctUntilChanged(() => false),
       withLatestFrom(this.nextUrl_i$),
       filter(([trigger, url]) => trigger),
@@ -116,8 +118,7 @@ export class ImmoweltDataProvider implements IResetableDataProvider {
           })
         );
       })
-    ).subscribe(() => { });
-    this.subscriptions.push(forceLoadSub);
+    );
 
     this.infiniteItemsLoaded_i$ = this.infiniteDataLoaded_i$.pipe(
       map(response => {
@@ -129,17 +130,17 @@ export class ImmoweltDataProvider implements IResetableDataProvider {
       })
     );
 
-    const searchItemsLoadedSub = this.searchItemsLoaded_i$.pipe(
+    this.itemsLoaded_i$ = this.searchItemsLoaded_i$.pipe(
       map(result => ({ source: 'search', values: result || [] })),
       merge(this.infiniteItemsLoaded_i$.pipe(map(result => ({ source: 'infinite', values: result || [] })))),
       withLatestFrom(this.itemsLoadedCustom_i$),
-    ).subscribe(([newList, currentList]) => {
-      const result = (newList.source === 'search') ? newList.values : [...currentList, ...newList.values];
-      this.itemsLoadedCustom_i$.next(result);
-      const converted = convertData(Array.isArray(result) ? result : [result]);
-      this.itemsLoaded_i$.next(converted);
-    });
-    this.subscriptions.push(searchItemsLoadedSub);
+      map(([newList, currentList]) => {
+        const result = (newList.source === 'search') ? newList.values : [...currentList, ...newList.values];
+        this.itemsLoadedCustom_i$.next(result);
+        const converted = convertData(Array.isArray(result) ? result : [result]);
+        return converted;
+      })
+    );
 
     this.itemsLoadingState_i$ = this.searchLoadingState_i$.pipe(
       combineLatest(this.infiniteLoadingState_i$),
@@ -154,6 +155,10 @@ export class ImmoweltDataProvider implements IResetableDataProvider {
   }
 
   public get() {
+    if (!this.forceLoadSub) {
+      this.forceLoadSub = this.forceLoad_i$.subscribe(() => { });
+      this.subscriptions.push(this.forceLoadSub);
+    }
     this.infiniteLoadingState_i$.next(Phase.unknown);
     this.searchBySettings_s$.next(true);
   }
