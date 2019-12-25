@@ -1,5 +1,5 @@
-import { Component, ViewChild } from '@angular/core';
-import { IonInfiniteScroll, LoadingController } from '@ionic/angular';
+import { Component } from '@angular/core';
+import { LoadingController } from '@ionic/angular';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
@@ -17,8 +17,6 @@ import { UIAdvertisement } from '../../../shared/types/ui-advertisement';
 export class FavouritesPage {
 
   public itemsLoaded_i$: Observable<UIAdvertisement[]>;
-
-  @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
 
   public constructor(
     private loading: LoadingController,

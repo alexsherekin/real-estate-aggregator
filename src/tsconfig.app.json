@@ -2,6 +2,15 @@
   "extends": "../tsconfig.json",
   "exclude": [
     "test.ts",
-    "**/*.spec.ts"
-  ]
+    "**/*.spec.ts",
+    "assets/**"
+  ],
+  "compilerOptions": {
+    "importHelpers": true
+  },
+  "angularCompilerOptions": {
+    "enableIvy": true,
+    "fullTemplateTypeCheck": true,
+    "strictInjectionParameters": true
+  }
 }

@@ -28,6 +28,10 @@ import { NotificationEffects } from './store/notifications';
 import { DataEffects } from './store/data/effects';
 import { SettingsEffects } from './store/settings/effects';
 
+export function TranslateMessageFormatCompilerFactory() {
+  return new TranslateMessageFormatCompiler();
+}
+
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -44,7 +48,7 @@ import { SettingsEffects } from './store/settings/effects';
      * meta-reducer. This returns all providers for an @ngrx/store
      * based application.
      */
-    StoreModule.forRoot(reducers, { metaReducers }),
+    StoreModule.forRoot(reducers, { metaReducers, runtimeChecks: { strictStateImmutability: true, strictActionImmutability: true } }),
     /**
      * @ngrx/router-store keeps router state up-to-date in the store.
      */
@@ -86,7 +90,7 @@ import { SettingsEffects } from './store/settings/effects';
       },
       compiler: {
         provide: TranslateCompiler,
-        useClass: TranslateMessageFormatCompiler
+        useFactory: TranslateMessageFormatCompilerFactory,
       }
     }),
     SharedModule.forRoot(),

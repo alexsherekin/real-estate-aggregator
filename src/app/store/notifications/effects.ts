@@ -10,7 +10,7 @@ import { from, of } from 'rxjs';
 @Injectable()
 export class NotificationEffects {
 
-  @Effect({ dispatch: false })
+  @Effect({ dispatch: false, resubscribeOnError: false })
   showNoInternetMessage$ = this.actions$
     .pipe(
       ofType(NoInternetAction.type),

@@ -24,7 +24,7 @@ export class SettingsPage implements OnInit, OnDestroy {
   public model: SettingsPageModel;
 
   private appSettingsSub: Subscription;
-  private settingsForm: FormGroup;
+  public settingsForm: FormGroup;
 
   public constructor(
     private store: Store<ISettingsState>,

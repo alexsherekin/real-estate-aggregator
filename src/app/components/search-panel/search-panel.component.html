@@ -11,8 +11,7 @@
     </ion-row>
   </ion-radio-group>
 
-  <app-typeahead #cityTypeahead
-    [dataSource]="cityAutocomplete"
+  <app-typeahead [dataSource]="cityAutocomplete"
     [loading]="cityAutocompleteLoading"
     [value]="apartment.city"
     [placeholder]="'ApartmentDescription.City' | translate"

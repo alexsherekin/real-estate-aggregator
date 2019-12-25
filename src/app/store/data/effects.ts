@@ -14,7 +14,7 @@ import { BeginSearchAction } from './actions';
 @Injectable()
 export class DataEffects {
 
-  @Effect({ dispatch: true })
+  @Effect({ dispatch: true, resubscribeOnError: false })
   locationAutocomplete$ = this.actions$
     .pipe(
       ofType(SaveSettings.type),

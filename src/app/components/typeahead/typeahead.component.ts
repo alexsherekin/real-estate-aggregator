@@ -1,9 +1,7 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, AfterViewInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, of } from 'rxjs';
 
 import { Phase } from '../../store/settings';
-import { IonInput } from '@ionic/angular';
 
 @Component({
   selector: 'app-typeahead',
@@ -20,8 +18,6 @@ export class TypeaheadComponent implements OnChanges {
 
   @Output() public search = new EventEmitter<string>();
   @Output() public itemSelected = new EventEmitter<any>();
-
-  @ViewChild('searchInput') public searchInput: IonInput;
 
   public Phase = Phase;
   public searchValue: string;

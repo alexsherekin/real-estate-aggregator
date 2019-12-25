@@ -1,21 +1,8 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  SimpleChanges,
-  ViewChild,
-} from '@angular/core';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 
 import { LocationAutocompleteItem, MarketingType, RealEstateType } from '../../shared/third-party-apis/native';
 import { ApartmentRequirements, SearchSettings, Sorting } from '../../shared/types';
 import { IFilters, Phase, Price } from '../../store/settings';
-import { TypeaheadComponent } from '../typeahead';
 
 enum UIMarketingType {
   ApartmentBuy = 'ApartmentBuy',
@@ -105,8 +92,6 @@ export class SearchPanelComponent implements OnInit, OnChanges {
   };
   public price: Price;
   public marketingTypes = [UIMarketingType.ApartmentBuy, UIMarketingType.ApartmentRent, UIMarketingType.HouseBuy, UIMarketingType.HouseRent];
-
-  @ViewChild('cityTypeahead') public cityTypeahead: TypeaheadComponent;
 
   public ngOnInit() {
   }

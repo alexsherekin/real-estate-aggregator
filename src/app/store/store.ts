@@ -1,6 +1,6 @@
 import * as fromRouter from '@ngrx/router-store';
 import { ActionReducer, ActionReducerMap, MetaReducer } from '@ngrx/store';
-import { storeFreeze } from 'ngrx-store-freeze';
+
 
 import { environment } from '../../environments/environment';
 import { RouterStateUrl } from '../shared/utils';
@@ -58,7 +58,7 @@ export function logger(reducer: ActionReducer<IState>): ActionReducer<IState> {
  * that will be composed to form the root meta-reducer.
  */
 export const metaReducers: MetaReducer<IState>[] = [
-  ...(!environment.production ? [logger, storeFreeze] : []),
+  ...(!environment.production ? [logger] : []),
 ];
 
 export const settingsSelectors = fromSettings.getSelectors('settings');
