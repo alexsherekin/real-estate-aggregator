@@ -11,6 +11,8 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "i18n-add": "",
+    "android": "npm run build:android:dev",
+    "sideload": "adb install -r platforms/android/app/build/outputs/apk/debug/app-debug.apk",
     "rebuild:android:dev": "rm -rf ./platforms/android && rm -rf ./plugins && ionic cordova platform add android && ionic cordova build android",
     "build:android:dev": "ionic cordova build android",
     "build:android:prod": "ionic cordova build android -- --prod"
