@@ -1,4 +1,12 @@
-export const supportedLanguages = {
+export interface LanguageDescription {
+  id: string,
+  label: string,
+  default?: boolean,
+}
+
+export const supportedLanguages: {
+  languages: LanguageDescription[]
+} = {
   languages: [
     {
       id: 'en',

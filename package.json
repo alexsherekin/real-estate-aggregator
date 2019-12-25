@@ -12,7 +12,8 @@
     "e2e": "ng e2e",
     "i18n-add": "",
     "rebuild:android:dev": "rm -rf ./platforms/android && rm -rf ./plugins && ionic cordova platform add android && ionic cordova build android",
-    "build:android:dev": "ionic cordova build android"
+    "build:android:dev": "ionic cordova build android",
+    "build:android:prod": "ionic cordova build android -- --prod"
   },
   "private": true,
   "dependencies": {

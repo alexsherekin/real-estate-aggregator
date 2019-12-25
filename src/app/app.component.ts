@@ -50,11 +50,11 @@ export class AppComponent implements OnDestroy {
         this.translate.use(lang);
       });
 
-    this.store.select(dataSelectors.getCache)
-      .pipe(
-        filter(cache => !cache || !Object.keys(cache).length),
-        first(),
-      ).subscribe(() => this.openMenu());
+    // this.store.select(dataSelectors.getCache)
+    //   .pipe(
+    //     filter(cache => !cache || !Object.keys(cache).length),
+    //     first(),
+    //   ).subscribe(() => this.openMenu());
 
 
     this.store.select(dataSelectors.getIsRehydrated)

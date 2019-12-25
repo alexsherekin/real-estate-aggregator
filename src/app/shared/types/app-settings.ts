@@ -1,3 +1,3 @@
 export interface AppSettings {
-  language: string;
+  language?: string;
 }

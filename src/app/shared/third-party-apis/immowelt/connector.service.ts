@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, merge, combineLatest } from 'rxjs';
+import { Observable, of, merge, combineLatest, throwError } from 'rxjs';
 import { map, switchMap, mergeMap } from 'rxjs/operators';
 import * as urlParse from 'url-parse';
 
@@ -62,8 +62,9 @@ export class ImmoweltConnectorService implements IConnectorService {
 
   public searchByUrl(url: string): Observable<ItemsResponse> {
     if (!url) {
-      return of(undefined);
+      return throwError(new Error('Invalid argument url'));
     }
+
     url = this.urlCreator.addBaseUrl(url);
     return this._search(url);
   }

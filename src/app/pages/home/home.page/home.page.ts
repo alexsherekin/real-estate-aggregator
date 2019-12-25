@@ -3,7 +3,7 @@ import { IonInfiniteScroll, LoadingController, MenuController } from '@ionic/ang
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
-import { combineLatest, map } from 'rxjs/operators';
+import { combineLatest, map, share, scan } from 'rxjs/operators';
 import { dataSelectors, IState, settingsSelectors } from 'src/app/store';
 
 import { DataProviderComposerService } from '../../../shared/third-party-apis/composer/data-provider-composer.servive';
@@ -20,6 +20,7 @@ export class HomePage implements OnDestroy {
   public itemsLoaded_i$: Observable<UIAdvertisement[]>;
   public itemsLoadingState_i$: Observable<Phase>;
   public onlyNew$: Observable<boolean>;
+  public canScrollInfinitely$: Observable<boolean>;
 
   public Phase = Phase;
 
@@ -38,7 +39,7 @@ export class HomePage implements OnDestroy {
 
     this.onlyNew$ = this.store.select(settingsSelectors.getDisplaySettingsOnlyNew);
 
-    this.itemsLoaded_i$ = dataProvider.itemsLoaded_i$
+    const itemsState$ = dataProvider.itemsLoaded_i$
       .pipe(
         combineLatest(
           this.store.select(dataSelectors.getFavourites),
@@ -46,17 +47,42 @@ export class HomePage implements OnDestroy {
           this.onlyNew$,
         ),
         map(([data, favourites, seen, onlyNew]) => {
-          return data.map<UIAdvertisement>(item => {
+          if (!data || !data.length) {
+            return [];
+          }
+
+          const result = data.map<UIAdvertisement>(item => {
             return {
               id: item.id,
               advertisement: item,
               isFavourite: !!favourites.find(f => f.id === item.id),
               isSeen: !!seen.find(s => s.id === item.id),
             };
-          }).filter(item => !onlyNew || !item.isSeen)
-        })
+          }).filter(item => !onlyNew || !item.isSeen);
+          return result;
+        }),
+        share(),
       );
-    this.itemsLoadingState_i$ = dataProvider.itemsLoadingState_i$;
+
+    this.canScrollInfinitely$ = itemsState$.pipe(
+      scan((acc, value) => {
+        acc.push(value ? value.length : 0);
+        return acc;
+      }, [] as number[]),
+      map(result => {
+        const lastIndex = result.length - 1;
+        if (lastIndex < 1) {
+          return true;
+        }
+        return result[lastIndex] !== result[lastIndex - 1];
+      })
+    );
+
+    this.itemsLoaded_i$ = itemsState$;
+
+    this.itemsLoadingState_i$ = dataProvider.itemsLoadingState_i$.pipe(
+      share()
+    );
     this.initDataProvider();
   }
 
@@ -83,9 +109,7 @@ export class HomePage implements OnDestroy {
           }
 
           if (this.infiniteScroll) {
-            if (state === Phase.ready || state === Phase.failed || state === Phase.stopped) {
-              this.infiniteScroll.complete();
-            }
+            this.infiniteScroll.complete();
           }
         }
       });

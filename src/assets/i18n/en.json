@@ -4,9 +4,14 @@
     "Search": "Search...",
     "Loading": "Loading more data...",
     "NothingFound": "Sorry... We could not find anything",
-    "EmptySearchResult": "",
-    "OpenSideBar": "",
-    "GoToFavourites": ""
+    "EmptySearchResult": "Nothing found",
+    "OpenSideBar": "Search",
+    "GoToFavourites": "Favourites",
+    "ShowAll": "Show all",
+    "ShowNew": "Show new"
+  },
+  "SideBar": {
+    "Search": "Search..."
   },
   "SettingsPage": {
     "Title": "Settings",

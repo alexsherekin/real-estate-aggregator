@@ -28,7 +28,7 @@ export const defaultSettings: ISettingsState = {
     realEstateType: RealEstateType.FLAT,
   },
   appSettings: {
-    language: undefined,
+
   },
   displaySettings: {
     onlyNew: false,

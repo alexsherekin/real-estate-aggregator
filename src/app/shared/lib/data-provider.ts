@@ -13,3 +13,7 @@ export interface IDataProvider {
   getNext(): void;
 }
 
+export interface IResetableDataProvider extends IDataProvider {
+  reset(): void;
+}
+

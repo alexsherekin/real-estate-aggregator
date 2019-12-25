@@ -5,7 +5,7 @@ export enum Phase {
   unknown = 'unknown',
   init = 'init',
   running = 'running',
-  paused = 'paused',
+  // paused = 'paused',
   stopped = 'stopped',
   ready = 'ready',
   failed = 'failed',

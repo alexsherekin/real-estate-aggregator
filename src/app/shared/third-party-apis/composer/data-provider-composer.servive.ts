@@ -1,9 +1,9 @@
 import { Inject, Injectable } from '@angular/core';
 import { combineLatest, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 import { Phase } from '../../../store/settings';
-import { IDataProvider, IDataProviderListInjectionToken } from '../../lib';
+import { IDataProvider, IDataProviderListInjectionToken, IResetableDataProvider } from '../../lib';
 import { Advertisement } from '../native';
 import { areSimilar } from './are-similar';
 
@@ -15,7 +15,7 @@ export class DataProviderComposerService implements IDataProvider {
 
   constructor(
     @Inject(IDataProviderListInjectionToken)
-    private dataProviders: IDataProvider[],
+    private dataProviders: IResetableDataProvider[],
   ) {
     const events = this.dataProviders.map(dataProvider => this.initDataProvider(dataProvider));
 
@@ -31,6 +31,11 @@ export class DataProviderComposerService implements IDataProvider {
   }
 
   private flattenLoadingPhase = (phases: Phase[]) => {
+    const someInit = phases.some(phase => phase === Phase.init);
+    if (someInit) {
+      return Phase.init;
+    }
+
     const isRunning = phases.some(phase => phase === Phase.running);
     if (isRunning) {
       return Phase.running;
@@ -39,6 +44,11 @@ export class DataProviderComposerService implements IDataProvider {
     const allFailed = phases.every(phase => phase === Phase.failed);
     if (allFailed) {
       return Phase.failed;
+    }
+
+    const allStopped = phases.every(phase => phase === Phase.stopped);
+    if (allStopped) {
+      return Phase.stopped;
     }
 
     return Phase.ready;
@@ -96,6 +106,8 @@ export class DataProviderComposerService implements IDataProvider {
   }
 
   public getNext() {
+    this.dataProviders.forEach(dataProvider => dataProvider.reset());
+
     this.dataProviders.forEach(dataProvider => dataProvider.getNext());
   }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 import { Http } from '../../services/http';
@@ -29,7 +29,7 @@ export class ImmobilienScout24ConnectorService implements IConnectorService {
 
   public searchByUrl(url: string): Observable<ItemsResponse> {
     if (!url) {
-      return of(undefined);
+      return throwError(new Error('Invalid argument url'));
     }
 
     return this.http.post<ItemsResponse>(this.urlCreator.addBaseUrl(url), null, { "Content-Type": "application/json" });

@@ -15,7 +15,7 @@ export class ImmoweltUrlCreatorService {
   }
 
   // short url example
-  // https://www.immonet.de/immobiliensuche/sel.do?sortby=0&suchart=1&zip=97070&fromarea=10&objecttype=1&marketingtype=2&parentcat=1&toprice=1000&fromrooms=2&pageoffset=1&listsize=26&page=2&locationname=97070+Würzburg
+  // https://www.immonet.de/immobiliensuche/sel.do?sortby=19&suchart=1&zip=97070&fromarea=10&objecttype=1&marketingtype=2&parentcat=1&toprice=1000&fromrooms=2&pageoffset=1&listsize=26&page=2&locationname=97070+Würzburg
   // https://www.immonet.de/immobiliensuche/sel.do?sortby=${sortBy}&suchart=${searchType}&zip=${zip}&fromarea=${radius}&parentcat=${realEstateType}&marketingtype=${marketingType}&toprice=${maxPrice}&fromrooms=${minRoomsCount}&pageoffset=${pageOffset}&listsize=${itemsCount}&page=${page}&locationname=${locationName}
   private static readonly baseUrl = 'https://www.immonet.de/';
 
@@ -28,7 +28,7 @@ export class ImmoweltUrlCreatorService {
     }
 
     const args = [
-      { key: 'sortby', value: 0 },
+      { key: 'sortby', value: 19 },
       { key: 'suchart', value: 2 },
       { key: 'zip', value: '' },
       { key: 'fromarea', value: apartment.minSquare },

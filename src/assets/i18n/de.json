@@ -4,9 +4,14 @@
     "Search": "Suchen...",
     "Loading": "Laden die Daten...",
     "NothingFound": "Leider gibt es zurzeit keine Anzeigen...",
-    "EmptySearchResult": "",
-    "OpenSideBar": "",
-    "GoToFavourites": ""
+    "EmptySearchResult": "Nichts gefunden",
+    "OpenSideBar": "Suche",
+    "GoToFavourites": "Favoriten",
+    "ShowAll": "Alles anzeigen",
+    "ShowNew": "Neues anzeigen"
+  },
+  "SideBar": {
+    "Search": "Suchen..."
   },
   "SettingsPage": {
     "Title": "Einstellungen",
