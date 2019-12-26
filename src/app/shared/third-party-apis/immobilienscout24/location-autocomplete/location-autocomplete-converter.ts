@@ -6,7 +6,7 @@ import {
   ImmobilienScout24LocationType,
 } from './location-autocomplete-response';
 
-export function convertAutocompleteResponse(input: ImmobilienScout24LocationAutocompleteResponse): LocationAutocomplete {
+export function convertAutocompleteResponse(input: ImmobilienScout24LocationAutocompleteResponse | undefined): LocationAutocomplete {
   if (!input || !input.length) {
     return {
       key: DataProviderKey,
@@ -16,11 +16,11 @@ export function convertAutocompleteResponse(input: ImmobilienScout24LocationAuto
 
   return {
     key: DataProviderKey,
-    items: input.map(convertItem)
+    items: input.map(convertItem).filter(Boolean) as LocationAutocompleteItem[]
   };
 }
 
-function convertItem(locationItem: ImmobilienScout24LocationAutocompleteItem): LocationAutocompleteItem {
+function convertItem(locationItem: ImmobilienScout24LocationAutocompleteItem): LocationAutocompleteItem | undefined {
   if (!locationItem || !locationItem.entity) {
     return undefined;
   }

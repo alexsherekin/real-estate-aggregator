@@ -44,7 +44,7 @@ export const reducers: ActionReducerMap<IState> = {
 
 // console.log all actions
 export function logger(reducer: ActionReducer<IState>): ActionReducer<IState> {
-  return function (state: IState, action: any): IState {
+  return function (state: IState | undefined, action: any): IState {
     console.log('state', state);
     console.log('action', action);
 

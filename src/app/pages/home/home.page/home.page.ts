@@ -17,16 +17,16 @@ import { Phase, ToggleDisplaySettingsOnlyNew } from '../../../store/settings';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage implements OnDestroy {
-  public itemsLoaded_i$: Observable<UIAdvertisement[]>;
-  public itemsLoadingState_i$: Observable<Phase>;
-  public onlyNew$: Observable<boolean>;
+  public itemsLoaded_i$!: Observable<UIAdvertisement[]>;
+  public itemsLoadingState_i$!: Observable<Phase>;
+  public onlyNew$!: Observable<boolean>;
 
   public Phase = Phase;
 
   private subscriptions: Subscription[] = [];
-  private loadingOverlayPromise: Promise<HTMLIonLoadingElement>;
+  private loadingOverlayPromise?: Promise<HTMLIonLoadingElement>;
 
-  @ViewChild(IonInfiniteScroll, { static: true }) infiniteScroll: IonInfiniteScroll;
+  @ViewChild(IonInfiniteScroll, { static: true }) infiniteScroll!: IonInfiniteScroll;
 
   public constructor(
     private dataProvider: DataProviderComposerService,

@@ -10,17 +10,17 @@ import { Phase } from '../../store/settings';
 })
 export class TypeaheadComponent implements OnChanges {
   @Input() public dataSource: any;
-  @Input() public loading: Phase;
-  @Input() public bindValue: string;
-  @Input() public searchField: string;
-  @Input() public placeholder: string;
+  @Input() public loading!: Phase;
+  @Input() public bindValue!: string;
+  @Input() public searchField!: string;
+  @Input() public placeholder!: string;
   @Input() public value: any;
 
   @Output() public search = new EventEmitter<string>();
   @Output() public itemSelected = new EventEmitter<any>();
 
   public Phase = Phase;
-  public searchValue: string;
+  public searchValue?: string;
   public selectedOption: any;
   public valueSelected: boolean = false;
 

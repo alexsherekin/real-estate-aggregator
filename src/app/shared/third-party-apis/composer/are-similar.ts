@@ -36,6 +36,6 @@ export function areSimilar(ad1: Advertisement, ad2: Advertisement) {
   return true;
 }
 
-function isDefined<T>(obj: T, prop: keyof T) {
+function isDefined<T extends Object>(obj: T, prop: keyof T) {
   return obj.hasOwnProperty(prop) && obj[prop] !== undefined && obj[prop] !== null;
 }

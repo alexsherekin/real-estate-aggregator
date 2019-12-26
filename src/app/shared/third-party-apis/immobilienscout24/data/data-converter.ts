@@ -1,4 +1,15 @@
-import { Address, Advertisement, ExternalAsset, MarketingType, Price, RealEstate, RealEstateFeature, RealEstateType } from '../../native';
+import { KeyValue } from '../../../../shared/types';
+import {
+  Address,
+  Advertisement,
+  Coordinates,
+  ExternalAsset,
+  MarketingType,
+  Price,
+  RealEstate,
+  RealEstateFeature,
+  RealEstateType,
+} from '../../native';
 import { ImmobilienScout24UrlCreatorService } from '../url-creator.service';
 import {
   ImageUrl,
@@ -12,10 +23,6 @@ import {
 const titleImageSize = 500;
 
 export function convertData(entries: RealEstateFullDescription[], marketingType: RealEstateTypeNumber): Advertisement[] {
-  if (!entries) {
-    return undefined;
-  }
-
   return entries.map(entry => {
     return {
       id: entry['@id'],
@@ -30,14 +37,11 @@ export function convertData(entries: RealEstateFullDescription[], marketingType:
 }
 
 function getTitle(description: RealEstateShortDescription): string {
-  if (!description) {
-    return undefined;
-  }
   return description.title;
 }
 
 function getPictures(description: RealEstateShortDescription): ExternalAsset[] {
-  if (!description || !description.titlePicture || !description.titlePicture.urls) {
+  if (!description.titlePicture || !description.titlePicture.urls) {
     return [];
   }
   return description.titlePicture.urls
@@ -54,8 +58,8 @@ function getPictures(description: RealEstateShortDescription): ExternalAsset[] {
     });
 }
 
-function getRealEstate(description: RealEstateFullDescription, marketingType: RealEstateTypeNumber): RealEstate {
-  if (!description || !description['resultlist.realEstate']) {
+function getRealEstate(description: RealEstateFullDescription, marketingType: RealEstateTypeNumber): RealEstate | undefined {
+  if (!description['resultlist.realEstate']) {
     return undefined;
   }
 
@@ -73,9 +77,6 @@ function getRealEstate(description: RealEstateFullDescription, marketingType: Re
 }
 
 function getAddress(address: RealEstateAddress): Address {
-  if (!address) {
-    return undefined;
-  }
   return {
     street: address.street,
     houseNumber: address.houseNumber,
@@ -108,7 +109,7 @@ function getRealEstateType(type: RealEstateTypeNumber): RealEstateType {
   return map[type] || RealEstateType.UNKNOWN;
 }
 
-function getCoordinate(coordinate) {
+function getCoordinate(coordinate: Coordinates) {
   if (!coordinate) {
     return undefined;
   }
@@ -118,14 +119,14 @@ function getCoordinate(coordinate) {
   };
 }
 
-function getDescription(description) {
+function getDescription(description: { text: string } | undefined) {
   if (!description) {
     return undefined;
   }
   return description.text;
 }
 
-const featuresMap = {
+const featuresMap: KeyValue<RealEstateFeature> = {
   'Balkon/Terrasse': RealEstateFeature.Balcony,
   'Einbauküche': RealEstateFeature.BuiltInKitchen,
   'Keller': RealEstateFeature.Cellar,
@@ -145,13 +146,10 @@ function getFeatures(description: RealEstateFullDescription): RealEstateFeature[
   }
   return (Array.isArray(tags) ? tags : [tags])
     .map(tag => featuresMap[tag])
-    .filter(feature => feature);
+    .filter(Boolean);
 }
 
 function getPrice(price: RealEstatePrice): Price {
-  if (!price) {
-    return undefined;
-  }
   return {
     value: price.value,
     currency: price.currency as any,

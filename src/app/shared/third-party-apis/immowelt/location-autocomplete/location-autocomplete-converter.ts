@@ -7,7 +7,7 @@ import {
 } from './location-autocomplete-response';
 
 
-export function convertAutocompleteResponse(input: ImmoweltLocationAutocompleteResponse): LocationAutocomplete {
+export function convertAutocompleteResponse(input: ImmoweltLocationAutocompleteResponse | undefined): LocationAutocomplete {
   if (!input || !input.data) {
     return {
       key: DataProviderKey,
@@ -21,8 +21,8 @@ export function convertAutocompleteResponse(input: ImmoweltLocationAutocompleteR
   };
 }
 
-export function convertBackAutocompleteResponse(input: LocationAutocomplete): ImmoweltLocationAutocompleteResponse {
-  if (!input || !input.items) {
+export function convertBackAutocompleteResponse(input: LocationAutocomplete): ImmoweltLocationAutocompleteResponse | undefined {
+  if (!input.items) {
     return undefined;
   }
 
@@ -32,9 +32,6 @@ export function convertBackAutocompleteResponse(input: LocationAutocomplete): Im
 }
 
 function convertItem(locationItem: ImmoweltLocationAutocompleteItem): LocationAutocompleteItem {
-  if (!locationItem) {
-    return undefined;
-  }
   return {
     id: locationItem.id,
     label: locationItem.name,
@@ -43,12 +40,9 @@ function convertItem(locationItem: ImmoweltLocationAutocompleteItem): LocationAu
 }
 
 function convertBackItem(locationItem: LocationAutocompleteItem): ImmoweltLocationAutocompleteItem {
-  if (!locationItem) {
-    return undefined;
-  }
   return {
     id: locationItem.id,
-    name: locationItem.label,
+    name: locationItem.label || '',
     type: convertBackType(locationItem.type),
   };
 }
@@ -58,6 +52,7 @@ const typeMap = {
   [ImmoweltLocationType.district]: LocationType.district,
   [ImmoweltLocationType.zip]: LocationType.postcode,
   [ImmoweltLocationType.county]: LocationType.region,
+  [ImmoweltLocationType.unknown]: LocationType.unknown,
 };
 function convertType(type: ImmoweltLocationType): LocationType {
   return typeMap[type];
@@ -68,6 +63,10 @@ const typeBackMap = {
   [LocationType.district]: ImmoweltLocationType.district,
   [LocationType.postcode]: ImmoweltLocationType.zip,
   [LocationType.region]: ImmoweltLocationType.county,
+
+  [LocationType.quarter]: ImmoweltLocationType.unknown,
+  [LocationType.country]: ImmoweltLocationType.unknown,
+  [LocationType.unknown]: ImmoweltLocationType.unknown,
 };
 function convertBackType(type: LocationType): ImmoweltLocationType {
   return typeBackMap[type];

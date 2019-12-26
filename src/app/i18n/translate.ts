@@ -31,14 +31,17 @@ const languages = supportedLanguages.languages.map(l => {
 let diffExists = false;
 
 const mainTranslation = languages.find(lang => lang.default);
+if (!mainTranslation) {
+  throw new Error('Invalid translation configuration. No default language');
+}
 const others = languages.filter(lang => !lang.default);
 
 const allTranslationPromise = others.reduce((bigAccPromise, otherTranslation) => {
   return bigAccPromise = bigAccPromise.then(() => {
     const mainTranslationKey = mainTranslation.key;
     const keysDiff = diff(mainTranslation.value, otherTranslation.value);
-    const mainUnique = keysDiff[0].map(elementPathArray => elementPathArray.join('.'));
-    const otherUnique = keysDiff[1].map(elementPathArray => elementPathArray.join('.'));
+    const mainUnique: string[] = keysDiff[0].map((elementPathArray: any) => elementPathArray.join('.'));
+    const otherUnique: string[] = keysDiff[1].map((elementPathArray: any) => elementPathArray.join('.'));
     if (!mainUnique.length && !otherUnique.length) {
       return;
     }
@@ -49,7 +52,7 @@ const allTranslationPromise = others.reduce((bigAccPromise, otherTranslation) =>
     if (mainUnique.length) {
       console.error(`${mainTranslationKey} only tokens:`);
 
-      translationPromise = mainUnique.reduce((accPromise, path) => {
+      translationPromise = mainUnique.reduce((accPromise: Promise<void>, path) => {
         return accPromise = accPromise.then(() => {
           const stringified = path.toString();
           console.log(` - ${stringified}`);
@@ -75,7 +78,7 @@ const allTranslationPromise = others.reduce((bigAccPromise, otherTranslation) =>
             text: mainValue,
             source_lang: mainTranslation.languageKey,
             target_lang: otherTranslation.languageKey,
-          })).then(result => {
+          })).then((result: any) => {
             if (!result) {
               return;
             }
@@ -88,7 +91,7 @@ const allTranslationPromise = others.reduce((bigAccPromise, otherTranslation) =>
             console.log(`get result ${firstTranslation.text}`);
 
             otherValue[parts[parts.length - 1]] = firstTranslation.text || '';
-          }).catch(error => {
+          }).catch((error: Error) => {
             console.error(error);
           });
         });

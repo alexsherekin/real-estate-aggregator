@@ -39,7 +39,7 @@ export class ImmoweltConnectorService implements IConnectorService {
 
   }
 
-  public search(apartment: ApartmentRequirements, search: SearchSettings): Observable<ItemsResponse> {
+  public search(apartment: ApartmentRequirements, search: SearchSettings): Observable<ItemsResponse | undefined> {
     if (!apartment.locationSettings || !apartment.locationSettings[DataProviderKey]) {
       return of(undefined);
     }
@@ -73,11 +73,15 @@ export class ImmoweltConnectorService implements IConnectorService {
     return this.http.get<string>(url, { 'Content-Type': 'text/html' }, 'text')
       .pipe(
         map(response => {
+          if (!response) {
+            return [];
+          }
+
           const parsed = new urlParse(url);
           const items: ItemsResponseResultListEntry[] = this.parseMainHTML(response)
             .map(item => {
-              item.marketingType = parseInt(parsed.query.marketingtype, 10) as MarketingTypeNumber;
-              item.realEstateType = parseInt(parsed.query.parentcat, 10) as RealEstateTypeNumber;
+              item.marketingType = parseInt(parsed.query.marketingtype || MarketingTypeNumber.Rent.toString(), 10);
+              item.realEstateType = parseInt(parsed.query.parentcat || RealEstateTypeNumber.Flat.toString(), 10);
               return item as ItemsResponseResultListEntry;
             });
           return items;
@@ -87,10 +91,10 @@ export class ImmoweltConnectorService implements IConnectorService {
             return this.http.get<string>(item.link, { 'Content-Type': 'text/html' }, 'text')
               .pipe(
                 map(html => this.parseItemHTML(html)),
-                map(extItem => {
+                map((extItem: any) => {
                   Object.keys(extItem)
-                    .filter(key => extItem[key])
-                    .forEach(key => item[key] = extItem[key]);
+                    .filter(key => !!extItem[key])
+                    .forEach(key => (item as any)[key] = extItem[key]);
                   return item;
                 })
               );
@@ -108,8 +112,8 @@ export class ImmoweltConnectorService implements IConnectorService {
       );
   }
 
-  private parseItemHTML(html: string): Partial<ItemsResponseResultListEntry> {
-    html = html.replace(/\<img/g, '<img1');
+  private parseItemHTML(html: string | undefined): Partial<ItemsResponseResultListEntry> {
+    html = (html || '').replace(/\<img/g, '<img1');
     const root = document.createElement('div');
     root.innerHTML = html;
 
@@ -269,6 +273,9 @@ export class ImmoweltConnectorService implements IConnectorService {
     }
 
     const resultsList = root.querySelector(config.list.selector);
+    if (!resultsList) {
+      return [];
+    }
     const resultItems = [].slice.call(resultsList.querySelectorAll(config.listItem.selector)) as HTMLElement[];
     const convertedItems = resultItems.map(item => {
       const tags = (this.getDataItem(config.tags, item) || []).map(tag => (tag || '').toLocaleLowerCase());
@@ -320,7 +327,7 @@ export class ImmoweltConnectorService implements IConnectorService {
     });
   }
 
-  public searchLocation(searchQuery: string): Observable<LocationAutocompleteResponse> {
+  public searchLocation(searchQuery: string): Observable<LocationAutocompleteResponse | undefined> {
     const url = this.urlCreator.createLocationAutocompleteUrl(searchQuery);
     return this.http.get<LocationAutocompleteResponse>(url, { "Content-Type": "application/json" });
   }
@@ -332,7 +339,7 @@ export class ImmoweltConnectorService implements IConnectorService {
 
     const isEuro = value.includes('€');
     let priceValue = '';
-    const parts = value.split(/[,.]/).map(part => (/\s*[0-9]+/.exec(part)[0] || '').trim().toString());
+    const parts = value.split(/[,.]/).map(part => ((/\s*[0-9]+/.exec(part) || '')[0] || '').trim().toString());
     // Integer
     if (parts.length === 1) {
       priceValue = parts[0];

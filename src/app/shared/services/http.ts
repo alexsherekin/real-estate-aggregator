@@ -16,7 +16,7 @@ export class Http {
   }
 
   public get<T>(url: string, headers: any = {}, responseType: any = 'json') {
-    let result$: Observable<T>;
+    let result$: Observable<T | undefined>;
     if (window.cordova) {
       result$ = from(this.http.get(url, {}, headers))
         .pipe(
@@ -51,7 +51,7 @@ export class Http {
   }
 
   public post<T>(url: string, body: any = {}, headers: any = {}, responseType: any = 'json') {
-    let result$: Observable<T>;
+    let result$: Observable<T | undefined>;
     if (window.cordova) {
       if (!headers['Content-Type'] || (headers['Content-Type'] === 'application/json')) {
         this.http.setDataSerializer('json');

@@ -10,7 +10,7 @@ import { UIAdvertisement } from '../../types/ui-advertisement';
 })
 export class RealEstateItemComponent implements OnInit, OnChanges {
   @Input()
-  public item: UIAdvertisement;
+  public item!: UIAdvertisement;
 
   @Output()
   public toggleFavourite = new EventEmitter<boolean>();
@@ -19,13 +19,13 @@ export class RealEstateItemComponent implements OnInit, OnChanges {
   public intersect = new EventEmitter<void>();
 
   // https://www.immonet.de/immobiliensuche/sel.do?sortby=19&suchart=1&fromarea=10&parentcat=1&marketingtype=1&toprice=150000&fromrooms=2&pageoffset=0&listsize=10&page=1&locationName=W%C3%BCrzburg&city=153145
-  public realEstate: RealEstate;
-  public address: Address;
-  public linkToSource: string;
+  public realEstate?: RealEstate;
+  public address?: Address;
+  public linkToSource?: string;
 
-  public title: string;
-  public titleImage: string;
-  public addressAsString: string;
+  public title?: string;
+  public titleImage?: string;
+  public addressAsString?: string;
   public mapsIcon = require('./assets/maps.png');
   public linkIcon = require('./assets/link.svg');
   public noImageIcon = require('./assets/no-image.svg');
@@ -60,7 +60,9 @@ export class RealEstateItemComponent implements OnInit, OnChanges {
       this.linkToSource = '';
     }
 
-    this.addressAsString = [this.address.city, this.address.street, this.address.houseNumber].filter(Boolean).join(' ');
+    this.addressAsString = (this.address ? [this.address.city, this.address.street, this.address.houseNumber] : [])
+      .filter(Boolean)
+      .join(' ');
   }
 
   public hasTags(realEstate: RealEstate) {
@@ -72,6 +74,10 @@ export class RealEstateItemComponent implements OnInit, OnChanges {
   }
 
   public formatAddress() {
+    if (!this.address) {
+      return '';
+    }
+
     const street = [this.address.street, this.address.houseNumber].filter(Boolean).join(' ');
 
     const city = [this.address.city, this.address.quarter].filter(Boolean).join('/');
@@ -80,6 +86,10 @@ export class RealEstateItemComponent implements OnInit, OnChanges {
   }
 
   public formatFeatures() {
+    if (!this.realEstate) {
+      return '';
+    }
+
     return this.getTags(this.realEstate)
       .filter(Boolean)
       .map(label => this.translate.instant('RealEstateFeature.' + label))

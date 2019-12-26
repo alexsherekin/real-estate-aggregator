@@ -17,20 +17,20 @@ import { DataProviderKey } from '../key';
 export class ImmobilienScout24DataProvider implements IResetableDataProvider {
   public readonly DataProviderKey: string = DataProviderKey;
 
-  private searchBySettings_s$ = new BehaviorSubject(undefined);
-  private searchByUrl_s$ = new BehaviorSubject(undefined);
+  private searchBySettings_s$ = new BehaviorSubject<boolean>(false);
+  private searchByUrl_s$ = new BehaviorSubject<boolean>(false);
 
   private searchLoadingState_i$ = new BehaviorSubject<Phase>(Phase.unknown);
-  private searchDataLoaded_i$: Observable<ItemsResponse>;
-  private searchItemsLoaded_i$: Observable<Array<RealEstateFullDescription>>;
+  private searchDataLoaded_i$: Observable<ItemsResponse | undefined>;
+  private searchItemsLoaded_i$: Observable<Array<RealEstateFullDescription> | undefined>;
 
   private infiniteLoadingState_i$ = new BehaviorSubject<Phase>(Phase.unknown);
-  private infiniteDataLoaded_i$ = new BehaviorSubject<ItemsResponse>(undefined);
-  private infiniteItemsLoaded_i$: Observable<Array<RealEstateFullDescription>>;
+  private infiniteDataLoaded_i$ = new BehaviorSubject<ItemsResponse | undefined>(undefined);
+  private infiniteItemsLoaded_i$: Observable<Array<RealEstateFullDescription> | undefined>;
 
   private nextUrl_i$: Observable<string>;
-  private forceLoad_i$: Observable<ItemsResponse>;
-  private forceLoadSub: Subscription;
+  private forceLoad_i$: Observable<void>;
+  private forceLoadSub?: Subscription;
 
   private subscriptions: Subscription[] = [];
 
@@ -70,7 +70,7 @@ export class ImmobilienScout24DataProvider implements IResetableDataProvider {
     this.searchItemsLoaded_i$ = this.searchDataLoaded_i$.pipe(
       map(response => {
         try {
-          return response.searchResponseModel['resultlist.resultlist'].resultlistEntries[0].resultlistEntry;
+          return (response as any).searchResponseModel['resultlist.resultlist'].resultlistEntries[0].resultlistEntry;
         } catch (error) {
           return undefined;
         }
@@ -81,9 +81,9 @@ export class ImmobilienScout24DataProvider implements IResetableDataProvider {
       merge(this.infiniteDataLoaded_i$),
       map(response => {
         try {
-          return response.searchResponseModel['resultlist.resultlist'].paging.next['@xlink.href'];
+          return (response as any).searchResponseModel['resultlist.resultlist'].paging.next['@xlink.href'];
         } catch (error) {
-          return undefined;
+          return '';
         }
       })
     );
@@ -111,7 +111,7 @@ export class ImmobilienScout24DataProvider implements IResetableDataProvider {
     this.infiniteItemsLoaded_i$ = this.infiniteDataLoaded_i$.pipe(
       map(response => {
         try {
-          return response.searchResponseModel['resultlist.resultlist'].resultlistEntries[0].resultlistEntry;
+          return (response as any).searchResponseModel['resultlist.resultlist'].resultlistEntries[0].resultlistEntry;
         } catch (error) {
           return undefined;
         }

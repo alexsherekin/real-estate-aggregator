@@ -7,13 +7,13 @@ import { defaultData } from './default';
 export const FEATURE_NAME = 'data';
 const STORE_KEYS_TO_PERSIST: Array<keyof IDataState> = ['cache', 'favourites', 'seenAds', 'seenAdsCache'];
 
-const lookup: { [key: string]: (state: IDataState, action: DataActions) => IDataState } = {
+const lookup: { [key: string]: (state: IDataState, action: any) => IDataState } = {
 
-  [LocationAutocompleteAllAction.type]: (state: IDataState, action: LocationAutocompleteAllAction) => {
+  [LocationAutocompleteAllAction.type]: (state: IDataState, action: LocationAutocompleteAllAction): IDataState => {
     return state;
   },
 
-  [SaveRealEstateDataAction.type]: (state: IDataState, action: SaveRealEstateDataAction) => {
+  [SaveRealEstateDataAction.type]: (state: IDataState, action: SaveRealEstateDataAction): IDataState => {
     const providerKey = action.dataProviderKey;
 
     return {
@@ -21,14 +21,14 @@ const lookup: { [key: string]: (state: IDataState, action: DataActions) => IData
       cache: {
         ...(state.cache || {}),
         [providerKey]: {
-          ...(state[providerKey] || {}),
-          items: action.data || []
+          ...(state.cache[providerKey] || {}),
+          items: action.data
         }
       }
     }
   },
 
-  [ToggleFavouriteAdvertisementAction.type]: (state: IDataState, action: ToggleFavouriteAdvertisementAction) => {
+  [ToggleFavouriteAdvertisementAction.type]: (state: IDataState, action: ToggleFavouriteAdvertisementAction): IDataState => {
     let favourites = [...state.favourites];
     if (action.isFavourite) {
       const alreadyFavourite = favourites.findIndex(f => f.id === action.ad.id) > -1;
@@ -45,7 +45,7 @@ const lookup: { [key: string]: (state: IDataState, action: DataActions) => IData
     };
   },
 
-  [MarkAdvertisementSeenAction.type]: (state: IDataState, action: MarkAdvertisementSeenAction) => {
+  [MarkAdvertisementSeenAction.type]: (state: IDataState, action: MarkAdvertisementSeenAction): IDataState => {
     const seenAds = [...state.seenAds, ...state.seenAdsCache];
     const found = !!seenAds.find(ad => ad.id === action.ad.id);
     if (found) {
@@ -58,7 +58,7 @@ const lookup: { [key: string]: (state: IDataState, action: DataActions) => IData
     };
   },
 
-  [MergeSeenAdvertisementAction.type]: (state: IDataState, action: MergeSeenAdvertisementAction) => {
+  [MergeSeenAdvertisementAction.type]: (state: IDataState, action: MergeSeenAdvertisementAction): IDataState => {
     return {
       ...state,
       seenAds: [...state.seenAds, ...state.seenAdsCache],
@@ -86,7 +86,11 @@ export function localStorageSyncReducer(reducer: ActionReducer<IDataState>): Act
 }
 
 export function setRehydrateReducer(reducer: ActionReducer<IDataState>): ActionReducer<IDataState> {
-  return (state: IDataState, action: any) => {
+  return (state: IDataState | undefined, action: Action): IDataState => {
+    if (!state) {
+      return reducer(state, action);
+    }
+
     if (state.isRehydrated) {
       return reducer(state, action);
     }

@@ -18,7 +18,7 @@ export class ImmobilienScout24ConnectorService implements IConnectorService {
 
   }
 
-  public search(apartment: ApartmentRequirements, search: SearchSettings): Observable<ItemsResponse> {
+  public search(apartment: ApartmentRequirements, search: SearchSettings): Observable<ItemsResponse | undefined> {
     return this.urlCreator.createSearchUrl(apartment, search)
       .pipe(
         switchMap(url => {
@@ -27,7 +27,7 @@ export class ImmobilienScout24ConnectorService implements IConnectorService {
       );
   }
 
-  public searchByUrl(url: string): Observable<ItemsResponse> {
+  public searchByUrl(url: string): Observable<ItemsResponse | undefined> {
     if (!url) {
       return throwError(new Error('Invalid argument url'));
     }
@@ -35,7 +35,7 @@ export class ImmobilienScout24ConnectorService implements IConnectorService {
     return this.http.post<ItemsResponse>(this.urlCreator.addBaseUrl(url), null, { "Content-Type": "application/json" });
   }
 
-  public searchLocation(searchQuery: string): Observable<ImmobilienScout24LocationAutocompleteResponse> {
+  public searchLocation(searchQuery: string): Observable<ImmobilienScout24LocationAutocompleteResponse | undefined> {
     const url = this.urlCreator.createLocationAutocompleteUrl(searchQuery);
 
     return this.http.get<ImmobilienScout24LocationAutocompleteResponse>(url, { "Content-Type": "application/json" });

@@ -23,7 +23,7 @@ export class SettingsPage implements OnInit, OnDestroy {
 
   public model: SettingsPageModel;
 
-  private appSettingsSub: Subscription;
+  private appSettingsSub!: Subscription;
   public settingsForm: FormGroup;
 
   public constructor(
@@ -52,12 +52,11 @@ export class SettingsPage implements OnInit, OnDestroy {
   public ngOnDestroy(): void {
     if (this.appSettingsSub) {
       this.appSettingsSub.unsubscribe();
-      this.appSettingsSub = undefined;
     }
   }
 
   public onLanguageChanged() {
-    const language = this.settingsForm.get('language').value;
-    this.store.dispatch(new SetLanguageSettings(language));
+    const languageConfig = this.settingsForm.get('language') || { value: undefined };
+    this.store.dispatch(new SetLanguageSettings(languageConfig.value));
   }
 }

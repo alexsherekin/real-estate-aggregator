@@ -20,7 +20,7 @@ export class ImmoweltUrlCreatorService {
   private static readonly baseUrl = 'https://www.immonet.de/';
 
   public createSearchUrl(apartment: ApartmentRequirements, search: SearchSettings, payload: LocationAutocompleteItem) {
-    let price: Price;
+    let price: Price | undefined;
     if (apartment.marketingType === MarketingType.BUY) {
       price = apartment.buyPrice;
     } else if (apartment.marketingType === MarketingType.RENT) {
@@ -97,22 +97,24 @@ export class ImmoweltUrlCreatorService {
     }
   }
 
-  private convertMarketingType(marketingType: MarketingType) {
+  private convertMarketingType(marketingType?: MarketingType) {
     const map = {
       [MarketingType.BUY]: 1,
       [MarketingType.RENT]: 2,
+      [MarketingType.UNKNOWN]: 2,
     };
 
-    return map[marketingType] ? map[marketingType] : 2;
+    return map[marketingType || MarketingType.RENT];
   }
 
-  private convertRealEstateType(realEstateType: RealEstateType) {
+  private convertRealEstateType(realEstateType?: RealEstateType) {
     const map = {
       [RealEstateType.FLAT]: 1,
       [RealEstateType.HOUSE]: 2,
+      [RealEstateType.UNKNOWN]: 1,
     };
 
-    return map[realEstateType] ? map[realEstateType] : 2;
+    return map[realEstateType || RealEstateType.FLAT];
   }
 
   private guard(value: never) { }

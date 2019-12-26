@@ -35,7 +35,7 @@ export interface IFilters {
 }
 
 export interface DisplaySettings {
-  onlyNew?: boolean,
+  onlyNew: boolean,
 }
 
 export interface ISettingsState {
@@ -43,6 +43,6 @@ export interface ISettingsState {
   saving: IActionPhase,
   filters: IFilters,
   sorting?: Sorting,
-  appSettings?: AppSettings,
-  displaySettings?: DisplaySettings,
+  appSettings: AppSettings,
+  displaySettings: DisplaySettings,
 }

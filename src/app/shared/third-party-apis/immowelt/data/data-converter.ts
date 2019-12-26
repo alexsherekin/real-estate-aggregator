@@ -1,4 +1,4 @@
-import { Address, Advertisement, MarketingType, Price, RealEstate, RealEstateFeature, RealEstateType } from '../../native/address';
+import { Address, Advertisement, MarketingType, Price, RealEstate, RealEstateFeature, RealEstateType, Currency, PriceIntervalType } from '../../native/address';
 import {
   ItemsResponseResultListEntry,
   MarketingTypeNumber,
@@ -9,7 +9,7 @@ import {
 
 export function convertData(entries: ItemsResponseResultListEntry[]): Advertisement[] {
   if (!entries) {
-    return undefined;
+    return [];
   }
 
   return entries.map(entry => {
@@ -25,7 +25,7 @@ export function convertData(entries: ItemsResponseResultListEntry[]): Advertisem
   });
 }
 
-function getRealEstate(description: ItemsResponseResultListEntry): RealEstate {
+function getRealEstate(description: ItemsResponseResultListEntry): RealEstate | undefined {
   if (!description) {
     return undefined;
   }
@@ -45,7 +45,13 @@ function getRealEstate(description: ItemsResponseResultListEntry): RealEstate {
 
 function getAddress(address: RealEstateAddress): Address {
   if (!address) {
-    return undefined;
+    return {
+      street: undefined,
+      houseNumber: undefined,
+      postcode: undefined,
+      city: '',
+      quarter: undefined,
+    };
   }
   return {
     street: address.street,
@@ -76,21 +82,38 @@ function getFeatures(description: ItemsResponseResultListEntry): RealEstateFeatu
   if (!description) {
     return [];
   }
-  return [
-    description.balcony && RealEstateFeature.Balcony,
-    description.builtInKitchen && RealEstateFeature.BuiltInKitchen,
-    description.garden && RealEstateFeature.Garden,
-  ].filter(Boolean);
+  const config = [
+    {
+      has: description.balcony,
+      value: RealEstateFeature.Balcony,
+    },
+    {
+      has: description.builtInKitchen,
+      value: RealEstateFeature.BuiltInKitchen,
+    },
+    {
+      has: description.garden,
+      value: RealEstateFeature.Garden,
+    },
+  ]
+  return config
+    .filter(item => item.has)
+    .map(item => item.value);
 }
 
 function getPrice(price: RealEstatePrice): Price {
   if (!price) {
-    return undefined;
+    return {
+      value: 0,
+      currency: Currency.EUR,
+      priceIntervalType: PriceIntervalType.MONTH,
+      marketingType: MarketingType.UNKNOWN,
+    };
   }
   return {
     value: price.value,
     currency: price.currency as any,
-    marketingType: undefined,
-    priceIntervalType: undefined,
+    priceIntervalType: PriceIntervalType.MONTH,
+    marketingType: MarketingType.UNKNOWN,
   };
 }

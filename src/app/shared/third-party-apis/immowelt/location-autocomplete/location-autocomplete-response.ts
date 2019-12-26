@@ -48,4 +48,5 @@ export enum LocationType {
   county = 'county',
   city = 'city',
   district = 'district',
+  unknown = 'unknown',
 }

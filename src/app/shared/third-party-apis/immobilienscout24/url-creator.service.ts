@@ -60,10 +60,10 @@ export class ImmobilienScout24UrlCreatorService {
         "max": apartment.maxRoomsCount,
       },
       "netRentRange": {
-        "min": rawPrice.minPrice,
-        "max": rawPrice.maxPrice,
+        "min": rawPrice && rawPrice.minPrice,
+        "max": rawPrice && rawPrice.maxPrice,
       },
-      geoInfoNodes: [],
+      geoInfoNodes: [] as number[],
       geoHierarchySearch: true,
 
       apartmentTypes: [],
@@ -76,7 +76,10 @@ export class ImmobilienScout24UrlCreatorService {
       budgetRentRange: null,
       buildingProjectId: null,
       careTypes: [],
-      centerOfSearchAddress: null,
+      centerOfSearchAddress: {
+        postcode: '',
+        city: '',
+      },
       centerX: null,
       centerY: null,
       clipShape: null,
@@ -203,9 +206,10 @@ export class ImmobilienScout24UrlCreatorService {
       body.geoInfoNodes = [parseInt(geoId, 10)];
     } else if (location && location.type === LocationType.postcode) {
       body.locationSelectionType = "VICINITY";
+      const locationValue = location.value || '';
       body.centerOfSearchAddress = {
-        postcode: location.value,
-        city: (location.label || '').replace(location.value, '').trim()
+        postcode: locationValue,
+        city: (location.label || '').replace(locationValue, '').trim()
       };
     } else {
       return of('');
@@ -214,7 +218,7 @@ export class ImmobilienScout24UrlCreatorService {
     return this.http
       .post<{ url: string }>(url, body, { 'Content-Type': 'application/json' })
       .pipe(
-        map(result => result && result.url ? this.addBaseUrl(result.url) : undefined)
+        map(result => result && result.url ? this.addBaseUrl(result.url) : '')
       );
   }
 
@@ -223,13 +227,23 @@ export class ImmobilienScout24UrlCreatorService {
       [RealEstateType.FLAT]: {
         [MarketingType.BUY]: RealEstateTypeString2.ApartmentBuy,
         [MarketingType.RENT]: RealEstateTypeString2.ApartmentRent,
+        [MarketingType.UNKNOWN]: undefined,
       },
       [RealEstateType.HOUSE]: {
         [MarketingType.BUY]: RealEstateTypeString2.HouseBuy,
         [MarketingType.RENT]: RealEstateTypeString2.HouseRent,
+        [MarketingType.UNKNOWN]: undefined,
+      },
+      [RealEstateType.UNKNOWN]: {
+        [MarketingType.BUY]: undefined,
+        [MarketingType.RENT]: undefined,
+        [MarketingType.UNKNOWN]: undefined,
       }
     };
 
+    if (!apartment.realEstateType || !apartment.marketingType) {
+      return undefined;
+    }
     return (map[apartment.realEstateType] && map[apartment.realEstateType][apartment.marketingType]) || RealEstateTypeString2.ApartmentRent;
   }
 
@@ -242,64 +256,6 @@ export class ImmobilienScout24UrlCreatorService {
       return url;
     }
     return `${ImmobilienScout24UrlCreatorService.baseUrl}${url}`;
-  }
-
-
-  private convertString(value: string | { label: string }) {
-    if (!value) {
-      return '-';
-    }
-    const text = (typeof value === 'string') ? value : value.label;
-    if (!text) {
-      return '-';
-    }
-    return text.replace(/\s+/g, '-');
-  }
-
-  private convertRange(left: any, right: any) {
-    left = left || '';
-    right = right || '';
-    return left || right ? [left, right].join('-') : '-';
-  }
-
-  private convertSorting(sorting: Sorting) {
-    switch (sorting) {
-      case Sorting.default:
-        return 'S-T';
-      case Sorting.dateDesc:
-        return 'S-2';
-      case Sorting.priceDesc:
-        return 'S-3';
-      case Sorting.priceAsc:
-        return 'S-4';
-      case Sorting.roomsDesc:
-        return 'S-5';
-      case Sorting.roomsAsc:
-        return 'S-6';
-      case Sorting.squareDesc:
-        return 'S-7';
-      case Sorting.squareAsc:
-        return 'S-8';
-      default:
-        this.guard(sorting);
-        break;
-    }
-  }
-
-  private convertMarketingType(marketingType: MarketingType, realEstateType: RealEstateType) {
-    const map = {
-      [MarketingType.BUY]: {
-        [RealEstateType.FLAT]: RealEstateTypeString3.ApartmentBuy,
-        [RealEstateType.HOUSE]: RealEstateTypeString3.HouseBuy,
-
-      },
-      [MarketingType.RENT]: {
-        [RealEstateType.FLAT]: RealEstateTypeString3.ApartmentRent,
-        [RealEstateType.HOUSE]: RealEstateTypeString3.HouseRent,
-      }
-    };
-
-    return map[marketingType] ? map[marketingType][realEstateType] : RealEstateTypeString3.ApartmentRent;
   }
 
   private guard(value: never) { }

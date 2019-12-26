@@ -7,7 +7,7 @@ import { localStorageSync } from 'ngrx-store-localstorage';
 export const FEATURE_NAME = 'settings';
 const STORE_KEYS_TO_PERSIST: Array<keyof ISettingsState> = ['filters', 'sorting', 'appSettings', 'displaySettings'];
 
-const lookup: { [key: string]: (state: ISettingsState, action: SettingsActions) => ISettingsState } = {
+const lookup: { [key: string]: (state: ISettingsState, action: any) => ISettingsState } = {
   [SaveSettings.type]: (state: ISettingsState, action: SaveSettings) => {
     return {
       ...state,

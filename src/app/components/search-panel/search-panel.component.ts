@@ -29,17 +29,27 @@ const marketingTypesMap = {
     marketingType: MarketingType.RENT,
     realEstateType: RealEstateType.HOUSE,
   },
+  [UIMarketingType.Unknown]: {
+    marketingType: MarketingType.UNKNOWN,
+    realEstateType: RealEstateType.UNKNOWN,
+  }
 };
 
 const marketingTypesReverseMap = {
   [MarketingType.BUY]: {
     [RealEstateType.FLAT]: UIMarketingType.ApartmentBuy,
     [RealEstateType.HOUSE]: UIMarketingType.HouseBuy,
-
+    [RealEstateType.UNKNOWN]: UIMarketingType.Unknown,
   },
   [MarketingType.RENT]: {
     [RealEstateType.FLAT]: UIMarketingType.ApartmentRent,
     [RealEstateType.HOUSE]: UIMarketingType.HouseRent,
+    [RealEstateType.UNKNOWN]: UIMarketingType.Unknown,
+  },
+  [MarketingType.UNKNOWN]: {
+    [RealEstateType.FLAT]: UIMarketingType.Unknown,
+    [RealEstateType.HOUSE]: UIMarketingType.Unknown,
+    [RealEstateType.UNKNOWN]: UIMarketingType.Unknown,
   }
 };
 
@@ -58,10 +68,10 @@ interface PriceRangeConfig {
 export class SearchPanelComponent implements OnInit, OnChanges {
 
   @Input()
-  public data: ApartmentRequirements;
+  public data!: ApartmentRequirements;
 
   @Input()
-  public cityAutocomplete: LocationAutocompleteItem[];
+  public cityAutocomplete!: LocationAutocompleteItem[];
 
   @Input()
   public cityAutocompleteLoading: Phase = Phase.init;
@@ -77,7 +87,6 @@ export class SearchPanelComponent implements OnInit, OnChanges {
     sorting: Sorting.dateDesc
   };
   public uiMarketingType: UIMarketingType = UIMarketingType.ApartmentRent;
-  public priceRangeConfig: PriceRangeConfig;
   public priceRangeConfigs = {
     [MarketingType.BUY]: {
       min: 0,
@@ -89,8 +98,14 @@ export class SearchPanelComponent implements OnInit, OnChanges {
       max: 1000,
       step: 10
     },
+    [MarketingType.UNKNOWN]: {
+      min: 0,
+      max: 1000,
+      step: 10
+    },
   };
-  public price: Price;
+  public priceRangeConfig?: PriceRangeConfig;
+  public price?: Price;
   public marketingTypes = [UIMarketingType.ApartmentBuy, UIMarketingType.ApartmentRent, UIMarketingType.HouseBuy, UIMarketingType.HouseRent];
 
   public ngOnInit() {
@@ -101,13 +116,15 @@ export class SearchPanelComponent implements OnInit, OnChanges {
     if (changes.hasOwnProperty('data')) {
       Object.assign(this.apartment, changes.data.currentValue);
       if (this.apartment) {
-        const { marketingType, realEstateType, rentPrice, buyPrice } = this.apartment;
-        this.uiMarketingType = marketingTypesReverseMap[marketingType] ? marketingTypesReverseMap[marketingType][realEstateType] : UIMarketingType.ApartmentRent;
-        this.priceRangeConfig = this.priceRangeConfigs[marketingType] || this.priceRangeConfigs[MarketingType.RENT];
+        const { marketingType: inputMarketingType, realEstateType: inputRealEstateType, rentPrice, buyPrice } = this.apartment;
+        const marketingType = inputMarketingType || MarketingType.RENT;
+        const realEstateType = inputRealEstateType || RealEstateType.FLAT;
+        this.uiMarketingType = !!marketingTypesReverseMap[marketingType] ? marketingTypesReverseMap[marketingType][realEstateType] : UIMarketingType.ApartmentRent;
+        this.priceRangeConfig = this.priceRangeConfigs[marketingType];
         this.price = marketingType === MarketingType.RENT ? rentPrice : buyPrice;
       } else {
         this.uiMarketingType = UIMarketingType.ApartmentRent;
-        this.priceRangeConfig = this.priceRangeConfigs[this.uiMarketingType];
+        this.priceRangeConfig = this.priceRangeConfigs[MarketingType.RENT];
         this.price = undefined;
       }
     }

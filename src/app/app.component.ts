@@ -23,10 +23,10 @@ import { Phase, SaveSettings } from './store/settings';
 export class AppComponent implements OnDestroy {
   private filtersChanged = false;
   private defaultAutocompleteResponse: LocationAutocomplete = { key: '', items: [] };
-  public cityAutocomplete$: Observable<LocationAutocompleteItem[]>;
+  public cityAutocomplete$?: Observable<LocationAutocompleteItem[]>;
   public cityAutocompleteLoading: Phase = Phase.init;
 
-  private languageSub: Subscription;
+  private languageSub!: Subscription;
 
   constructor(
     private platform: Platform,
@@ -42,20 +42,18 @@ export class AppComponent implements OnDestroy {
 
   private initializeApp() {
     const defaultLanguage = supportedLanguages.languages.find(l => l.default);
+    if (!defaultLanguage) {
+      throw new Error('Invalid languages config. No default language set!');
+    }
     this.translate.setDefaultLang(defaultLanguage.id);
     this.translate.addLangs(supportedLanguages.languages.map(l => l.id));
 
     this.languageSub = this.store.select(settingsSelectors.getLanguageSettings)
       .subscribe(lang => {
-        this.translate.use(lang);
+        if (lang) {
+          this.translate.use(lang);
+        }
       });
-
-    // this.store.select(dataSelectors.getCache)
-    //   .pipe(
-    //     filter(cache => !cache || !Object.keys(cache).length),
-    //     first(),
-    //   ).subscribe(() => this.openMenu());
-
 
     this.store.select(dataSelectors.getIsRehydrated)
       .pipe(
@@ -74,7 +72,6 @@ export class AppComponent implements OnDestroy {
   public ngOnDestroy(): void {
     if (this.languageSub) {
       this.languageSub.unsubscribe();
-      this.languageSub = undefined;
     }
   }
 

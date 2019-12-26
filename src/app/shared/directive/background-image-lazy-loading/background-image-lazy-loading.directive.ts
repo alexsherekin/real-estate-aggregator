@@ -5,8 +5,8 @@ import { Directive, ElementRef, HostBinding, Input, AfterViewInit, OnChanges, Si
 })
 export class BackgroundImageLazyLoadingDirective implements OnChanges, AfterViewInit {
 
-  @HostBinding('style.background-image') bgImage = null;
-  @Input() img: string;
+  @HostBinding('style.background-image') bgImage: string | null = null;
+  @Input() img!: string;
 
   constructor(private el: ElementRef) { }
 

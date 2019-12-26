@@ -5,6 +5,7 @@ import { EMPTY, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 import { SetLanguageSettings } from './actions';
+import { Action } from '@ngrx/store';
 
 @Injectable()
 export class SettingsEffects {
@@ -12,7 +13,7 @@ export class SettingsEffects {
   @Effect({ dispatch: false })
   startDataSearch$ = this.actions$
     .pipe(
-      ofType(SetLanguageSettings.type),
+      ofType(SetLanguageSettings.type as any),
       switchMap((action: SetLanguageSettings) => {
         this.translate.use(action.language);
         return of(EMPTY);

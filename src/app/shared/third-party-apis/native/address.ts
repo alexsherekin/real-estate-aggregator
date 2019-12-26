@@ -58,7 +58,7 @@ export interface RealEstate {
   address: Address,
   marketingType: MarketingType,
   realEstateType: RealEstateType,
-  features?: RealEstateFeature[],
+  features: RealEstateFeature[],
   livingSpace?: number,
   numberOfRooms?: number,
   price: Price,
@@ -77,6 +77,11 @@ export enum RealEstateFeature {
   WGPossible = 'WGPossible',
 }
 
+export interface Coordinates {
+  latitude: number,
+  longitude: number,
+}
+
 export interface Address {
   street?: string,
   houseNumber?: string,
@@ -84,9 +89,6 @@ export interface Address {
   city: string,
   country?: string,
   quarter?: string,
-  coordinates?: {
-    latitude: number,
-    longitude: number
-  },
+  coordinates?: Coordinates,
   description?: string,
 }

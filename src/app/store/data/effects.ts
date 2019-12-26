@@ -3,13 +3,14 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { EMPTY, of } from 'rxjs';
 import { catchError, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
-import { LocationAutocompleteComposerService } from 'src/app/shared/third-party-apis/composer';
+import { LocationAutocompleteComposerService, KeyedLocationAutocompleteItem } from 'src/app/shared/third-party-apis/composer';
 import { DataProviderComposerService } from 'src/app/shared/third-party-apis/composer/data-provider-composer.servive';
 import { LocationAutocompleteItem } from 'src/app/shared/third-party-apis/native';
 
 import { settingsSelectors } from '../../store';
 import { ISettingsState, SaveSettings } from '../settings';
 import { BeginSearchAction } from './actions';
+import { KeyValue } from 'src/app/shared/types';
 
 @Injectable()
 export class DataEffects {
@@ -28,17 +29,19 @@ export class DataEffects {
           .pipe(
             catchError(() => {
               return of([{
-                key: undefined as string,
-                item: undefined as LocationAutocompleteItem,
-              }]);
+                key: '',
+                item: undefined,
+              } as KeyedLocationAutocompleteItem]);
             })
           );
       }),
       map(responses => {
         const locationSettings = responses.reduce((acc, response) => {
-          acc[response.key] = response.item;
+          if (response && response.item) {
+            acc[response.key] = response.item;
+          }
           return acc;
-        }, {});
+        }, {} as KeyValue<LocationAutocompleteItem>);
 
         return new SaveSettings({ locationSettings });
       }),

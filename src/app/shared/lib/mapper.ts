@@ -1,7 +1,7 @@
 export class Mapper {
   public static map: any = {};
 
-  public static MapToEntity<TSource, TDest>(
+  public static MapToEntity<TSource, TDest extends new () => Object>(
     sourceObject: TSource,
     destEntity: TDest,
     entityClass?: any
@@ -53,7 +53,7 @@ export class Mapper {
     return destEntity;
   }
 
-  public static MapFromEntity<TSource, TDest>(
+  public static MapFromEntity<TSource extends new () => Object, TDest>(
     sourceEntity: TSource,
     destObject: TDest,
     entityClass?: any
