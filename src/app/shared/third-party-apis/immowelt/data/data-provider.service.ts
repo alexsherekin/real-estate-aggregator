@@ -1,19 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { BehaviorSubject, Observable, Subscription, of } from 'rxjs';
-import { combineLatest, distinctUntilChanged, map, merge, withLatestFrom, filter, tap, switchMap, catchError, share, first } from 'rxjs/operators';
-import * as urlParse from 'parse-url';
 import * as buildUrl from 'build-url';
+import * as urlParse from 'parse-url';
+import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
+import { catchError, combineLatest, distinctUntilChanged, filter, map, merge, share, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 
 import { settingsSelectors } from '../../../../store';
 import { ISettingsState, Phase } from '../../../../store/settings';
 import { IResetableDataProvider } from '../../../lib/data-provider';
 import { Sorting } from '../../../types/sorting';
-import { ImmoweltConnectorService } from '../connector.service';
-import { ItemsResponse, ItemsResponseResultListEntry } from './data-items-response';
 import { Advertisement } from '../../native/address';
-import { convertData } from './data-converter';
+import { ImmoweltConnectorService } from '../connector.service';
 import { DataProviderKey } from '../key';
+import { convertData } from './data-converter';
+import { ItemsResponse, ItemsResponseResultListEntry } from './data-items-response';
 
 @Injectable()
 export class ImmoweltDataProvider implements IResetableDataProvider {
@@ -31,8 +31,6 @@ export class ImmoweltDataProvider implements IResetableDataProvider {
   private infiniteItemsLoaded_i$: Observable<Array<ItemsResponseResultListEntry> | undefined>;
 
   private nextUrl_i$: Observable<string>;
-  private forceLoad_i$: Observable<void>;
-  private forceLoadSub?: Subscription;
 
   private subscriptions: Subscription[] = [];
 
@@ -100,24 +98,26 @@ export class ImmoweltDataProvider implements IResetableDataProvider {
       })
     );
 
-    this.forceLoad_i$ = this.searchByUrl_s$.pipe(
-      distinctUntilChanged(() => false),
-      withLatestFrom(this.nextUrl_i$),
-      filter(([trigger, url]) => trigger),
-      tap(() => this.infiniteLoadingState_i$.next(Phase.init)),
-      switchMap(([trigger, url]) => {
-        this.infiniteLoadingState_i$.next(Phase.running);
-        return this.connector.searchByUrl(url).pipe(
-          map(response => {
-            this.infiniteDataLoaded_i$.next(response);
-            this.infiniteLoadingState_i$.next(Phase.ready);
-          }),
-          catchError(error => {
-            this.infiniteLoadingState_i$.next(Phase.failed);
-            return of(undefined);
-          })
-        );
-      })
+    this.subscriptions.push(
+      this.searchByUrl_s$.pipe(
+        distinctUntilChanged(() => false),
+        withLatestFrom(this.nextUrl_i$),
+        filter(([trigger, url]) => trigger),
+        tap(() => this.infiniteLoadingState_i$.next(Phase.init)),
+        switchMap(([trigger, url]) => {
+          this.infiniteLoadingState_i$.next(Phase.running);
+          return this.connector.searchByUrl(url).pipe(
+            map(response => {
+              this.infiniteDataLoaded_i$.next(response);
+              this.infiniteLoadingState_i$.next(Phase.ready);
+            }),
+            catchError(error => {
+              this.infiniteLoadingState_i$.next(Phase.failed);
+              return of(undefined);
+            })
+          );
+        })
+      ).subscribe(() => { })
     );
 
     this.infiniteItemsLoaded_i$ = this.infiniteDataLoaded_i$.pipe(
@@ -155,10 +155,6 @@ export class ImmoweltDataProvider implements IResetableDataProvider {
   }
 
   public get() {
-    if (!this.forceLoadSub) {
-      this.forceLoadSub = this.forceLoad_i$.subscribe(() => { });
-      this.subscriptions.push(this.forceLoadSub);
-    }
     this.infiniteLoadingState_i$.next(Phase.unknown);
     this.searchBySettings_s$.next(true);
   }

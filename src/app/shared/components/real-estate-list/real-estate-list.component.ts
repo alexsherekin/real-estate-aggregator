@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, HostBinding } from '@angular/core';
+import { Component, EventEmitter, HostBinding, Input, OnInit, Output } from '@angular/core';
 
 import { UIAdvertisement } from '../../types/ui-advertisement';
 
@@ -22,7 +22,7 @@ export class RealEstateListComponent implements OnInit {
   public ngOnInit() {
   }
 
-  public trackById(value: UIAdvertisement) {
+  public trackById(index: number, value: UIAdvertisement): any {
     return value.id;
   }
 

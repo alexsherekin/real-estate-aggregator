@@ -29,7 +29,7 @@
       max="5"
       step="1"
       snaps="true"
-      [value]="{lower: apartment.minRoomsCount, upper: apartment.maxRoomsCount}"
+      [value]="{lower: apartment.minRoomsCount || 0, upper: apartment.maxRoomsCount || 0}"
       (ionChange)="roomsCountChanged($event.detail.value)"></ion-range>
   </ion-item>
   <ion-item>

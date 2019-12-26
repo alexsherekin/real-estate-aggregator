@@ -9,9 +9,9 @@ import { IResetableDataProvider } from '../../../lib';
 import { Sorting } from '../../../types/sorting';
 import { Advertisement } from '../../native';
 import { ImmobilienScout24ConnectorService } from '../connector.service';
+import { DataProviderKey } from '../key';
 import { convertData } from './data-converter';
 import { ItemsResponse, RealEstateFullDescription, RealEstateTypeNumber } from './data-items-response';
-import { DataProviderKey } from '../key';
 
 @Injectable()
 export class ImmobilienScout24DataProvider implements IResetableDataProvider {
@@ -29,8 +29,6 @@ export class ImmobilienScout24DataProvider implements IResetableDataProvider {
   private infiniteItemsLoaded_i$: Observable<Array<RealEstateFullDescription> | undefined>;
 
   private nextUrl_i$: Observable<string>;
-  private forceLoad_i$: Observable<void>;
-  private forceLoadSub?: Subscription;
 
   private subscriptions: Subscription[] = [];
 
@@ -88,24 +86,26 @@ export class ImmobilienScout24DataProvider implements IResetableDataProvider {
       })
     );
 
-    this.forceLoad_i$ = this.searchByUrl_s$.pipe(
-      distinctUntilChanged(() => false),
-      withLatestFrom(this.nextUrl_i$),
-      filter(([trigger, url]) => trigger),
-      tap(() => this.infiniteLoadingState_i$.next(Phase.init)),
-      switchMap(([trigger, url]) => {
-        this.infiniteLoadingState_i$.next(Phase.running);
-        return this.connector.searchByUrl(url).pipe(
-          map(response => {
-            this.infiniteDataLoaded_i$.next(response);
-            this.infiniteLoadingState_i$.next(Phase.ready);
-          }),
-          catchError(error => {
-            this.infiniteLoadingState_i$.next(Phase.failed);
-            return of(undefined);
-          })
-        );
-      })
+    this.subscriptions.push(
+      this.searchByUrl_s$.pipe(
+        distinctUntilChanged(() => false),
+        withLatestFrom(this.nextUrl_i$),
+        filter(([trigger, url]) => trigger),
+        tap(() => this.infiniteLoadingState_i$.next(Phase.init)),
+        switchMap(([trigger, url]) => {
+          this.infiniteLoadingState_i$.next(Phase.running);
+          return this.connector.searchByUrl(url).pipe(
+            map(response => {
+              this.infiniteDataLoaded_i$.next(response);
+              this.infiniteLoadingState_i$.next(Phase.ready);
+            }),
+            catchError(error => {
+              this.infiniteLoadingState_i$.next(Phase.failed);
+              return of(undefined);
+            })
+          );
+        })
+      ).subscribe(() => { })
     );
 
     this.infiniteItemsLoaded_i$ = this.infiniteDataLoaded_i$.pipe(
@@ -143,10 +143,6 @@ export class ImmobilienScout24DataProvider implements IResetableDataProvider {
   }
 
   public get() {
-    if (!this.forceLoadSub) {
-      this.forceLoadSub = this.forceLoad_i$.subscribe(() => { });
-      this.subscriptions.push(this.forceLoadSub);
-    }
     this.infiniteLoadingState_i$.next(Phase.unknown);
     this.searchBySettings_s$.next(true);
   }

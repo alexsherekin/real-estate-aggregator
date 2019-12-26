@@ -10,7 +10,7 @@
 </ion-header>
 <ion-content>
 
-  <app-real-estate-list [items]="itemsLoaded_i$ | async"
+  <app-real-estate-list [items]="(itemsLoaded_i$ | async) || []"
     (toggleFavourite)="onToggleFavourite($event)">
     <ion-item text-center
       empty>

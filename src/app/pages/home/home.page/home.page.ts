@@ -26,7 +26,7 @@ export class HomePage implements OnDestroy {
   private subscriptions: Subscription[] = [];
   private loadingOverlayPromise?: Promise<HTMLIonLoadingElement>;
 
-  @ViewChild(IonInfiniteScroll, { static: true }) infiniteScroll!: IonInfiniteScroll;
+  @ViewChild(IonInfiniteScroll, { static: false }) infiniteScroll!: IonInfiniteScroll;
 
   public constructor(
     private dataProvider: DataProviderComposerService,

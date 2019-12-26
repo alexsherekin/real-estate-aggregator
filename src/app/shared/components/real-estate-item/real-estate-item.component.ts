@@ -65,8 +65,8 @@ export class RealEstateItemComponent implements OnInit, OnChanges {
       .join(' ');
   }
 
-  public hasTags(realEstate: RealEstate) {
-    return realEstate && realEstate.features && realEstate.features.length > 0;
+  public hasTags(realEstate: RealEstate): boolean {
+    return !!(realEstate && realEstate.features && realEstate.features.length > 0);
   }
 
   public getTags(realEstate: RealEstate) {

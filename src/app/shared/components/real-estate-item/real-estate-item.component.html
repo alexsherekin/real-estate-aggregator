@@ -50,7 +50,8 @@
           </section>
 
         </div>
-        <div class="description-bottom">
+        <div *ngIf="realEstate"
+          class="description-bottom">
           <span *ngIf="realEstate.numberOfRooms"
             class="info-box shiny">
             {{ 'RealEstateItemComponent.CountOfRooms' | translate: { count: realEstate.numberOfRooms } }}

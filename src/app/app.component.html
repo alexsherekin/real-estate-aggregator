@@ -15,8 +15,8 @@
       </ion-toolbar>
     </ion-header>
     <ion-content>
-      <app-search-panel [data]="settings$ | async"
-        [cityAutocomplete]="cityAutocomplete$ | async"
+      <app-search-panel [data]="(settings$ | async) || {}"
+        [cityAutocomplete]="(cityAutocomplete$ | async) || []"
         [cityAutocompleteLoading]="cityAutocompleteLoading"
         (changeValue)="onSearchSettingsChanged($event)"
         (citySearchChange)="onCitySearchChanged($event)">

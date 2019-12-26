@@ -3,11 +3,11 @@
   "exclude": [
     "test.ts",
     "**/*.spec.ts",
-    "assets/**"
+    "app/i18n/**"
   ],
   "angularCompilerOptions": {
-    "enableIvy": true,
-    "fullTemplateTypeCheck": true,
-    "strictInjectionParameters": true
+    "enableIvy": false,
+    "fullTemplateTypeCheck": false,
+    "strictInjectionParameters": false
   }
 }

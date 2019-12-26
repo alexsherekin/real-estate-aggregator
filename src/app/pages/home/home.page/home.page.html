@@ -36,7 +36,7 @@
   </ion-item>
 
   <ng-container *ngIf="(itemsLoadingState_i$ | async) !== Phase.failed">
-    <app-real-estate-list [items]="itemsLoaded_i$ | async"
+    <app-real-estate-list [items]="(itemsLoaded_i$ | async) || []"
       (toggleFavourite)="onToggleFavourite($event)"
       (itemIntersect)="onItemIntersect($event)">
       <div empty>
