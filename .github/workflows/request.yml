@@ -1,16 +1,36 @@
 name: Fetch API
 
 on:
-  schedule:
-    # Runs "every 5 minutes" (see https://crontab.guru)
-    - cron: "*/5 * * * *"
+  workflow_dispatch
+  #schedule:
+  # Runs "every 5 minutes" (see https://crontab.guru)
+  #  - cron: "*/5 * * * *"
 jobs:
   build:
     name: Fetch API
     runs-on: ubuntu-latest
     steps:
-      - name: Install mailutils
-        run: sudo apt install mailutils
-
       - name: cURL request
+        id: request
         run: script.sh
+
+      - name: Send mail
+        uses: dawidd6/action-send-mail@v3
+        with:
+          # Required mail server address if not connection_url:
+          server_address: smtp.gmail.com
+          # Server port, default 25:
+          server_port: 465
+          # Optional whether this connection use TLS (default is true if server_port is 465)
+          secure: true
+          # Optional (recommended): mail server username:
+          username: ${{secrets.MAIL_USERNAME}}
+          # Optional (recommended) mail server password:
+          password: ${{secrets.MAIL_PASSWORD}}
+          # Required mail subject:
+          subject: Termin ${{ steps.request.outputs.SEARCH_RESULT }}
+          # Required recipients' addresses:
+          to: ${{secrets.MAIL_RECIPIENT}}
+          # Required sender full name (address can be skipped):
+          from: CRON
+          priority: high

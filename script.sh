@@ -19,9 +19,7 @@ curl 'https://service.berlin.de/terminvereinbarung/termin/day/' \
   --compressed > result.html
 
 if grep -q 'An diesem Tag einen Termin buchen' 'result.html'; then
-    mail -s 'FOUND' alexandr.sherekin@gmail.com
-    echo found
+    echo "::set-output name=SEARCH_RESULT::FOUND"
 else
-    mail -s 'NOT FOUND' alexandr.sherekin@gmail.com
-    echo not found
+    echo "::set-output name=SEARCH_RESULT::NOT_FOUND"
 fi
