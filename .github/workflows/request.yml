@@ -10,9 +10,10 @@ jobs:
     name: Fetch API
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - name: cURL request
         id: request
-        run: ./script.sh
+        run: script.sh
 
       - name: Send mail
         uses: dawidd6/action-send-mail@v3
