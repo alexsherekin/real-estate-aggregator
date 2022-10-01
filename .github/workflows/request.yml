@@ -1,0 +1,16 @@
+name: Fetch API
+
+on:
+  schedule:
+    # Runs "every 5 minutes" (see https://crontab.guru)
+    - cron: "*/5 * * * *"
+jobs:
+  build:
+    name: Fetch API
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install mailutils
+        run: sudo apt install mailutils
+
+      - name: cURL request
+        run: script.sh
