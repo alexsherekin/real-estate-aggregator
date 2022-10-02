@@ -19,7 +19,7 @@ curl -L 'https://service.berlin.de/terminvereinbarung/termin/tag.php?termin=1&di
  > result.html
 
 if grep -q 'An diesem Tag einen Termin buchen' 'result.html'; then
-    echo "::set-output name=SEARCH_RESULT::FOUND"
+    echo "::set-output name=SEARCH_RESULT::true"
 else
-    echo "::set-output name=SEARCH_RESULT::NOT_FOUND"
+    echo "::set-output name=SEARCH_RESULT::false"
 fi
