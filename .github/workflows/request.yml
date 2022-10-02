@@ -15,7 +15,7 @@ jobs:
         run: ./script.sh
 
       - name: Send mail
-        if: steps.request.outputs.SEARCH_RESULT == "NOT_FOUND"
+        if: steps.request.outputs.SEARCH_RESULT == true
         uses: dawidd6/action-send-mail@v3
         with:
           # Required mail server address if not connection_url:
