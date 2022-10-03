@@ -1,0 +1,13 @@
+name: Fetch API
+
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    name: Fetch API
+    runs-on: ubuntu-latest
+    steps:
+      - name: move
+        run: node move.js
+      - name: verify
+        run: node see.js
