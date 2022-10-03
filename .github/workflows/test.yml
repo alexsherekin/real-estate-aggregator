@@ -9,6 +9,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: move
+        env:
+          E2E_SECRET: ${{ secrets.E2E_SECRET }}
         run: node move.js
       - name: verify
         run: node see.js
