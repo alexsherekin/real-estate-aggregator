@@ -4,9 +4,10 @@ on:
   workflow_dispatch:
 jobs:
   build:
-    name: Fetch API
+    name: Test
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - name: move
         run: node move.js
       - name: verify
