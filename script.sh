@@ -17,7 +17,6 @@ curl -L 'https://service.berlin.de/terminvereinbarung/termin/tag.php?termin=1&di
   -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 Edg/105.0.1343.53' \
   --compressed
  > result.html
-
 if grep -q 'An diesem Tag einen Termin buchen' 'result.html'; then
     echo "::set-output name=SEARCH_RESULT::true"
 else
